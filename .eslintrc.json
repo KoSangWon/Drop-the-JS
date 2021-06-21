@@ -1,0 +1,31 @@
+{
+    "parser": "babel-eslint",
+    "parserOptions": {
+      "ecmaVersion": 11
+    },
+    "env": {
+      "browser": true,
+      "node": true,
+      "jest": true
+    },
+    "extends": ["airbnb-base", "prettier"],
+    "plugins": ["html"],
+    "rules": {
+      "no-console": "warn",
+      "no-plusplus": "off",
+      "no-shadow": "off",
+      "vars-on-top": "off",
+      "no-underscore-dangle": "off", // var _foo;
+      "func-names": "off", // setTimeout(function () {}, 0);
+      "prefer-arrow-callback": "error", // Require using arrow functions for callbacks
+      "prefer-template": "off",
+      "no-nested-ternary": "off",
+      "max-classes-per-file": "off",
+      "wrap-iife": ["error", "inside"],
+      "arrow-parens": ["error", "as-needed"], // a => {}
+      "no-restricted-syntax": [0, "ForOfStatement"], // disallow specified syntax(ex. WithStatement)
+      "no-param-reassign": ["error", { "props": false }],
+      "require-await": "error",
+      "import/no-extraneous-dependencies": ["error", { "devDependencies": true }]
+    }
+  }

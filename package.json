@@ -1,0 +1,28 @@
+{
+  "name": "drop-the-js",
+  "version": "1.0.0",
+  "description": "Drop the JS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KoSangWon/Drop-the-JS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KoSangWon/Drop-the-JS/issues"
+  },
+  "homepage": "https://github.com/KoSangWon/Drop-the-JS#readme",
+  "devDependencies": {
+    "babel-eslint": "10.1.0",
+    "eslint": "7.29.0",
+    "eslint-config-airbnb-base": "14.2.1",
+    "eslint-config-prettier": "8.3.0",
+    "eslint-plugin-html": "6.1.2",
+    "eslint-plugin-import": "2.23.4"
+  }
+}
