@@ -1,9 +1,16 @@
 @import 'normalize';
 @import 'asset';
 @import 'a11y';
+@import 'keyframes';
 
 body {
   font-family: 'Noto Sans KR', sans-serif;
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 input {

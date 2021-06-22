@@ -475,8 +475,30 @@ template {
   margin: -1px;
 }
 
+@keyframes appearUp {
+  from {
+    transform: translate3d(0, 100%, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 body {
   font-family: "Noto Sans KR", sans-serif;
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 input {
@@ -492,31 +514,42 @@ li {
 
 .header {
   width: 100%;
-  height: 150px;
-  text-align: center;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+@media screen and (max-width: 767px) {
+  .header {
+    height: 120px;
+  }
+  .header img {
+    width: 120px;
+  }
 }
 
 .main {
   margin: 0 auto;
   text-align: center;
-  padding: 0 7.5rem;
   display: flex;
   position: relative;
   justify-content: center;
   align-items: flex-start;
   --cell-col: 8;
+  animation: fadeIn 1s;
 }
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 768px) {
   .main {
     --cell-size: 50px;
   }
 }
-@media screen and (min-width: 1024px) and (max-width: 1280px) {
+@media screen and (min-width: 768px) and (max-width: 1280px) {
   .main {
     --cell-size: 40px;
   }
 }
-@media screen and (max-width: 1023px) {
+@media screen and (max-width: 767px) {
   .main {
     --cell-size: 30px;
   }
@@ -525,15 +558,13 @@ li {
 .inst-list {
   display: flex;
   flex-direction: column;
+  margin-right: 10px;
 }
 
 .inst-item {
   position: relative;
   width: var(--cell-size);
   height: var(--cell-size);
-  display: flex;
-  justify-content: center;
-  align-items: center;
   margin-bottom: 0.625rem;
 }
 .inst-item .add-btn {
@@ -550,6 +581,7 @@ li {
   background-image: url("/assets/img/plus_icon.svg");
   background-position: center;
   background-repeat: no-repeat;
+  background-size: 50%;
   background-size: 40%;
   opacity: 0.5;
 }
@@ -563,16 +595,14 @@ li {
   transform: scale(1.1);
 }
 .inst-item .add-btn:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
 }
 .inst-item .inst-delete-btn {
-  display: none;
   left: 0;
   top: 0;
+  opacity: 0;
   position: absolute;
-}
-.inst-item:hover .inst-delete-btn {
   background-color: #ff3939;
   padding: 0;
   margin: 0;
@@ -586,25 +616,32 @@ li {
   background-image: url("/assets/img/x_icon.svg");
   background-position: center;
   background-repeat: no-repeat;
-  display: block;
+  background-size: 50%;
 }
-.inst-item:hover .inst-delete-btn:hover {
+.inst-item .inst-delete-btn:hover {
   outline: none;
   transform: scale(1.1);
 }
-.inst-item:hover .inst-delete-btn:focus {
+.inst-item .inst-delete-btn:focus {
   outline: none;
   box-shadow: 0, 0, 100px, rgba(105, 88, 27, 0.5);
   transform: scale(1.1);
 }
-.inst-item:hover .inst-delete-btn:active {
-  transition: transform 0.2s;
+.inst-item .inst-delete-btn:active {
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
 }
+.inst-item:hover .inst-delete-btn,
+.inst-item .inst-delete-btn:focus {
+  opacity: 1;
+}
 
-.inst-icon {
-  width: 50%;
-  height: 50%;
+.icon-drum {
+  background-image: url("/assets/img/drum-icon.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 50%;
+  background-size: 50%;
 }
 
 .music {
@@ -612,7 +649,12 @@ li {
   grid-template: auto/repeat(var(--cell-col), auto);
   gap: 8px 8px;
   justify-content: center;
-  align-content: start;
+  align-content: center;
+}
+@media screen and (max-width: 767px) {
+  .music {
+    gap: 4px;
+  }
 }
 
 .panel--red label {
@@ -630,16 +672,24 @@ li {
   transform: scale(1.1);
 }
 .panel--red label:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
+}
+.panel--red label.running {
+  transform: scale(1.2);
 }
 .panel--red input:checked + label {
   background-color: #ff3939;
   box-shadow: 0 0 15px rgba(255, 57, 57, 0.5);
 }
-.panel--red input:focus-visible + label {
+.panel--red input:focus + label {
   outline: none;
-  box-shadow: 0, 0, 100px, rgba(105, 88, 27, 0.5);
+  transform: scale(1.1);
+}
+.panel--red input:focus:not(:focus-visible) + label {
+  transform: scale(1);
+}
+.panel--red input:focus:not(:focus-visible):hover + label {
   transform: scale(1.1);
 }
 .panel--red:nth-child(4n) {
@@ -667,16 +717,24 @@ li {
   transform: scale(1.1);
 }
 .panel--orange label:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
+}
+.panel--orange label.running {
+  transform: scale(1.2);
 }
 .panel--orange input:checked + label {
   background-color: #ff8c39;
   box-shadow: 0 0 15px rgba(255, 140, 57, 0.5);
 }
-.panel--orange input:focus-visible + label {
+.panel--orange input:focus + label {
   outline: none;
-  box-shadow: 0, 0, 100px, rgba(105, 88, 27, 0.5);
+  transform: scale(1.1);
+}
+.panel--orange input:focus:not(:focus-visible) + label {
+  transform: scale(1);
+}
+.panel--orange input:focus:not(:focus-visible):hover + label {
   transform: scale(1.1);
 }
 .panel--orange:nth-child(4n) {
@@ -704,16 +762,24 @@ li {
   transform: scale(1.1);
 }
 .panel--yellow label:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
+}
+.panel--yellow label.running {
+  transform: scale(1.2);
 }
 .panel--yellow input:checked + label {
   background-color: #ffdf39;
   box-shadow: 0 0 15px rgba(255, 223, 57, 0.5);
 }
-.panel--yellow input:focus-visible + label {
+.panel--yellow input:focus + label {
   outline: none;
-  box-shadow: 0, 0, 100px, rgba(105, 88, 27, 0.5);
+  transform: scale(1.1);
+}
+.panel--yellow input:focus:not(:focus-visible) + label {
+  transform: scale(1);
+}
+.panel--yellow input:focus:not(:focus-visible):hover + label {
   transform: scale(1.1);
 }
 .panel--yellow:nth-child(4n) {
@@ -741,16 +807,24 @@ li {
   transform: scale(1.1);
 }
 .panel--leafgreen label:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
+}
+.panel--leafgreen label.running {
+  transform: scale(1.2);
 }
 .panel--leafgreen input:checked + label {
   background-color: #9dd400;
   box-shadow: 0 0 15px rgba(157, 212, 0, 0.5);
 }
-.panel--leafgreen input:focus-visible + label {
+.panel--leafgreen input:focus + label {
   outline: none;
-  box-shadow: 0, 0, 100px, rgba(105, 88, 27, 0.5);
+  transform: scale(1.1);
+}
+.panel--leafgreen input:focus:not(:focus-visible) + label {
+  transform: scale(1);
+}
+.panel--leafgreen input:focus:not(:focus-visible):hover + label {
   transform: scale(1.1);
 }
 .panel--leafgreen:nth-child(4n) {
@@ -778,16 +852,24 @@ li {
   transform: scale(1.1);
 }
 .panel--green label:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
+}
+.panel--green label.running {
+  transform: scale(1.2);
 }
 .panel--green input:checked + label {
   background-color: #39dd00;
   box-shadow: 0 0 15px rgba(57, 221, 0, 0.5);
 }
-.panel--green input:focus-visible + label {
+.panel--green input:focus + label {
   outline: none;
-  box-shadow: 0, 0, 100px, rgba(105, 88, 27, 0.5);
+  transform: scale(1.1);
+}
+.panel--green input:focus:not(:focus-visible) + label {
+  transform: scale(1);
+}
+.panel--green input:focus:not(:focus-visible):hover + label {
   transform: scale(1.1);
 }
 .panel--green:nth-child(4n) {
@@ -815,16 +897,24 @@ li {
   transform: scale(1.1);
 }
 .panel--jade label:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
+}
+.panel--jade label.running {
+  transform: scale(1.2);
 }
 .panel--jade input:checked + label {
   background-color: #00dba6;
   box-shadow: 0 0 15px rgba(0, 219, 166, 0.5);
 }
-.panel--jade input:focus-visible + label {
+.panel--jade input:focus + label {
   outline: none;
-  box-shadow: 0, 0, 100px, rgba(105, 88, 27, 0.5);
+  transform: scale(1.1);
+}
+.panel--jade input:focus:not(:focus-visible) + label {
+  transform: scale(1);
+}
+.panel--jade input:focus:not(:focus-visible):hover + label {
   transform: scale(1.1);
 }
 .panel--jade:nth-child(4n) {
@@ -852,16 +942,24 @@ li {
   transform: scale(1.1);
 }
 .panel--skyblue label:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
+}
+.panel--skyblue label.running {
+  transform: scale(1.2);
 }
 .panel--skyblue input:checked + label {
   background-color: #3eb9ff;
   box-shadow: 0 0 15px rgba(62, 185, 255, 0.5);
 }
-.panel--skyblue input:focus-visible + label {
+.panel--skyblue input:focus + label {
   outline: none;
-  box-shadow: 0, 0, 100px, rgba(105, 88, 27, 0.5);
+  transform: scale(1.1);
+}
+.panel--skyblue input:focus:not(:focus-visible) + label {
+  transform: scale(1);
+}
+.panel--skyblue input:focus:not(:focus-visible):hover + label {
   transform: scale(1.1);
 }
 .panel--skyblue:nth-child(4n) {
@@ -889,16 +987,24 @@ li {
   transform: scale(1.1);
 }
 .panel--blue label:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
+}
+.panel--blue label.running {
+  transform: scale(1.2);
 }
 .panel--blue input:checked + label {
   background-color: #355deb;
   box-shadow: 0 0 15px rgba(53, 93, 235, 0.5);
 }
-.panel--blue input:focus-visible + label {
+.panel--blue input:focus + label {
   outline: none;
-  box-shadow: 0, 0, 100px, rgba(105, 88, 27, 0.5);
+  transform: scale(1.1);
+}
+.panel--blue input:focus:not(:focus-visible) + label {
+  transform: scale(1);
+}
+.panel--blue input:focus:not(:focus-visible):hover + label {
   transform: scale(1.1);
 }
 .panel--blue:nth-child(4n) {
@@ -926,16 +1032,24 @@ li {
   transform: scale(1.1);
 }
 .panel--plum label:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
+}
+.panel--plum label.running {
+  transform: scale(1.2);
 }
 .panel--plum input:checked + label {
   background-color: #8a43ff;
   box-shadow: 0 0 15px rgba(138, 67, 255, 0.5);
 }
-.panel--plum input:focus-visible + label {
+.panel--plum input:focus + label {
   outline: none;
-  box-shadow: 0, 0, 100px, rgba(105, 88, 27, 0.5);
+  transform: scale(1.1);
+}
+.panel--plum input:focus:not(:focus-visible) + label {
+  transform: scale(1);
+}
+.panel--plum input:focus:not(:focus-visible):hover + label {
   transform: scale(1.1);
 }
 .panel--plum:nth-child(4n) {
@@ -963,16 +1077,24 @@ li {
   transform: scale(1.1);
 }
 .panel--purple label:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
+}
+.panel--purple label.running {
+  transform: scale(1.2);
 }
 .panel--purple input:checked + label {
   background-color: #ef39ff;
   box-shadow: 0 0 15px rgba(239, 57, 255, 0.5);
 }
-.panel--purple input:focus-visible + label {
+.panel--purple input:focus + label {
   outline: none;
-  box-shadow: 0, 0, 100px, rgba(105, 88, 27, 0.5);
+  transform: scale(1.1);
+}
+.panel--purple input:focus:not(:focus-visible) + label {
+  transform: scale(1);
+}
+.panel--purple input:focus:not(:focus-visible):hover + label {
   transform: scale(1.1);
 }
 .panel--purple:nth-child(4n) {
@@ -1014,12 +1136,108 @@ li {
   background-image: url("/assets/img/drum-icon.svg");
   background-position: center;
   background-repeat: no-repeat;
+  background-size: 50%;
   background-size: 80%;
   vertical-align: top;
 }
 
 .add-inst-name {
   vertical-align: bottom;
+}
+
+.page-control {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  animation: fadeIn 1s 0.5s backwards;
+}
+@media screen and (max-width: 767px) {
+  .page-control {
+    margin-bottom: 1.125rem;
+  }
+}
+.page-control .total-page {
+  margin-right: 8px;
+  font-size: 1rem;
+  color: #5a5a5a;
+}
+@media screen and (max-width: 767px) {
+  .page-control .total-page {
+    font-size: 0.875rem;
+  }
+}
+.page-control .current-page {
+  margin-left: 0.5rem;
+  font-size: 1.125rem;
+}
+@media screen and (max-width: 767px) {
+  .page-control .current-page {
+    font-size: 1rem;
+  }
+}
+
+.page-down-btn,
+.page-up-btn {
+  background-color: #f8e543;
+  padding: 0;
+  margin: 0;
+  min-width: 20px;
+  min-height: 20px;
+  border-radius: 50%;
+  border: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  box-shadow: 0px 0px 20px rgba(248, 229, 67, 0.5);
+  transition: transform 0.4s;
+}
+.page-down-btn:hover,
+.page-up-btn:hover {
+  outline: none;
+  transform: scale(1.1);
+}
+.page-down-btn:focus,
+.page-up-btn:focus {
+  outline: none;
+  box-shadow: 0, 0, 100px, rgba(105, 88, 27, 0.5);
+  transform: scale(1.1);
+}
+.page-down-btn:active,
+.page-up-btn:active {
+  transition: transform 0.2s background-color 0.2s;
+  transform: scale(1);
+}
+@media screen and (max-width: 767px) {
+  .page-down-btn,
+.page-up-btn {
+    background-color: #f8e543;
+    padding: 0;
+    margin: 0;
+    min-width: 15px;
+    min-height: 15px;
+    border-radius: 50%;
+    border: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    box-shadow: 0px 0px 20px rgba(248, 229, 67, 0.5);
+    transition: transform 0.4s;
+  }
+  .page-down-btn:hover,
+.page-up-btn:hover {
+    outline: none;
+    transform: scale(1.1);
+  }
+  .page-down-btn:focus,
+.page-up-btn:focus {
+    outline: none;
+    box-shadow: 0, 0, 100px, rgba(105, 88, 27, 0.5);
+    transform: scale(1.1);
+  }
+  .page-down-btn:active,
+.page-up-btn:active {
+    transition: transform 0.2s background-color 0.2s;
+    transform: scale(1);
+  }
 }
 
 .controls {
@@ -1034,14 +1252,34 @@ li {
   background-color: #fff;
   border-radius: 50px 50px 0 0;
   box-shadow: 0 0 100px rgba(0, 0, 0, 0.05);
+  animation: appearUp 1s 0.5s backwards;
+}
+@media screen and (max-width: 767px) {
+  .controls {
+    bottom: -140px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    min-height: 200px;
+  }
+  .controls::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 10px;
+    width: 60px;
+    height: 2px;
+    border-radius: 1px;
+    background-color: rgba(90, 90, 90, 0.3);
+  }
 }
 
 .play-btn {
   background-color: #f8e543;
   padding: 0;
   margin: 0;
-  min-width: 100px;
-  min-height: 100px;
+  min-width: 80px;
+  min-height: 80px;
   border-radius: 50%;
   border: none;
   -webkit-appearance: none;
@@ -1051,6 +1289,7 @@ li {
   background-image: url("/assets/img/play_icon.svg");
   background-position: center;
   background-repeat: no-repeat;
+  background-size: 50%;
 }
 .play-btn:hover {
   outline: none;
@@ -1062,13 +1301,49 @@ li {
   transform: scale(1.1);
 }
 .play-btn:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
+}
+@media screen and (max-width: 767px) {
+  .play-btn {
+    background-color: #f8e543;
+    padding: 0;
+    margin: 0;
+    min-width: 60px;
+    min-height: 60px;
+    border-radius: 50%;
+    border: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    box-shadow: 0px 0px 20px rgba(248, 229, 67, 0.5);
+    transition: transform 0.4s;
+  }
+  .play-btn:hover {
+    outline: none;
+    transform: scale(1.1);
+  }
+  .play-btn:focus {
+    outline: none;
+    box-shadow: 0, 0, 100px, rgba(105, 88, 27, 0.5);
+    transform: scale(1.1);
+  }
+  .play-btn:active {
+    transition: transform 0.2s background-color 0.2s;
+    transform: scale(1);
+  }
 }
 
 .control-wrapper {
   display: flex;
   justify-content: space-between;
+}
+@media screen and (max-width: 767px) {
+  .control-wrapper {
+    min-width: 300px;
+    max-width: 350px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 }
 
 .beat-control,
@@ -1080,6 +1355,13 @@ li {
 .beat-control:first-child,
 .bpm-control:first-child {
   margin-right: 1.5rem;
+}
+@media screen and (max-width: 767px) {
+  .beat-control,
+.bpm-control {
+    margin: 0;
+    margin-bottom: 12px;
+  }
 }
 .beat-control label,
 .bpm-control label {
@@ -1096,6 +1378,13 @@ li {
   text-align: center;
   border: none;
 }
+@media screen and (max-width: 767px) {
+  .beat-control input,
+.bpm-control input {
+    font-size: 1.75rem;
+    width: 3.125rem;
+  }
+}
 .beat-control input:focus,
 .bpm-control input:focus {
   outline: none;
@@ -1108,8 +1397,8 @@ li {
   background-color: #f8e543;
   padding: 0;
   margin: 0;
-  min-width: 40px;
-  min-height: 40px;
+  min-width: 30px;
+  min-height: 30px;
   border-radius: 50%;
   border: none;
   -webkit-appearance: none;
@@ -1136,14 +1425,55 @@ li {
 .beat-up-btn:active,
 .bpm-down-btn:active,
 .bpm-up-btn:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
+}
+@media screen and (max-width: 767px) {
+  .beat-down-btn,
+.beat-up-btn,
+.bpm-down-btn,
+.bpm-up-btn {
+    background-color: #f8e543;
+    padding: 0;
+    margin: 0;
+    min-width: 25px;
+    min-height: 25px;
+    border-radius: 50%;
+    border: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    box-shadow: 0px 0px 20px rgba(248, 229, 67, 0.5);
+    transition: transform 0.4s;
+  }
+  .beat-down-btn:hover,
+.beat-up-btn:hover,
+.bpm-down-btn:hover,
+.bpm-up-btn:hover {
+    outline: none;
+    transform: scale(1.1);
+  }
+  .beat-down-btn:focus,
+.beat-up-btn:focus,
+.bpm-down-btn:focus,
+.bpm-up-btn:focus {
+    outline: none;
+    box-shadow: 0, 0, 100px, rgba(105, 88, 27, 0.5);
+    transform: scale(1.1);
+  }
+  .beat-down-btn:active,
+.beat-up-btn:active,
+.bpm-down-btn:active,
+.bpm-up-btn:active {
+    transition: transform 0.2s background-color 0.2s;
+    transform: scale(1);
+  }
 }
 
 .plus-icon {
   background-image: url("/assets/img/plus_icon.svg");
   background-position: center;
   background-repeat: no-repeat;
+  background-size: 50%;
   order: 1;
 }
 
@@ -1151,6 +1481,7 @@ li {
   background-image: url("/assets/img/minus_icon.svg");
   background-position: center;
   background-repeat: no-repeat;
+  background-size: 50%;
 }
 
 .file-control {
@@ -1159,6 +1490,11 @@ li {
   align-items: center;
   margin-left: 2.625rem;
 }
+@media screen and (max-width: 767px) {
+  .file-control {
+    margin: 0;
+  }
+}
 
 .file-load-btn,
 .file-save-btn,
@@ -1166,8 +1502,8 @@ li {
   background-color: #f8e543;
   padding: 0;
   margin: 0;
-  min-width: 50px;
-  min-height: 50px;
+  min-width: 40px;
+  min-height: 40px;
   border-radius: 50%;
   border: none;
   -webkit-appearance: none;
@@ -1191,8 +1527,44 @@ li {
 .file-load-btn:active,
 .file-save-btn:active,
 .file-clear-btn:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
+}
+@media screen and (max-width: 767px) {
+  .file-load-btn,
+.file-save-btn,
+.file-clear-btn {
+    background-color: #f8e543;
+    padding: 0;
+    margin: 0;
+    min-width: 40px;
+    min-height: 40px;
+    border-radius: 50%;
+    border: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    box-shadow: 0px 0px 20px rgba(248, 229, 67, 0.5);
+    transition: transform 0.4s;
+  }
+  .file-load-btn:hover,
+.file-save-btn:hover,
+.file-clear-btn:hover {
+    outline: none;
+    transform: scale(1.1);
+  }
+  .file-load-btn:focus,
+.file-save-btn:focus,
+.file-clear-btn:focus {
+    outline: none;
+    box-shadow: 0, 0, 100px, rgba(105, 88, 27, 0.5);
+    transform: scale(1.1);
+  }
+  .file-load-btn:active,
+.file-save-btn:active,
+.file-clear-btn:active {
+    transition: transform 0.2s background-color 0.2s;
+    transform: scale(1);
+  }
 }
 .file-load-btn:not(:last-child),
 .file-save-btn:not(:last-child),
@@ -1204,18 +1576,21 @@ li {
   background-image: url("/assets/img/load_icon.svg");
   background-position: center;
   background-repeat: no-repeat;
+  background-size: 50%;
 }
 
 .file-save-btn {
   background-image: url("/assets/img/save_icon.svg");
   background-position: center;
   background-repeat: no-repeat;
+  background-size: 50%;
 }
 
 .file-clear-btn {
   background-image: url("/assets/img/clear_icon.svg");
   background-position: center;
   background-repeat: no-repeat;
+  background-size: 50%;
 }
 
 .color-red {
@@ -1247,6 +1622,12 @@ li {
 }
 .color-purple {
   filter: invert(54%) sepia(69%) saturate(6773%) hue-rotate(273deg) brightness(101%) contrast(109%);
+}
+
+.step-sequencer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /*# sourceMappingURL=style.css.map */
