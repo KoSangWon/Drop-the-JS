@@ -9,14 +9,22 @@
     @include hoverTransition();
     @include clickTransition();
     transition: background-color 0.2s, transform 0.4s, box-shadow 0.2s;
+    &.running {
+      transform: scale(1.2);
+    }
   }
   & input:checked + label {
     background-color: $color;
     box-shadow: 0 0 15px rgba($color, 0.5);
   }
-  & input:focus-visible + label {
+  & input:focus + label {
     outline: none;
-    box-shadow: 0, 0, 100px, rgba($dark-yellow, 0.5);
+    transform: scale(1.1);
+  }
+  & input:focus:not(:focus-visible) + label {
+    transform: scale(1);
+  }
+  & input:focus:not(:focus-visible):hover + label {
     transform: scale(1.1);
   }
 }
