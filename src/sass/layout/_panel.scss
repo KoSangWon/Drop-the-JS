@@ -6,6 +6,7 @@
   justify-content: center;
   align-items: flex-start;
   --cell-col: 8;
+  animation: fadeIn 1s;
   @include desktop {
     --cell-size: 50px;
   }
@@ -60,6 +61,9 @@
   display: grid;
   grid-template: auto / repeat($cell-col, auto);
   gap: 8px 8px;
+  @include mobile {
+    gap: 4px;
+  }
   justify-content: center;
   align-content: center;
 }

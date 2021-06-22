@@ -23,7 +23,7 @@
 
 @mixin clickTransition {
   &:active {
-    transition: transform 0.2s;
+    transition: transform 0.2s background-color 0.2s;
     transform: scale(1);
   }
 }

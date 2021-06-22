@@ -475,6 +475,22 @@ template {
   margin: -1px;
 }
 
+@keyframes appearUp {
+  from {
+    transform: translate3d(0, 100%, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 body {
   font-family: "Noto Sans KR", sans-serif;
   -ms-user-select: none;
@@ -482,6 +498,7 @@ body {
   -khtml-user-select: none;
   -webkit-user-select: none;
   user-select: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 input {
@@ -512,6 +529,7 @@ li {
   justify-content: center;
   align-items: flex-start;
   --cell-col: 8;
+  animation: fadeIn 1s;
 }
 @media screen and (min-width: 768px) {
   .main {
@@ -569,7 +587,7 @@ li {
   transform: scale(1.1);
 }
 .inst-item .add-btn:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
 }
 .inst-item .inst-delete-btn {
@@ -602,7 +620,7 @@ li {
   transform: scale(1.1);
 }
 .inst-item .inst-delete-btn:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
 }
 .inst-item:hover .inst-delete-btn,
@@ -625,6 +643,11 @@ li {
   justify-content: center;
   align-content: center;
 }
+@media screen and (max-width: 767px) {
+  .music {
+    gap: 4px;
+  }
+}
 
 .panel--red label {
   display: block;
@@ -641,7 +664,7 @@ li {
   transform: scale(1.1);
 }
 .panel--red label:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
 }
 .panel--red label.running {
@@ -686,7 +709,7 @@ li {
   transform: scale(1.1);
 }
 .panel--orange label:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
 }
 .panel--orange label.running {
@@ -731,7 +754,7 @@ li {
   transform: scale(1.1);
 }
 .panel--yellow label:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
 }
 .panel--yellow label.running {
@@ -776,7 +799,7 @@ li {
   transform: scale(1.1);
 }
 .panel--leafgreen label:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
 }
 .panel--leafgreen label.running {
@@ -821,7 +844,7 @@ li {
   transform: scale(1.1);
 }
 .panel--green label:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
 }
 .panel--green label.running {
@@ -866,7 +889,7 @@ li {
   transform: scale(1.1);
 }
 .panel--jade label:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
 }
 .panel--jade label.running {
@@ -911,7 +934,7 @@ li {
   transform: scale(1.1);
 }
 .panel--skyblue label:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
 }
 .panel--skyblue label.running {
@@ -956,7 +979,7 @@ li {
   transform: scale(1.1);
 }
 .panel--blue label:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
 }
 .panel--blue label.running {
@@ -1001,7 +1024,7 @@ li {
   transform: scale(1.1);
 }
 .panel--plum label:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
 }
 .panel--plum label.running {
@@ -1046,7 +1069,7 @@ li {
   transform: scale(1.1);
 }
 .panel--purple label:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
 }
 .panel--purple label.running {
@@ -1119,6 +1142,7 @@ li {
   align-items: center;
   text-align: center;
   margin-bottom: 1.5rem;
+  animation: fadeIn 1s 0.5s backwards;
 }
 @media screen and (max-width: 767px) {
   .page-control {
@@ -1172,7 +1196,7 @@ li {
 }
 .page-down-btn:active,
 .page-up-btn:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
 }
 @media screen and (max-width: 767px) {
@@ -1203,7 +1227,7 @@ li {
   }
   .page-down-btn:active,
 .page-up-btn:active {
-    transition: transform 0.2s;
+    transition: transform 0.2s background-color 0.2s;
     transform: scale(1);
   }
 }
@@ -1220,6 +1244,7 @@ li {
   background-color: #fff;
   border-radius: 50px 50px 0 0;
   box-shadow: 0 0 100px rgba(0, 0, 0, 0.05);
+  animation: appearUp 1s 0.5s backwards;
 }
 @media screen and (max-width: 767px) {
   .controls {
@@ -1245,8 +1270,8 @@ li {
   background-color: #f8e543;
   padding: 0;
   margin: 0;
-  min-width: 100px;
-  min-height: 100px;
+  min-width: 80px;
+  min-height: 80px;
   border-radius: 50%;
   border: none;
   -webkit-appearance: none;
@@ -1268,7 +1293,7 @@ li {
   transform: scale(1.1);
 }
 .play-btn:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
 }
 @media screen and (max-width: 767px) {
@@ -1295,7 +1320,7 @@ li {
     transform: scale(1.1);
   }
   .play-btn:active {
-    transition: transform 0.2s;
+    transition: transform 0.2s background-color 0.2s;
     transform: scale(1);
   }
 }
@@ -1306,7 +1331,8 @@ li {
 }
 @media screen and (max-width: 767px) {
   .control-wrapper {
-    max-width: 300px;
+    min-width: 300px;
+    max-width: 350px;
     flex-wrap: wrap;
     justify-content: center;
   }
@@ -1363,8 +1389,8 @@ li {
   background-color: #f8e543;
   padding: 0;
   margin: 0;
-  min-width: 40px;
-  min-height: 40px;
+  min-width: 30px;
+  min-height: 30px;
   border-radius: 50%;
   border: none;
   -webkit-appearance: none;
@@ -1391,7 +1417,7 @@ li {
 .beat-up-btn:active,
 .bpm-down-btn:active,
 .bpm-up-btn:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
 }
 @media screen and (max-width: 767px) {
@@ -1430,7 +1456,7 @@ li {
 .beat-up-btn:active,
 .bpm-down-btn:active,
 .bpm-up-btn:active {
-    transition: transform 0.2s;
+    transition: transform 0.2s background-color 0.2s;
     transform: scale(1);
   }
 }
@@ -1468,8 +1494,8 @@ li {
   background-color: #f8e543;
   padding: 0;
   margin: 0;
-  min-width: 50px;
-  min-height: 50px;
+  min-width: 40px;
+  min-height: 40px;
   border-radius: 50%;
   border: none;
   -webkit-appearance: none;
@@ -1493,7 +1519,7 @@ li {
 .file-load-btn:active,
 .file-save-btn:active,
 .file-clear-btn:active {
-  transition: transform 0.2s;
+  transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
 }
 @media screen and (max-width: 767px) {
@@ -1528,7 +1554,7 @@ li {
   .file-load-btn:active,
 .file-save-btn:active,
 .file-clear-btn:active {
-    transition: transform 0.2s;
+    transition: transform 0.2s background-color 0.2s;
     transform: scale(1);
   }
 }

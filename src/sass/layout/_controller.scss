@@ -3,6 +3,7 @@
   align-items: center;
   text-align: center;
   margin-bottom: rem(24px);
+  animation: fadeIn 1s 0.5s backwards;
   @include mobile {
     margin-bottom: rem(18px);
   }
@@ -43,6 +44,7 @@
   background-color: #fff;
   border-radius: 50px 50px 0 0;
   box-shadow: 0 0 100px rgba(0, 0, 0, 0.05);
+  animation: appearUp 1s 0.5s backwards;
   @include mobile {
     bottom: -140px;
     flex-direction: column;
@@ -65,7 +67,7 @@
 // buttons
 
 .play-btn {
-  @include circleButton(100px, 100px);
+  @include circleButton(80px, 80px);
   @include mobile {
     @include circleButton(60px, 60px);
   }
@@ -76,7 +78,8 @@
   display: flex;
   justify-content: space-between;
   @include mobile {
-    max-width: 300px;
+    min-width: 300px;
+    max-width: 350px;
     flex-wrap: wrap;
     justify-content: center;
   }
@@ -120,7 +123,7 @@
 .beat-up-btn,
 .bpm-down-btn,
 .bpm-up-btn {
-  @include circleButton(40px, 40px);
+  @include circleButton(30px, 30px);
   @include mobile {
     @include circleButton(25px, 25px);
   }
@@ -147,7 +150,7 @@
 .file-load-btn,
 .file-save-btn,
 .file-clear-btn {
-  @include circleButton(50px, 50px);
+  @include circleButton(40px, 40px);
   @include mobile {
     @include circleButton(40px, 40px);
   }
