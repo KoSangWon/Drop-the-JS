@@ -5,54 +5,66 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Drop the JS</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;400;700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <h1 class="a11y-hidden">Drop the JavaScript</h1>
     <div class="step-sequencer">
-      <header class="header"><img src="" alt="" class="logo-img" /></header>
+      <header class="header">
+        <h1 class="a11y-hidden">Drop the JavaScript</h1>
+        <img src="/assets/img/logo.png" alt="" class="logo-img" />
+      </header>
       <main class="main">
         <ul class="inst-list">
           <li class="inst-item">
             <div class="inst">
-              <img src="" alt="" class="inst-img" />
-              <button class="inst-delete-btn"></button>
+              <object
+                class="drum-icon"
+                data="/assets/img/drum-icon.svg"
+                type="image/svg+xml"
+              ></object>
+              <button class="inst__delete-btn"></button>
             </div>
           </li>
         </ul>
         <section class="music">
           <div class="panel">
-            <label for="" class="back-shadow"></label>
-            <input type="checkbox" />
+            <input type="checkbox" id="cell00" />
+            <label class="panel-cell" for="cell00"></label>
           </div>
           <div class="panel">
-            <label for="" class="back-shadow"></label>
-            <input type="checkbox" />
+            <input type="checkbox" id="cell10" />
+            <label class="panel-cell" for="cell10"></label>
           </div>
           <div class="panel">
-            <label for="" class="back-shadow"></label>
-            <input type="checkbox" />
+            <input type="checkbox" id="cell20" />
+            <label class="panel-cell" for="cell20"></label>
           </div>
           <div class="panel">
-            <label for="" class="back-shadow"></label>
-            <input type="checkbox" />
+            <input type="checkbox" id="cell30" />
+            <label class="panel-cell" for="cell30"></label>
           </div>
           <div class="panel">
-            <label for="" class="back-shadow"></label>
-            <input type="checkbox" />
+            <input type="checkbox" id="cell40" />
+            <label class="panel-cell" for="cell40"></label>
           </div>
           <div class="panel">
-            <label for="" class="back-shadow"></label>
-            <input type="checkbox" />
+            <input type="checkbox" id="cell50" />
+            <label class="panel-cell" for="cell50"></label>
           </div>
           <div class="panel">
-            <label for="" class="back-shadow"></label>
-            <input type="checkbox" />
+            <input type="checkbox" id="cell60" />
+            <label class="panel-cell" for="cell60"></label>
           </div>
           <div class="panel">
-            <label for="" class="back-shadow"></label>
-            <input type="checkbox" />
+            <input type="checkbox" id="cell70" />
+            <label class="panel-cell" for="cell70"></label>
           </div>
+
           <button class="add-btn"></button>
         </section>
         <ul class="new-inst-list">
@@ -64,58 +76,30 @@
           </li>
         </ul>
         <section class="controls">
-          <button class="play-btn bottom-btn">
-            <img src="" alt="" class="play-img" />
-          </button>
-          <div class="beat-control">
-            <ul class="beat-control-btns">
-              <li class="beat-control-btn">
-                <button class="beat-up-btn bottom-btn">
-                  <img src="" alt="" class="plus-img" />
-                </button>
-              </li>
-              <li class="beat-control-btn">
-                <button class="beat-down-btn bottom-btn">
-                  <img src="" alt="" class="minus-img" />
-                </button>
-              </li>
-            </ul>
-            <label for=""></label>
-            <input type="text" />
+          <button class="play-btn"></button>
+          <div class="control-wrapper">
+            <div class="beat-control">
+              <button class="beat-down-btn minus-icon"></button>
+              <button class="beat-up-btn plus-icon"></button>
+              <div class="beat-input-wrapper">
+                <label for="beat-input">Beat</label>
+                <input type="text" id="beat-input" />
+              </div>
+            </div>
+            <div class="bpm-control">
+              <button class="bpm-down-btn minus-icon"></button>
+              <button class="bpm-up-btn plus-icon"></button>
+              <div class="bpm-input-wrapper">
+                <label for="bpm-input">BPM</label>
+                <input type="text" id="bpm-input" />
+              </div>
+            </div>
+            <div class="file-control">
+              <button class="file-load-btn"></button>
+              <button class="file-save-btn"></button>
+              <button class="file-clear-btn"></button>
+            </div>
           </div>
-          <div class="bpm-control">
-            <ul class="bpm-control-btns">
-              <li class="bpm-control-btn">
-                <button class="bpm-up-btn bottom-btn">
-                  <img src="" alt="" class="plus-img" />
-                </button>
-              </li>
-              <li class="bpm-control-btn">
-                <button class="bpm-down-btn bottom-btn">
-                  <img src="" alt="" class="minus-img" />
-                </button>
-              </li>
-            </ul>
-            <label for=""></label>
-            <input type="text" />
-          </div>
-          <div class="file-control">
-            <ul class="file-control-btns">
-              <li class="file-control-btn">
-                <button class="file-save-btn bottom-btn">
-                  <img src="" alt="" class="plus-img" />
-                </button>
-              </li>
-              <li class="file-control-btn">
-                <button class="file-load-btn bottom-btn">
-                  <img src="" alt="" class="minus-img" />
-                </button>
-              </li>
-            </ul>
-          </div>
-          <button class="clear-btn bottom-btn">
-            <img src="" alt="" class="clear-img" />
-          </button>
         </section>
       </main>
     </div>
