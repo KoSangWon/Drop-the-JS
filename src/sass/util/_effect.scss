@@ -1,4 +1,4 @@
-@mixin icon($url, $offset-x: 0, $offset-y: 0) {
+@mixin icon($url) {
   background-image: url($url);
   background-position: center;
   background-repeat: no-repeat;
@@ -7,6 +7,15 @@
 @mixin hoverTransition {
   transition: transform 0.4s;
   &:hover {
+    outline: none;
+    transform: scale(1.1);
+  }
+}
+
+@mixin focusTransition {
+  &:focus {
+    outline: none;
+    box-shadow: 0, 0, 100px, rgba($dark-yellow, 0.5);
     transform: scale(1.1);
   }
 }
@@ -14,6 +23,6 @@
 @mixin clickTransition {
   &:active {
     transition: transform 0.2s;
-    transform: scale(0.95);
+    transform: scale(1);
   }
 }

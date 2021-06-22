@@ -11,3 +11,19 @@ $cell-blue: #355deb;
 $cell-plum: #8a43ff;
 $cell-purple: #ef39ff;
 $dark-gray: #5a5a5a;
+
+$cell-size: var(--cell-size);
+$cell-col: var(--cell-col);
+
+$cell-colors: (
+  'red': #ff3939,
+  'orange': #ff8c39,
+  'yellow': #ffdf39,
+  'leafgreen': #9dd400,
+  'green': #39dd00,
+  'jade': #00dba6,
+  'skyblue': #3eb9ff,
+  'blue': #355deb,
+  'plum': #8a43ff,
+  'purple': #ef39ff
+);
