@@ -5,4 +5,10 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  @include mobile {
+    height: 120px;
+    img {
+      width: 120px;
+    }
+  }
 }

@@ -520,6 +520,14 @@ li {
   justify-content: center;
   align-items: center;
 }
+@media screen and (max-width: 767px) {
+  .header {
+    height: 120px;
+  }
+  .header img {
+    width: 120px;
+  }
+}
 
 .main {
   margin: 0 auto;
