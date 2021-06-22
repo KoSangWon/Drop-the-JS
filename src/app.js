@@ -162,7 +162,7 @@ $musicPad.addEventListener('mousedown', e => {
 $musicPad.addEventListener('mouseup', e => {
   if (!e.target.matches('label.panel-cell')) return;
   console.log(e.target.previousElementSibling, startCheckBox);
-  // if (e.target.previousElementSibling === startCheckBox) return;
+  if (e.target.previousElementSibling === startCheckBox) return;
   console.log('mouseup일어남');
 
   $musicPad.removeEventListener('mouseover', handleMouseOver);

@@ -1,8 +1,10 @@
+@use 'sass:math';
+
 $defaultUnit: 16;
 
 @function rem($value) {
-  $unUnit: ($value / ($value * 0 + 1));
-  @return ($unUnit / $defaultUnit) * 1rem;
+  $unUnit: math.div($value, $value * 0 + 1);
+  @return (math.div($unUnit, $defaultUnit)) * 1rem;
 }
 
 @function colorToFilter($color) {

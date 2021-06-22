@@ -1,18 +1,19 @@
 .main {
   margin: 0 auto;
   text-align: center;
-  padding: 0 rem(120px);
   display: flex;
   position: relative;
   justify-content: center;
   align-items: flex-start;
   --cell-col: 8;
-  --cell-size: 3.5vw;
-  // @include desktop {
-  // }
-  // @include tablet {
-  //   --cell-size: 40px;
-  // }
+
+  animation: fadeIn 1s;
+  @include desktop {
+    --cell-size: 50px;
+  }
+  @include tablet {
+    --cell-size: 40px;
+  }
   @include mobile {
     --cell-size: 30px;
   }
@@ -21,6 +22,7 @@
 .inst-list {
   display: flex;
   flex-direction: column;
+  margin-right: 10px;
 }
 
 .inst-item {
@@ -60,15 +62,17 @@
   display: grid;
   grid-template: auto / repeat($cell-col, auto);
   gap: 8px 8px;
+  @include mobile {
+    gap: 4px;
+  }
   justify-content: center;
-  align-content: start;
+  align-content: center;
 }
 
 @each $key, $value in $cell-colors {
   .panel {
     &--#{$key} {
       @include panelBox($value);
-
       &:nth-child(4n) {
         margin-right: 10px;
       }
