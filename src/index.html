@@ -21,35 +21,35 @@
           </li>
         </ul>
         <section class="music">
-          <div class="panel">
+          <div class="panel" data-row="0" data-col="0">
             <label for="" class="back-shadow"></label>
             <input type="checkbox" />
           </div>
-          <div class="panel">
+          <div class="panel" data-row="0" data-col="1">
             <label for="" class="back-shadow"></label>
             <input type="checkbox" />
           </div>
-          <div class="panel">
+          <div class="panel" data-row="0" data-col="2">
             <label for="" class="back-shadow"></label>
             <input type="checkbox" />
           </div>
-          <div class="panel">
+          <div class="panel" data-row="0" data-col="3">
             <label for="" class="back-shadow"></label>
             <input type="checkbox" />
           </div>
-          <div class="panel">
+          <div class="panel" data-row="0" data-col="4">
             <label for="" class="back-shadow"></label>
             <input type="checkbox" />
           </div>
-          <div class="panel">
+          <div class="panel" data-row="0" data-col="5">
             <label for="" class="back-shadow"></label>
             <input type="checkbox" />
           </div>
-          <div class="panel">
+          <div class="panel" data-row="0" data-col="6">
             <label for="" class="back-shadow"></label>
             <input type="checkbox" />
           </div>
-          <div class="panel">
+          <div class="panel" data-row="0" data-col="7">
             <label for="" class="back-shadow"></label>
             <input type="checkbox" />
           </div>
@@ -65,17 +65,21 @@
         </ul>
         <section class="controls">
           <button class="play-btn bottom-btn">
+            play
             <img src="" alt="" class="play-img" />
           </button>
           <div class="beat-control">
             <ul class="beat-control-btns">
               <li class="beat-control-btn">
                 <button class="beat-up-btn bottom-btn">
+                  beat-up(+10)
                   <img src="" alt="" class="plus-img" />
                 </button>
               </li>
+              <span class="current-beat">150</span>
               <li class="beat-control-btn">
                 <button class="beat-down-btn bottom-btn">
+                  beat-down(-10)
                   <img src="" alt="" class="minus-img" />
                 </button>
               </li>
@@ -119,6 +123,7 @@
         </section>
       </main>
     </div>
+    <audio id="audio-source" src="./sound/1.mp3"></audio>
     <script src="app.js"></script>
   </body>
 </html>

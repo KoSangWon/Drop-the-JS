@@ -1,0 +1,13 @@
+.music {
+  display: grid;
+  grid-template-rows: repeat(2, 100px);
+  grid-template-columns: repeat(8, 1fr);
+}
+
+.panel {
+  background-color: aqua;
+}
+
+.active {
+  background-color: palevioletred;
+}
