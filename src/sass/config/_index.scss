@@ -4,6 +4,11 @@
 
 body {
   font-family: 'Noto Sans KR', sans-serif;
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 input {
