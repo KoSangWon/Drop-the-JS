@@ -1,0 +1,22 @@
+@mixin panelBox($color: $cell-red) {
+  & label {
+    display: block;
+    border-radius: 5px;
+    border: 1px solid rgba($dark-gray, 0.3);
+    cursor: pointer;
+    width: $cell-size;
+    height: $cell-size;
+    @include hoverTransition();
+    @include clickTransition();
+    transition: background-color 0.2s, transform 0.4s, box-shadow 0.2s;
+  }
+  & input:checked + label {
+    background-color: $color;
+    box-shadow: 0 0 15px rgba($color, 0.5);
+  }
+  & input:focus-visible + label {
+    outline: none;
+    box-shadow: 0, 0, 100px, rgba($dark-yellow, 0.5);
+    transform: scale(1.1);
+  }
+}
