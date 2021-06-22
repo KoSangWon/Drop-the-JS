@@ -4,7 +4,8 @@
   "description": "Drop the JS",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "sass":  "sass src/sass/main.scss src/style.css --watch"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,10 @@
     "eslint-config-airbnb-base": "14.2.1",
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-html": "6.1.2",
-    "eslint-plugin-import": "2.23.4"
+    "eslint-plugin-import": "2.23.4",
+    "sass": "^1.35.1"
+  },
+  "dependencies": {
+    "normalize-scss": "^7.0.1"
   }
 }

@@ -1,0 +1,19 @@
+@mixin icon($url, $offset-x: 0, $offset-y: 0) {
+  background-image: url($url);
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+@mixin hoverTransition {
+  transition: transform 0.4s;
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+@mixin clickTransition {
+  &:active {
+    transition: transform 0.2s;
+    transform: scale(0.95);
+  }
+}

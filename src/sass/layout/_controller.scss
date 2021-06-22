@@ -1,0 +1,92 @@
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 25px 60px;
+  background-color: #fff;
+  border-radius: 50px 50px 0 0;
+  box-shadow: 0 0 100px rgba(0, 0, 0, 0.05);
+}
+
+// buttons
+
+.play-btn {
+  @include circleButton(100px, 100px);
+  @include icon('/assets/img/play_icon.svg');
+}
+
+.control-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.beat-control,
+.bpm-control {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  &:first-child {
+    margin-right: rem(24px);
+  }
+  label {
+    display: block;
+    font-size: rem(14px);
+    font-weight: 700;
+  }
+  input {
+    width: rem(72px);
+    font-size: rem(36px);
+    font-weight: 700;
+    color: $dark-yellow;
+    text-align: center;
+    border: none;
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+.beat-down-btn,
+.beat-up-btn,
+.bpm-down-btn,
+.bpm-up-btn {
+  @include circleButton(40px, 40px);
+}
+
+.plus-icon {
+  @include icon('/assets/img/plus_icon.svg');
+  order: 1;
+}
+.minus-icon {
+  @include icon('/assets/img/minus_icon.svg');
+}
+
+.file-control {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: rem(42px);
+}
+
+.file-load-btn,
+.file-save-btn,
+.file-clear-btn {
+  @include circleButton(50px, 50px);
+  &:not(:last-child) {
+    margin-right: rem(16px);
+  }
+}
+
+.file-load-btn {
+  @include icon('/assets/img/load_icon.svg');
+}
+.file-save-btn {
+  @include icon('/assets/img/save_icon.svg');
+}
+.file-clear-btn {
+  @include icon('/assets/img/clear_icon.svg');
+}

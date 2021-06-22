@@ -1,0 +1,6 @@
+$defaultUnit: 16;
+
+@function rem($value) {
+  $unUnit: ($value / ($value * 0 + 1));
+  @return ($unUnit / $defaultUnit) * 1rem;
+}
