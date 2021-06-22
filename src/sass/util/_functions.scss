@@ -1,0 +1,53 @@
+$defaultUnit: 16;
+
+@function rem($value) {
+  $unUnit: ($value / ($value * 0 + 1));
+  @return ($unUnit / $defaultUnit) * 1rem;
+}
+
+@function colorToFilter($color) {
+  @if $color == $cell-red {
+    @return invert(33%) sepia(66%) saturate(5964%) hue-rotate(346deg)
+      brightness(121%) contrast(99%);
+  }
+  @if $color == $cell-orange {
+    @return invert(72%) sepia(31%) saturate(4580%) hue-rotate(333deg)
+      brightness(102%) contrast(101%);
+  }
+  @if $color == $cell-yellow {
+    @return invert(89%) sepia(75%) saturate(3334%) hue-rotate(324deg)
+      brightness(104%) contrast(103%);
+  }
+  @if $color == $cell-leafgreen {
+    @return invert(87%) sepia(35%) saturate(6443%) hue-rotate(30deg)
+      brightness(101%) contrast(101%);
+  }
+  @if $color == $cell-green {
+    @return invert(45%) sepia(96%) saturate(738%) hue-rotate(66deg)
+      brightness(114%) contrast(108%);
+  }
+  @if $color == $cell-jade {
+    @return invert(80%) sepia(59%) saturate(3106%) hue-rotate(110deg)
+      brightness(89%) contrast(101%);
+  }
+  @if $color == $cell-skyblue {
+    @return invert(80%) sepia(53%) saturate(5555%) hue-rotate(176deg)
+      brightness(103%) contrast(103%);
+  }
+  @if $color == $cell-blue {
+    @return invert(30%) sepia(38%) saturate(4295%) hue-rotate(220deg)
+      brightness(94%) contrast(97%);
+  }
+  @if $color == $cell-plum {
+    @return invert(37%) sepia(47%) saturate(6897%) hue-rotate(249deg)
+      brightness(99%) contrast(105%);
+  }
+  @if $color == $cell-purple {
+    @return invert(54%) sepia(69%) saturate(6773%) hue-rotate(273deg)
+      brightness(101%) contrast(109%);
+  }
+  @if $color == $cell-gray {
+    @return invert(35%) sepia(0%) saturate(980%) hue-rotate(188deg)
+      brightness(96%) contrast(87%);
+  }
+}

@@ -1,0 +1,121 @@
+.main {
+  margin: 0 auto;
+  text-align: center;
+  padding: 0 rem(120px);
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: flex-start;
+  --cell-col: 8;
+  @include desktop {
+    --cell-size: 50px;
+  }
+  @include tablet {
+    --cell-size: 40px;
+  }
+  @include mobile {
+    --cell-size: 30px;
+  }
+}
+
+.inst-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.inst-item {
+  position: relative;
+  width: $cell-size;
+  height: $cell-size;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: rem(10px);
+
+  .add-btn {
+    @include circleButton($cell-size, $cell-size, transparent, false);
+    @include icon('/assets/img/plus_icon.svg');
+    background-size: 40%;
+    opacity: 0.5;
+  }
+  .inst-delete-btn {
+    display: none;
+    left: 0;
+    top: 0;
+    position: absolute;
+  }
+  &:hover .inst-delete-btn {
+    @include circleButton(15px, 15px, $cell-red, false);
+    @include icon('/assets/img/x_icon.svg');
+    display: block;
+  }
+}
+
+.inst-icon {
+  width: 50%;
+  height: 50%;
+}
+
+.music {
+  display: grid;
+  grid-template: auto / repeat($cell-col, auto);
+  gap: 8px 8px;
+  justify-content: center;
+  align-content: start;
+}
+
+@each $key, $value in $cell-colors {
+  .panel {
+    &--#{$key} {
+      @include panelBox($value);
+
+      &:nth-child(4n) {
+        margin-right: 10px;
+      }
+
+      input {
+        position: absolute;
+        opacity: 0;
+        width: 1px;
+        height: 1px;
+      }
+    }
+  }
+}
+
+.add-inst-list {
+  position: absolute;
+  display: none;
+  min-width: rem(200px);
+  border-radius: 10px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  overflow: hidden;
+}
+
+.add-inst-btn {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  padding: 10px 0;
+  padding-left: 10px;
+  &:active {
+    background-color: rgba($primary-yellow, 0.4);
+  }
+}
+
+.add-inst-icon {
+  &--drum {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    @include icon('/assets/img/drum-icon.svg');
+    background-size: 80%;
+    vertical-align: top;
+  }
+}
+
+.add-inst-name {
+  vertical-align: bottom;
+}
