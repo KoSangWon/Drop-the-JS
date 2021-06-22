@@ -1,5 +1,10 @@
-@mixin circleButton($width: 20px, $height: 20px) {
-  background-color: $primary-yellow;
+@mixin circleButton(
+  $width: 5px,
+  $height: 5px,
+  $color: $primary-yellow,
+  $shadow: true
+) {
+  background-color: $color;
   padding: 0;
   margin: 0;
   min-width: $width;
@@ -7,7 +12,11 @@
   border-radius: 50%;
   border: none;
   -webkit-appearance: none;
-  box-shadow: 0px 0px 20px rgba($primary-yellow, 0.5);
+  cursor: pointer;
+  @if ($shadow) {
+    box-shadow: 0px 0px 20px rgba($color, 0.5);
+  }
   @include hoverTransition;
+  @include focusTransition;
   @include clickTransition;
 }
