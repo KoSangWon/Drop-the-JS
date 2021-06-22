@@ -183,3 +183,68 @@ document
       playMusic(playingColumn);
     }
   });
+
+// keyboard interaction
+document.onkeyup = event => {
+  // if(!document.activeElement.parentElement.matches('.inst-item') && !document.activeElement.nextElementSibling?.matches('.panel-cell'))return;
+
+  const $activeElem = document.activeElement;
+  // get position
+  const [, xLoc, yLoc] = $activeElem.id.split('-');
+  const [, lastXLoc, lastYLoc] = document
+    .querySelector('.music')
+    .lastElementChild.firstElementChild.id.split('-');
+
+  // instrument list
+  const insts = [...document.querySelector('.inst-list').children];
+
+  if (event.key === 'ArrowRight') {
+    console.log($activeElem);
+    // last panel
+    if (xLoc === lastXLoc && yLoc === lastYLoc) {
+      document.querySelector('.add-btn').focus();
+    }
+    // panel is end of line
+    else if (yLoc === lastYLoc) {
+      insts[+xLoc + 1].lastElementChild.focus();
+    }
+    // add button -> play button
+    else if ($activeElem.matches('.inst-item > .add-btn')) {
+      document.querySelector('.play-btn').focus();
+    }
+    // inst -> first panel
+    else if ($activeElem.parentElement.matches('.inst-item')) {
+      const instInd = insts.indexOf($activeElem.parentElement);
+      document.getElementById(`cell-${instInd}-0`).focus();
+    }
+    // move panel to right
+    else {
+      document.getElementById(`cell-${xLoc}-${+yLoc + 1}`).focus();
+    }
+  } else if (event.key === 'ArrowLeft') {
+    // if first panel, move to deltet button
+    if (yLoc === '0') {
+      insts[xLoc].lastElementChild.focus();
+    } else if ($activeElem.matches('.add-btn')) {
+      document.getElementById(`cell-${lastXLoc}-${lastYLoc}`).focus();
+    }
+    // if panel is first panel, move to inst
+    else if ($activeElem.parentElement.matches('.inst-item')) {
+      const instInd = insts.indexOf($activeElem.parentElement);
+      if (instInd === 0) return;
+      document.getElementById(`cell-${instInd - 1}-${lastYLoc}`).focus();
+    }
+    // move panel to left
+    else {
+      document.getElementById(`cell-${xLoc}-${+yLoc - 1}`).focus();
+    }
+  } else if (event.key === 'ArrowDown') {
+    // inst -> inst
+    if ($activeElem.parentElement.matches('.inst-item')) {
+      const instInd = insts.indexOf($activeElem.parentElement);
+      if (instInd === insts.length - 1) {
+        document.querySelector('.play-btn').focus();
+      }
+    }
+  }
+};
