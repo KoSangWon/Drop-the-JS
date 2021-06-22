@@ -6,7 +6,7 @@
   position: relative;
   justify-content: center;
   align-items: flex-start;
-  --cell-col: 16;
+  --cell-col: 8;
   --cell-size: 3.5vw;
   // @include desktop {
   // }
@@ -36,15 +36,16 @@
     opacity: 0.5;
   }
   .inst-delete-btn {
-    display: none;
     left: 0;
     top: 0;
+    opacity: 0;
     position: absolute;
-  }
-  &:hover .inst-delete-btn {
     @include circleButton(15px, 15px, $cell-red, false);
     @include icon('/assets/img/x_icon.svg');
-    display: block;
+  }
+  &:hover .inst-delete-btn,
+  .inst-delete-btn:focus {
+    opacity: 1;
   }
 }
 

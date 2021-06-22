@@ -88,7 +88,8 @@ main {
  */
 code,
 kbd,
-samp, pre {
+samp,
+pre {
   font-family: monospace, monospace;
   /* 1 */
   font-size: 1em;
@@ -285,17 +286,17 @@ select {
  * 2. Correct the inability to style clickable types in iOS and Safari.
  */
 button,
-html [type=button],
-[type=reset],
-[type=submit] {
+html [type='button'],
+[type='reset'],
+[type='submit'] {
   -webkit-appearance: button;
   /* 2 */
 }
 
 button,
-[type=button],
-[type=reset],
-[type=submit] {
+[type='button'],
+[type='reset'],
+[type='submit'] {
   /**
    * Remove the inner border and padding in Firefox.
    */
@@ -304,16 +305,16 @@ button,
    */
 }
 button::-moz-focus-inner,
-[type=button]::-moz-focus-inner,
-[type=reset]::-moz-focus-inner,
-[type=submit]::-moz-focus-inner {
+[type='button']::-moz-focus-inner,
+[type='reset']::-moz-focus-inner,
+[type='submit']::-moz-focus-inner {
   border-style: none;
   padding: 0;
 }
 button:-moz-focusring,
-[type=button]:-moz-focusring,
-[type=reset]:-moz-focusring,
-[type=submit]:-moz-focusring {
+[type='button']:-moz-focusring,
+[type='reset']:-moz-focusring,
+[type='submit']:-moz-focusring {
   outline: 1px dotted ButtonText;
 }
 
@@ -328,8 +329,8 @@ input {
  * 1. Add the correct box sizing in IE 10-.
  * 2. Remove the padding in IE 10-.
  */
-[type=checkbox],
-[type=radio] {
+[type='checkbox'],
+[type='radio'] {
   box-sizing: border-box;
   /* 1 */
   padding: 0;
@@ -339,8 +340,8 @@ input {
 /**
  * Correct the cursor style of increment and decrement buttons in Chrome.
  */
-[type=number]::-webkit-inner-spin-button,
-[type=number]::-webkit-outer-spin-button {
+[type='number']::-webkit-inner-spin-button,
+[type='number']::-webkit-outer-spin-button {
   height: auto;
 }
 
@@ -348,7 +349,7 @@ input {
  * 1. Correct the odd appearance in Chrome and Safari.
  * 2. Correct the outline style in Safari.
  */
-[type=search] {
+[type='search'] {
   -webkit-appearance: textfield;
   /* 1 */
   outline-offset: -2px;
@@ -357,7 +358,8 @@ input {
    * Remove the inner padding and cancel buttons in Chrome and Safari on macOS.
    */
 }
-[type=search]::-webkit-search-cancel-button, [type=search]::-webkit-search-decoration {
+[type='search']::-webkit-search-cancel-button,
+[type='search']::-webkit-search-decoration {
   -webkit-appearance: none;
 }
 
@@ -476,7 +478,7 @@ template {
 }
 
 body {
-  font-family: "Noto Sans KR", sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
 input {
@@ -535,7 +537,7 @@ li {
   -webkit-appearance: none;
   cursor: pointer;
   transition: transform 0.4s;
-  background-image: url("/assets/img/plus_icon.svg");
+  background-image: url('/assets/img/plus_icon.svg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 40%;
@@ -555,12 +557,10 @@ li {
   transform: scale(1);
 }
 .inst-item .inst-delete-btn {
-  display: none;
   left: 0;
   top: 0;
+  opacity: 0;
   position: absolute;
-}
-.inst-item:hover .inst-delete-btn {
   background-color: #ff3939;
   padding: 0;
   margin: 0;
@@ -571,27 +571,30 @@ li {
   -webkit-appearance: none;
   cursor: pointer;
   transition: transform 0.4s;
-  background-image: url("/assets/img/x_icon.svg");
+  background-image: url('/assets/img/x_icon.svg');
   background-position: center;
   background-repeat: no-repeat;
-  display: block;
 }
-.inst-item:hover .inst-delete-btn:hover {
+.inst-item .inst-delete-btn:hover {
   outline: none;
   transform: scale(1.1);
 }
-.inst-item:hover .inst-delete-btn:focus {
+.inst-item .inst-delete-btn:focus {
   outline: none;
   box-shadow: 0, 0, 100px, rgba(105, 88, 27, 0.5);
   transform: scale(1.1);
 }
-.inst-item:hover .inst-delete-btn:active {
+.inst-item .inst-delete-btn:active {
   transition: transform 0.2s;
   transform: scale(1);
 }
+.inst-item:hover .inst-delete-btn,
+.inst-item .inst-delete-btn:focus {
+  opacity: 1;
+}
 
 .icon-drum {
-  background-image: url("/assets/img/drum-icon.svg");
+  background-image: url('/assets/img/drum-icon.svg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 50%;
@@ -1001,7 +1004,7 @@ li {
   display: inline-block;
   width: 20px;
   height: 20px;
-  background-image: url("/assets/img/drum-icon.svg");
+  background-image: url('/assets/img/drum-icon.svg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 80%;
@@ -1038,7 +1041,7 @@ li {
   cursor: pointer;
   box-shadow: 0px 0px 20px rgba(248, 229, 67, 0.5);
   transition: transform 0.4s;
-  background-image: url("/assets/img/play_icon.svg");
+  background-image: url('/assets/img/play_icon.svg');
   background-position: center;
   background-repeat: no-repeat;
 }
@@ -1131,14 +1134,14 @@ li {
 }
 
 .plus-icon {
-  background-image: url("/assets/img/plus_icon.svg");
+  background-image: url('/assets/img/plus_icon.svg');
   background-position: center;
   background-repeat: no-repeat;
   order: 1;
 }
 
 .minus-icon {
-  background-image: url("/assets/img/minus_icon.svg");
+  background-image: url('/assets/img/minus_icon.svg');
   background-position: center;
   background-repeat: no-repeat;
 }
@@ -1191,52 +1194,62 @@ li {
 }
 
 .file-load-btn {
-  background-image: url("/assets/img/load_icon.svg");
+  background-image: url('/assets/img/load_icon.svg');
   background-position: center;
   background-repeat: no-repeat;
 }
 
 .file-save-btn {
-  background-image: url("/assets/img/save_icon.svg");
+  background-image: url('/assets/img/save_icon.svg');
   background-position: center;
   background-repeat: no-repeat;
 }
 
 .file-clear-btn {
-  background-image: url("/assets/img/clear_icon.svg");
+  background-image: url('/assets/img/clear_icon.svg');
   background-position: center;
   background-repeat: no-repeat;
 }
 
 .color-red {
-  filter: invert(33%) sepia(66%) saturate(5964%) hue-rotate(346deg) brightness(121%) contrast(99%);
+  filter: invert(33%) sepia(66%) saturate(5964%) hue-rotate(346deg)
+    brightness(121%) contrast(99%);
 }
 .color-orange {
-  filter: invert(72%) sepia(31%) saturate(4580%) hue-rotate(333deg) brightness(102%) contrast(101%);
+  filter: invert(72%) sepia(31%) saturate(4580%) hue-rotate(333deg)
+    brightness(102%) contrast(101%);
 }
 .color-yellow {
-  filter: invert(89%) sepia(75%) saturate(3334%) hue-rotate(324deg) brightness(104%) contrast(103%);
+  filter: invert(89%) sepia(75%) saturate(3334%) hue-rotate(324deg)
+    brightness(104%) contrast(103%);
 }
 .color-leafgreen {
-  filter: invert(87%) sepia(35%) saturate(6443%) hue-rotate(30deg) brightness(101%) contrast(101%);
+  filter: invert(87%) sepia(35%) saturate(6443%) hue-rotate(30deg)
+    brightness(101%) contrast(101%);
 }
 .color-green {
-  filter: invert(45%) sepia(96%) saturate(738%) hue-rotate(66deg) brightness(114%) contrast(108%);
+  filter: invert(45%) sepia(96%) saturate(738%) hue-rotate(66deg)
+    brightness(114%) contrast(108%);
 }
 .color-jade {
-  filter: invert(80%) sepia(59%) saturate(3106%) hue-rotate(110deg) brightness(89%) contrast(101%);
+  filter: invert(80%) sepia(59%) saturate(3106%) hue-rotate(110deg)
+    brightness(89%) contrast(101%);
 }
 .color-skyblue {
-  filter: invert(80%) sepia(53%) saturate(5555%) hue-rotate(176deg) brightness(103%) contrast(103%);
+  filter: invert(80%) sepia(53%) saturate(5555%) hue-rotate(176deg)
+    brightness(103%) contrast(103%);
 }
 .color-blue {
-  filter: invert(30%) sepia(38%) saturate(4295%) hue-rotate(220deg) brightness(94%) contrast(97%);
+  filter: invert(30%) sepia(38%) saturate(4295%) hue-rotate(220deg)
+    brightness(94%) contrast(97%);
 }
 .color-plum {
-  filter: invert(37%) sepia(47%) saturate(6897%) hue-rotate(249deg) brightness(99%) contrast(105%);
+  filter: invert(37%) sepia(47%) saturate(6897%) hue-rotate(249deg)
+    brightness(99%) contrast(105%);
 }
 .color-purple {
-  filter: invert(54%) sepia(69%) saturate(6773%) hue-rotate(273deg) brightness(101%) contrast(109%);
+  filter: invert(54%) sepia(69%) saturate(6773%) hue-rotate(273deg)
+    brightness(101%) contrast(109%);
 }
 
 /*# sourceMappingURL=style.css.map */

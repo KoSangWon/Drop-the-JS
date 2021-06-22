@@ -2,18 +2,18 @@
 const $playBtn = document.querySelector('.play-btn');
 const $musicPad = document.querySelector('.music');
 // 임시
-const $currentBeat = document.querySelector('.current-beat');
+const $bpmInput = document.querySelector('#bpm-input');
 
 /* ==== state ==== */
 // const MAX_BEAT = 32; // 최대 비트
 const MIN_TO_MS = 60000; // 1min = 60000ms
-// const beat = 16; // 초기 비트
+const beat = 8; // 초기 비트
 const musicInfo = [
-  { inst: 'A', file: './sound/1.wav', beat: 5 },
-  { inst: 'B', file: './sound/2.wav', beat: 6 },
-  { inst: 'D', file: './sound/3.wav', beat: 4 },
-  { inst: 'C', file: './sound/4.wav', beat: 3 },
-  { inst: 'E', file: './sound/5.wav', beat: 2 }
+  { inst: 'drum', file: './sound/1.wav', beat }
+  // { inst: 'B', file: './sound/2.wav', beat: 6 },
+  // { inst: 'D', file: './sound/3.wav', beat: 4 },
+  // { inst: 'C', file: './sound/4.wav', beat: 3 },
+  // { inst: 'E', file: './sound/5.wav', beat: 2 }
 ];
 
 // real data
@@ -44,7 +44,8 @@ const stopMusic = () => {
 const playMusic = startColumn => {
   const oneBeatTime = Math.floor(MIN_TO_MS / bpm);
   if (!timerId) {
-    $playBtn.textContent = 'stop';
+    // $playBtn.textContent = 'stop';
+    $playBtn.style['background-image'] = 'url("/assets/img/stop_icon.svg")';
     playingColumn = startColumn;
     timerId = setInterval(() => {
       // 각 악기의 비트 추출
@@ -77,11 +78,15 @@ const playMusic = startColumn => {
     }, oneBeatTime);
     return;
   }
-  $playBtn.textContent = 'play';
+  $playBtn.style['background-image'] = 'url("/assets/img/play_icon.svg")';
   stopMusic();
 };
 
 /* ==== event handlers ==== */
+window.addEventListener('DOMContentLoaded', () => {
+  $bpmInput.value = bpm;
+});
+
 $playBtn.addEventListener('click', () => {
   // 인터랙션 위해서 임의로 추가(해결 방법 찾는 중)
   const audio = new Audio('./sound/1.wav');
@@ -106,48 +111,75 @@ $playBtn.addEventListener('click', () => {
 let isActive = false;
 
 const handleMouseOver = e => {
-  const xLoc = e.target.dataset.row;
-  const yLoc = e.target.dataset.col;
-  if (!isActive) {
-    padArr[xLoc][yLoc] = 1;
-    e.target.classList.add('active');
-  } else {
-    padArr[xLoc][yLoc] = 0;
-    e.target.classList.remove('active');
-  }
-};
+  console.log('mouseover일어남');
+  if (!e.target.matches('label.panel-cell')) return;
+  const checkbox = e.target.previousElementSibling;
+  const cellId = checkbox.id;
+  const splitedCell = cellId.split('-');
+  const xLoc = splitedCell[1];
+  const yLoc = splitedCell[2];
 
-$musicPad.addEventListener('mousedown', e => {
-  if (!e.target.matches('.panel')) return;
-  isActive = e.target.classList.contains('active');
-
-  const xLoc = e.target.dataset.row;
-  const yLoc = e.target.dataset.col;
   // 리팩토링 필요
   if (!isActive) {
     padArr[xLoc][yLoc] = 1;
-    e.target.classList.add('active');
+    checkbox.checked = true;
   } else {
     padArr[xLoc][yLoc] = 0;
-    e.target.classList.remove('active');
+    checkbox.checked = false;
+  }
+};
+let startCheckBox;
+$musicPad.addEventListener('mousedown', e => {
+  console.log('mousedown일어남');
+
+  if (!e.target.matches('label.panel-cell')) return;
+
+  // checkbox check 여부
+  const checkbox = e.target.previousElementSibling;
+  startCheckBox = e.target.previousElementSibling;
+  console.log('checkbox', checkbox);
+
+  isActive = checkbox.checked;
+
+  const cellId = checkbox.id;
+  const splitedCell = cellId.split('-');
+
+  const xLoc = splitedCell[1];
+  const yLoc = splitedCell[2];
+
+  // 리팩토링 필요
+  if (!isActive) {
+    padArr[xLoc][yLoc] = 1;
+    checkbox.checked = 'checked';
+  } else {
+    padArr[xLoc][yLoc] = 0;
+    checkbox.checked = false;
   }
 
   $musicPad.addEventListener('mouseover', handleMouseOver);
 });
 
-$musicPad.addEventListener('mouseup', () => {
+$musicPad.addEventListener('mouseup', e => {
+  if (!e.target.matches('label.panel-cell')) return;
+  console.log(e.target.previousElementSibling, startCheckBox);
+  // if (e.target.previousElementSibling === startCheckBox) return;
+  console.log('mouseup일어남');
+
   $musicPad.removeEventListener('mouseover', handleMouseOver);
 });
-
+// down up
 // beat 변경
 document
-  .querySelector('.beat-control-btns')
+  .querySelector('.bpm-control')
   .addEventListener('click', ({ target }) => {
-    if (!target.matches('li > button') || !timerId) return;
-    stopMusic();
-    const delta = target.classList.contains('beat-up-btn') ? 10 : -10;
+    if (!target.matches('button')) return;
+    const delta = target.classList.contains('bpm-up-btn') ? 10 : -10;
     bpm += delta;
+    $bpmInput.value = bpm;
 
-    playMusic(playingColumn);
-    $currentBeat.textContent = bpm;
+    // Play 중 일 경우
+    if (timerId) {
+      stopMusic();
+      playMusic(playingColumn);
+    }
   });
