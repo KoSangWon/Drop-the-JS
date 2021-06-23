@@ -222,9 +222,61 @@ $musicPad.addEventListener('click', e => {
 });
 
 // mobile touch event
-$musicPad.addEventListener('touchmove', e => {
+
+const handleTouchMove = e => {
+  const {clientX, clientY} = e.touches[0];
+  console.log(e.touches);
+  if(!clientX || !clientY) return;
+
+  const $touchElem = document.elementFromPoint(clientX, clientY);
+  if(!$touchElem.matches('label.panel-cell')) return;
+
+  const checkbox = $touchElem.previousElementSibling;
+
+  const cellId = checkbox.id;
+  const splitedCell = cellId.split('-');
+
+  const xLoc = splitedCell[1];
+  const yLoc = splitedCell[2];
+
+  if (!isActive) {
+    padArr[xLoc][yLoc] = 1;
+    checkbox.checked = true;
+  } else {
+    padArr[xLoc][yLoc] = 0;
+    checkbox.checked = false;
+  }
+
+}
+
+$musicPad.addEventListener('touchstart', e => {
   e.preventDefault();
+  if (!e.target.matches('label.panel-cell')) return;
+
+  const checkbox = e.target.previousElementSibling;
+
+  isActive = checkbox.checked;
+
+  const cellId = checkbox.id;
+  const splitedCell = cellId.split('-');
+
+  const xLoc = splitedCell[1];
+  const yLoc = splitedCell[2];
+
+  // 리팩토링 필요
+  if (!isActive) {
+    padArr[xLoc][yLoc] = 1;
+    checkbox.checked = true;
+  } else {
+    padArr[xLoc][yLoc] = 0;
+    checkbox.checked = false;
+  }
+
+  $musicPad.addEventListener('touchmove', handleTouchMove);
+  
 });
+
+$musicPad.removeEventListener('touchend', handleTouchMove);
 
 // beat 변경
 document.querySelector('.beat-control').addEventListener('click', ({target}) => {
