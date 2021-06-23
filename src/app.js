@@ -319,3 +319,91 @@ document.onkeyup = event => {
     }
   }
 };
+
+// keyboard interaction 리팩토링 필요]
+document.addEventListener('keyup', event => {
+  if (document.activeElement.matches('.body')) return;
+
+  const $activeElem = document.activeElement;
+  // get position
+  const [, xLoc, yLoc] = $activeElem.id.split('-');
+  const [, lastXLoc, lastYLoc] = document
+    .querySelector('.music')
+    .lastElementChild.firstElementChild.id.split('-');
+
+  // instrument list
+  const insts = [...document.querySelector('.inst-list').children];
+
+  if (event.key === 'ArrowRight') {
+    // last panel
+    if (xLoc === lastXLoc && yLoc === lastYLoc) {
+      document.querySelector('.add-btn').focus();
+    }
+    // panel is end of line
+    else if (yLoc === lastYLoc) {
+      insts[+xLoc + 1].lastElementChild.focus();
+    }
+    // add button -> play button
+    else if ($activeElem.matches('.inst-item > .add-btn')) {
+      document.querySelector('.play-btn').focus();
+    }
+    // inst -> first panel
+    else if ($activeElem.parentElement.matches('.inst-item')) {
+      const instInd = insts.indexOf($activeElem.parentElement);
+      document.getElementById(`cell-${instInd}-0`).focus();
+    }
+    // move panel to right
+    else if (yLoc < lastYLoc) {
+      document.getElementById(`cell-${xLoc}-${+yLoc + 1}`).focus();
+    }
+  } else if (event.key === 'ArrowLeft') {
+    // if first panel, move to deltet button
+    if (yLoc === '0') {
+      insts[xLoc].lastElementChild.focus();
+    } else if ($activeElem.matches('.add-btn')) {
+      document.getElementById(`cell-${lastXLoc}-${lastYLoc}`).focus();
+    }
+    // if panel is first panel, move to inst
+    else if ($activeElem.parentElement.matches('.inst-item')) {
+      const instInd = insts.indexOf($activeElem.parentElement);
+      if (instInd === 0) return;
+      document.getElementById(`cell-${instInd - 1}-${lastYLoc}`).focus();
+    }
+    // move panel to left
+    else if (yLoc > 0) {
+      document.getElementById(`cell-${xLoc}-${+yLoc - 1}`).focus();
+    }
+  } else if (event.key === 'ArrowDown') {
+    if ($activeElem.parentElement.matches('.inst-item')) {
+      const instInd = insts.indexOf($activeElem.parentElement);
+      // inst -> inst
+      if (instInd === insts.length - 1) {
+        document.querySelector('.play-btn').focus();
+      }
+      // plus -> play
+      else {
+        insts[instInd + 1].lastElementChild.focus();
+      }
+    } else if (xLoc === lastXLoc) {
+      document.querySelector('.add-btn').focus();
+    } else if ($activeElem.matches('.add-btn')) {
+      document.querySelector('.play-btn').focus();
+    } else if (xLoc < lastXLoc) {
+      document.getElementById(`cell-${+xLoc + 1}-${yLoc}`).focus();
+    }
+  } else if (event.key === 'ArrowUp') {
+    if ($activeElem.parentElement.matches('.inst-item')) {
+      const instInd = insts.indexOf($activeElem.parentElement);
+      // inst -> inst
+      if (instInd !== 0) {
+        insts[instInd - 1].lastElementChild.focus();
+      }
+    } else if ($activeElem.matches('.add-btn')) {
+      insts[insts.length - 1].lastElementChild.focus();
+    } else if ($activeElem.matches('.play-btn')) {
+      document.querySelector('.add-btn').focus();
+    } else if (xLoc > 0) {
+      document.getElementById(`cell-${+xLoc - 1}-${yLoc}`).focus();
+    }
+  }
+});
