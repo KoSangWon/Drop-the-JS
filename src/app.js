@@ -2,6 +2,13 @@
 const $overlay = document.querySelector('.overlay');
 const $playBtn = document.querySelector('.play-btn');
 const $musicPad = document.querySelector('.music');
+const $musicPadMask = document.querySelector('.music-mask');
+const $controls = document.querySelector('.controls');
+
+const $pageUpBtn = document.querySelector('.page-up-btn');
+const $pageDownBtn = document.querySelector('.page-down-btn');
+const $currentPage = document.querySelector('.current-page');
+const $totalPage = document.querySelector('.total-page');
 
 const $fileUploadBtn = document.querySelector('input[type="file"]');
 const $fileDownloadBtn = document.querySelector('.file-save-btn');
@@ -12,6 +19,7 @@ const $bpmInput = document.querySelector('#bpm-input');
 const $beatInput = document.querySelector('#beat-input');
 // $musicPad.style['background-color'] = 'pink';
 /* ==== state ==== */
+const VIEW_PAGE = matchMedia('screen and (max-width: 767px)').matches ? 8 : 16;
 const MIN_BEAT = 4; // 최소 비트
 const MAX_BEAT = 32; // 최대 비트
 const COLORS = [
@@ -41,7 +49,7 @@ const instSet = [
 ];
 
 const MIN_TO_MS = 60000; // 1min = 60000ms
-let beat = 8; // 초기 비트
+let beat = 32; // 초기 비트
 let musicInfo = [
   { inst: 'drum', file: './sound/1.wav', beat },
   { inst: 'side-stick', file: './sound/2.wav', beat },
@@ -57,12 +65,29 @@ let musicInfo = [
 // );
 
 // dummy data
+let currentPage = 1;
+
 let padArr = [
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [1, 1, 1, 1, 0, 0, 1, 0]
+  [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 1
+  ],
+  [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 1
+  ],
+  [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 1
+  ],
+  [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 1
+  ],
+  [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 1
+  ]
 ];
 
 let bpm = 150;
@@ -97,6 +122,8 @@ const initAddInstList = () => {
 
 const initCellElements = () => {
   $musicPad.style.setProperty('--cell-col', beat);
+  $totalPage.textContent = '/' + Math.floor(beat / VIEW_PAGE);
+  $currentPage.textContent = currentPage;
   $instList.innerHTML =
     padArr
       .map(
@@ -142,42 +169,63 @@ const initCellElements = () => {
       document.removeEventListener('mouseup', closeMenuHandler);
     });
     initAddInstList();
-    
-    $instMenu.addEventListener('change', ({target:instCheckBox}) => {
+
+    $instMenu.addEventListener('change', ({ target: instCheckBox }) => {
       // 바뀐 체크박스의 인덱스 찾기
       let changeIndex = -1;
-      const targetName = instCheckBox.id.replace('inst-item-','');
+      const targetName = instCheckBox.id.replace('inst-item-', '');
       instSet.forEach((inst, index) => {
-        if(inst.instName === targetName){
+        if (inst.instName === targetName) {
           changeIndex = index;
           inst.used = !inst.used;
         }
-      })
+      });
       // 악기 추가 시
-      if(instCheckBox.checked){
+      if (instCheckBox.checked) {
         let insertIndex = padArr.length;
         // for문으로 해야함
-        for(let i = 0; i < musicInfo.length; i++){
+        for (let i = 0; i < musicInfo.length; i++) {
           const music = musicInfo[i];
-          const order = instSet.findIndex(inst => inst.instName === music.inst)
-          if(changeIndex < order){
+          const order = instSet.findIndex(inst => inst.instName === music.inst);
+          if (changeIndex < order) {
             insertIndex = i;
             break;
           }
         }
-        musicInfo = [...musicInfo.slice(0, insertIndex), {inst:targetName, file:`./sound/${insertIndex+1}.wav`, beat}, ...musicInfo.slice(insertIndex)];
-        padArr = [...padArr.slice(0, insertIndex), Array.from({length:beat}, () => 0), ...padArr.slice(insertIndex)];
+        musicInfo = [
+          ...musicInfo.slice(0, insertIndex),
+          { inst: targetName, file: `./sound/${insertIndex + 1}.wav`, beat },
+          ...musicInfo.slice(insertIndex)
+        ];
+        padArr = [
+          ...padArr.slice(0, insertIndex),
+          Array.from({ length: beat }, () => 0),
+          ...padArr.slice(insertIndex)
+        ];
       }
       // 악기 제거 시
-      else{
-        const deleteIndex = musicInfo.findIndex(({inst}) => 'inst-item-'+inst === instCheckBox.id)
-        musicInfo = [...musicInfo.slice(0, deleteIndex), ...musicInfo.slice(deleteIndex+1)];
-        padArr = [...padArr.slice(0, deleteIndex), ...padArr.slice(deleteIndex+1)];
+      else {
+        const deleteIndex = musicInfo.findIndex(
+          ({ inst }) => 'inst-item-' + inst === instCheckBox.id
+        );
+        musicInfo = [
+          ...musicInfo.slice(0, deleteIndex),
+          ...musicInfo.slice(deleteIndex + 1)
+        ];
+        padArr = [
+          ...padArr.slice(0, deleteIndex),
+          ...padArr.slice(deleteIndex + 1)
+        ];
       }
       initCellElements();
-    })
-    
+    });
   });
+};
+
+const movePage = page => {
+  currentPage = page;
+  $currentPage.textContent = currentPage;
+  $musicPad.style.setProperty('--page-offset', currentPage - 1);
 };
 
 const stopMusic = () => {
@@ -253,9 +301,20 @@ const changeBeat = () => {
 /* ==== event handlers ==== */
 window.addEventListener('DOMContentLoaded', () => {
   $bpmInput.value = bpm;
-  $beatInput.value = 8;
+  $beatInput.value = beat;
   initCellElements();
   initAddInstList();
+});
+
+// 페이지 이동
+$pageUpBtn.addEventListener('click', () => {
+  if (currentPage >= Math.floor(beat / VIEW_PAGE)) return;
+  movePage(currentPage + 1);
+});
+
+$pageDownBtn.addEventListener('click', () => {
+  if (currentPage <= 1) return;
+  movePage(currentPage - 1);
 });
 
 $playBtn.addEventListener('click', () => {
@@ -290,7 +349,7 @@ const handleMouseOver = e => {
   }
 };
 
-$musicPad.addEventListener('mousedown', e => {
+$musicPadMask.addEventListener('mousedown', e => {
   if (!e.target.matches('label.panel-cell')) return;
 
   const checkbox = e.target.previousElementSibling;
@@ -312,18 +371,18 @@ $musicPad.addEventListener('mousedown', e => {
     checkbox.checked = false;
   }
 
-  $musicPad.addEventListener('mouseover', handleMouseOver);
+  $musicPadMask.addEventListener('mouseover', handleMouseOver);
 });
 
-$musicPad.addEventListener('mouseup', () => {
-  $musicPad.removeEventListener('mouseover', handleMouseOver);
+$musicPadMask.addEventListener('mouseup', () => {
+  $musicPadMask.removeEventListener('mouseover', handleMouseOver);
 });
 
-$musicPad.addEventListener('mouseleave', () => {
-  $musicPad.removeEventListener('mouseover', handleMouseOver);
+$musicPadMask.addEventListener('mouseleave', () => {
+  $musicPadMask.removeEventListener('mouseover', handleMouseOver);
 });
 
-$musicPad.addEventListener('click', e => {
+$musicPadMask.addEventListener('click', e => {
   e.preventDefault();
 });
 
