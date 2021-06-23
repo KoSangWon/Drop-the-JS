@@ -82,10 +82,9 @@
   .panel {
     &--#{$key} {
       @include panelBox($value);
-      &:nth-child(4n) {
+      &.beat-gap {
         margin-right: 10px;
       }
-
       input {
         position: absolute;
         opacity: 0;

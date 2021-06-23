@@ -703,7 +703,7 @@ li {
 .panel--red input:focus:not(:focus-visible):hover + label {
   transform: scale(1.1);
 }
-.panel--red:nth-child(4n) {
+.panel--red.beat-gap {
   margin-right: 10px;
 }
 .panel--red input {
@@ -748,7 +748,7 @@ li {
 .panel--orange input:focus:not(:focus-visible):hover + label {
   transform: scale(1.1);
 }
-.panel--orange:nth-child(4n) {
+.panel--orange.beat-gap {
   margin-right: 10px;
 }
 .panel--orange input {
@@ -793,7 +793,7 @@ li {
 .panel--yellow input:focus:not(:focus-visible):hover + label {
   transform: scale(1.1);
 }
-.panel--yellow:nth-child(4n) {
+.panel--yellow.beat-gap {
   margin-right: 10px;
 }
 .panel--yellow input {
@@ -838,7 +838,7 @@ li {
 .panel--leafgreen input:focus:not(:focus-visible):hover + label {
   transform: scale(1.1);
 }
-.panel--leafgreen:nth-child(4n) {
+.panel--leafgreen.beat-gap {
   margin-right: 10px;
 }
 .panel--leafgreen input {
@@ -883,7 +883,7 @@ li {
 .panel--green input:focus:not(:focus-visible):hover + label {
   transform: scale(1.1);
 }
-.panel--green:nth-child(4n) {
+.panel--green.beat-gap {
   margin-right: 10px;
 }
 .panel--green input {
@@ -928,7 +928,7 @@ li {
 .panel--jade input:focus:not(:focus-visible):hover + label {
   transform: scale(1.1);
 }
-.panel--jade:nth-child(4n) {
+.panel--jade.beat-gap {
   margin-right: 10px;
 }
 .panel--jade input {
@@ -973,7 +973,7 @@ li {
 .panel--skyblue input:focus:not(:focus-visible):hover + label {
   transform: scale(1.1);
 }
-.panel--skyblue:nth-child(4n) {
+.panel--skyblue.beat-gap {
   margin-right: 10px;
 }
 .panel--skyblue input {
@@ -1018,7 +1018,7 @@ li {
 .panel--blue input:focus:not(:focus-visible):hover + label {
   transform: scale(1.1);
 }
-.panel--blue:nth-child(4n) {
+.panel--blue.beat-gap {
   margin-right: 10px;
 }
 .panel--blue input {
@@ -1063,7 +1063,7 @@ li {
 .panel--plum input:focus:not(:focus-visible):hover + label {
   transform: scale(1.1);
 }
-.panel--plum:nth-child(4n) {
+.panel--plum.beat-gap {
   margin-right: 10px;
 }
 .panel--plum input {
@@ -1108,7 +1108,7 @@ li {
 .panel--purple input:focus:not(:focus-visible):hover + label {
   transform: scale(1.1);
 }
-.panel--purple:nth-child(4n) {
+.panel--purple.beat-gap {
   margin-right: 10px;
 }
 .panel--purple input {
@@ -1592,6 +1592,11 @@ li {
   background-position: center;
   background-repeat: no-repeat;
   background-size: 50%;
+}
+.file-load-btn input {
+  width: 40px;
+  height: 40px;
+  opacity: 0;
 }
 
 .file-save-btn {

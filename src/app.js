@@ -5,7 +5,7 @@ const $instList = document.querySelector('.inst-list');
 // 임시
 const $bpmInput = document.querySelector('#bpm-input');
 const $beatInput = document.querySelector('#beat-input');
-$musicPad.style['background-color'] = 'pink';
+// $musicPad.style['background-color'] = 'pink';
 /* ==== state ==== */
 const MAX_BEAT = 32; // 최대 비트
 const COLORS = [
@@ -54,6 +54,7 @@ let timerId = null;
 
 /* ==== functions ==== */
 const initCellElements = () => {
+  $musicPad.style.setProperty('--cell-col', beat);
   $instList.innerHTML =
     padArr
       .map(
@@ -71,7 +72,9 @@ const initCellElements = () => {
     .map((padRow, rowIdx) =>
       padRow.map(
         (padCell, colIdx) => `
-        <div class="panel--${COLORS[rowIdx]}">
+        <div class="panel--${COLORS[rowIdx]} ${
+          (colIdx + 1) % 4 === 0 ? 'beat-gap' : ''
+        }">
           <input type="checkbox" id="cell-${rowIdx}-${colIdx}" ${
           padCell ? 'checked' : ''
         } />
