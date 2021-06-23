@@ -159,18 +159,7 @@ const initCellElements = () => {
   // TODO: 메뉴 토글이벤트
   $instAddBtn.addEventListener('click', () => {
     const $instMenu = document.querySelector('.add-inst-menu');
-    if ($instMenu.classList.contains('active')) return;
-    $instMenu.classList.add('active');
-    $overlay.classList.add('active');
-    document.addEventListener('mouseup', function closeMenuHandler(e) {
-      if (e.target.closest('.add-inst-menu')) return;
-      $instMenu.classList.remove('active');
-      $overlay.classList.remove('active');
-      document.removeEventListener('mouseup', closeMenuHandler);
-    });
-    initAddInstList();
-
-    $instMenu.addEventListener('change', ({ target: instCheckBox }) => {
+    const ToggleInstrument = ({ target: instCheckBox }) => {
       // 바뀐 체크박스의 인덱스 찾기
       let changeIndex = -1;
       const targetName = instCheckBox.id.replace('inst-item-', '');
@@ -218,7 +207,20 @@ const initCellElements = () => {
         ];
       }
       initCellElements();
+    }
+    if ($instMenu.classList.contains('active')) return;
+    $instMenu.classList.add('active');
+    $overlay.classList.add('active');
+    document.addEventListener('mouseup', function closeMenuHandler(e) {
+      if (e.target.closest('.add-inst-menu')) return;
+      $instMenu.classList.remove('active');
+      $overlay.classList.remove('active');
+      document.removeEventListener('mouseup', closeMenuHandler);
+      $instMenu.removeEventListener('change', ToggleInstrument);
     });
+    initAddInstList();
+    $instMenu.addEventListener('change', ToggleInstrument);
+    
   });
 };
 
