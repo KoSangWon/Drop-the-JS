@@ -586,6 +586,7 @@ document.addEventListener('keyup', event => {
     // panel is end of line
     else if (yLoc === lastYLoc) {
       insts[+xLoc + 1].lastElementChild.focus();
+      movePage(1);
     }
     // add button -> play button
     else if ($activeElem.matches('.inst-item > .add-btn')) {
@@ -597,8 +598,11 @@ document.addEventListener('keyup', event => {
       document.getElementById(`cell-${instInd}-0`).focus();
     }
     // move panel to right
-    else if (yLoc < lastYLoc) {
+    else if (+yLoc < +lastYLoc) {
       document.getElementById(`cell-${xLoc}-${+yLoc + 1}`).focus();
+      if(+yLoc === VIEW_PAGE-1){
+        movePage(2);
+      }
     }
   } else if (event.key === 'ArrowLeft') {
     // if first panel, move to deltet button
@@ -614,8 +618,11 @@ document.addEventListener('keyup', event => {
       document.getElementById(`cell-${instInd - 1}-${lastYLoc}`).focus();
     }
     // move panel to left
-    else if (yLoc > 0) {
+    else if (+yLoc > 0) {
       document.getElementById(`cell-${xLoc}-${+yLoc - 1}`).focus();
+      if(+yLoc === VIEW_PAGE){
+        movePage(1);
+      }
     }
   } else if (event.key === 'ArrowDown') {
     if ($activeElem.parentElement.matches('.inst-item')) {
@@ -632,7 +639,7 @@ document.addEventListener('keyup', event => {
       document.querySelector('.add-btn').focus();
     } else if ($activeElem.matches('.add-btn')) {
       document.querySelector('.play-btn').focus();
-    } else if (xLoc < lastXLoc) {
+    } else if (+xLoc < +lastXLoc) {
       document.getElementById(`cell-${+xLoc + 1}-${yLoc}`).focus();
     }
   } else if (event.key === 'ArrowUp') {
@@ -646,8 +653,20 @@ document.addEventListener('keyup', event => {
       insts[insts.length - 1].lastElementChild.focus();
     } else if ($activeElem.matches('.play-btn')) {
       document.querySelector('.add-btn').focus();
-    } else if (xLoc > 0) {
+    } else if (+xLoc > 0) {
       document.getElementById(`cell-${+xLoc - 1}-${yLoc}`).focus();
+    }
+  } else if (event.key === ' '){
+    if(xLoc){
+      const $cell = document.getElementById(`cell-${xLoc}-${yLoc}`)
+      $cell.checked = !$cell.checked;
+    }
+  } else if (event.key === 'Tab'){
+    if(+yLoc === VIEW_PAGE-1){
+      movePage(2);
+    }
+    else if(+yLoc === +lastYLoc){
+      movePage(1);
     }
   }
 });
