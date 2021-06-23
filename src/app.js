@@ -1,6 +1,12 @@
 /* ==== DOMs ==== */
 const $playBtn = document.querySelector('.play-btn');
 const $musicPad = document.querySelector('.music');
+
+const $fileUploadBtn = document.querySelector('input[type="file"]');
+const $fileDownloadBtn = document.querySelector('.file-save-btn');
+
+const $instAddBtn = document.querySelector('.inst-add');
+
 const $instList = document.querySelector('.inst-list');
 // 임시
 const $bpmInput = document.querySelector('#bpm-input');
@@ -42,9 +48,9 @@ let musicInfo = [
 // dummy data
 let padArr = [
   [0, 0, 0, 0, 0, 0, 0, 0],
-  [1, 0, 0, 0, 0, 0, 1, 0],
-  [1, 0, 1, 0, 1, 0, 1, 0],
-  [1, 0, 0, 1, 0, 0, 0, 0]
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0]
   // [1, 1, 1, 1, 0, 0, 1, 0]
 ];
 
@@ -401,6 +407,46 @@ $bpmInput.addEventListener('input', () => {
     .replace(/[^0-9]/g, '')
     .replace(/(\..*)\./g, '$1');
 });
+
+// file upload
+$fileUploadBtn.addEventListener('change', () => {
+  const selectedFile = $fileUploadBtn.files[0];
+
+  const reader = new FileReader();
+  if (reader) {
+    reader.readAsText(selectedFile, 'UTF-8');
+
+    reader.onload = e => {
+      let fileData = e.target.result;
+      fileData = JSON.parse(fileData);
+      // console.log('업로드한 데이터', fileData);
+      musicInfo = fileData.musicInfo;
+      padArr = fileData.padArr;
+      bpm = fileData.bpm;
+      beat = fileData.beat;
+      initCellElements();
+      $beatInput.value = beat;
+      $bpmInput.value = bpm;
+    };
+  }
+});
+
+// file download
+$fileDownloadBtn.addEventListener('click', () => {
+  const infoToSave = {
+    musicInfo,
+    padArr,
+    bpm,
+    beat
+  };
+  const jsonString = JSON.stringify(infoToSave);
+  const link = document.createElement('a');
+  link.download = `dropthejs-${Date.now()}.txt`;
+  const blob = new Blob([jsonString], { type: 'text/plain' });
+  link.href = window.URL.createObjectURL(blob);
+  link.click();
+});
+
 // keyboard interaction 리팩토링 필요]
 document.addEventListener('keyup', event => {
   if (document.activeElement.matches('.body')) return;
