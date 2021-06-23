@@ -1,11 +1,11 @@
 /* ==== DOMs ==== */
 const $playBtn = document.querySelector('.play-btn');
 const $musicPad = document.querySelector('.music');
-const $instAddBtn = document.querySelector('.inst-add');
+const $instList = document.querySelector('.inst-list');
 // 임시
 const $bpmInput = document.querySelector('#bpm-input');
 const $beatInput = document.querySelector('#beat-input');
-$musicPad.style['background-color'] = 'pink';
+// $musicPad.style['background-color'] = 'pink';
 /* ==== state ==== */
 const MAX_BEAT = 32; // 최대 비트
 const COLORS = [
@@ -20,6 +20,8 @@ const COLORS = [
   'plum',
   'purple'
 ];
+
+const instSet = [{ inst: 'drum', file: './sound/1.wav', used: false }];
 
 const MIN_TO_MS = 60000; // 1min = 60000ms
 let beat = 8; // 초기 비트
@@ -52,24 +54,27 @@ let timerId = null;
 
 /* ==== functions ==== */
 const initCellElements = () => {
-  $instAddBtn.insertAdjacentHTML(
-    'beforebegin',
+  $musicPad.style.setProperty('--cell-col', beat);
+  $instList.innerHTML =
     padArr
       .map(
         (_, idx) => `
-          <li class="inst-item">
-            <div class="inst-item icon-${musicInfo[idx].inst} color-${COLORS[idx]}"></div>
-            <button class="inst-delete-btn"></button>
-          </li>
-    `
+    <li class="inst-item">
+      <div class="icon-${musicInfo[idx].inst} color-${COLORS[idx]}"></div>
+      <button class="inst-delete-btn"></button>
+    </li>`
       )
-      .join('')
-  );
+      .join('') +
+    `<li class="inst-item inst-add">
+  <button class="add-btn"></button>
+</li>`;
   $musicPad.innerHTML = padArr
     .map((padRow, rowIdx) =>
       padRow.map(
         (padCell, colIdx) => `
-        <div class="panel--${COLORS[rowIdx]}">
+        <div class="panel--${COLORS[rowIdx]} ${
+          (colIdx + 1) % 4 === 0 ? 'beat-gap' : ''
+        }">
           <input type="checkbox" id="cell-${rowIdx}-${colIdx}" ${
           padCell ? 'checked' : ''
         } />
@@ -79,6 +84,43 @@ const initCellElements = () => {
     )
     .flat()
     .join('');
+
+  const $instAddBtn = $instList.querySelector('.add-btn');
+
+  // TODO: 메뉴 토글이벤트
+  $instAddBtn.addEventListener('click', () => {
+    const $instMenu = $instList.querySelector('.add-inst-menu');
+    console.log($instMenu.classList.contains('active'));
+    if ($instMenu.classList.contains('active')) return;
+    $instMenu.classList.add('active');
+    document.addEventListener('mouseup', function closeMenuHandler(e) {
+      if (e.target.closest('.add-inst-menu')) return;
+      $instMenu.classList.remove('active');
+      console.log(e);
+      document.removeEventListener('mouseup', closeMenuHandler);
+    });
+  });
+};
+
+const initAddInstList = () => {
+  const $instAddBtn = document.querySelector('.inst-add');
+  const $div = document.createElement('div');
+  $div.className = 'add-inst-menu';
+  const $ul = document.createElement('ul');
+  $ul.className = 'add-inst-list';
+  $ul.innerHTML = instSet
+    .map(inst => {
+      if (inst.used) return '';
+      return `<li class="add-inst-item">
+    <button class="add-inst-btn">
+      <span class="add-icon icon-${inst.inst}"></span>
+      <span class="add-inst-name">${inst.inst}</span>
+    </button>
+  </li>`;
+    })
+    .join('');
+  $div.appendChild($ul);
+  $instAddBtn.insertAdjacentElement('afterend', $div);
 };
 
 const stopMusic = () => {
@@ -139,10 +181,12 @@ const playMusic = startColumn => {
 
 // change bpm
 const changeBeat = () => {
-  padArr = padArr.map(row =>row.length < beat
-      ?  [...row, ...Array.from({ length: beat - row.length }, () => 0)]
-      : row.slice(0, beat));
-    initCellElements()
+  padArr = padArr.map(row =>
+    row.length < beat
+      ? [...row, ...Array.from({ length: beat - row.length }, () => 0)]
+      : row.slice(0, beat)
+  );
+  initCellElements();
 };
 
 /* ==== event handlers ==== */
@@ -150,6 +194,7 @@ window.addEventListener('DOMContentLoaded', () => {
   $bpmInput.value = bpm;
   $beatInput.value = 8;
   initCellElements();
+  initAddInstList();
 });
 
 $playBtn.addEventListener('click', () => {
@@ -227,15 +272,17 @@ $musicPad.addEventListener('touchmove', e => {
 });
 
 // beat 변경
-document.querySelector('.beat-control').addEventListener('click', ({target}) => {
-  if(!target.matches('button')) return;
-  const delta = target.classList.contains('beat-up-btn') ? 1 : -1;
-  beat += delta;
-  if (beat < 4) beat = 4;
-  if (beat > 16) beat = 16;
-  $beatInput.value = beat;
-  changeBeat();
-});
+document
+  .querySelector('.beat-control')
+  .addEventListener('click', ({ target }) => {
+    if (!target.matches('button')) return;
+    const delta = target.classList.contains('beat-up-btn') ? 1 : -1;
+    beat += delta;
+    if (beat < 4) beat = 4;
+    if (beat > 16) beat = 16;
+    $beatInput.value = beat;
+    changeBeat();
+  });
 
 // down up
 // bpm 변경
@@ -258,7 +305,8 @@ document
 
 // pad 초기화
 document.querySelector('.file-clear-btn').addEventListener('click', () => {
-  padArr = Array.from(Array(musicInfo.length), () => Array(MAX_BEAT).fill(0));
+  padArr = padArr.map(row => row.fill(0));
+  initCellElements();
 });
 
 // Beat input 변경

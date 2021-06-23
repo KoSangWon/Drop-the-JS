@@ -161,6 +161,11 @@
 
 .file-load-btn {
   @include icon('/assets/img/load_icon.svg');
+  input {
+    width: 40px;
+    height: 40px;
+    opacity: 0;
+  }
 }
 .file-save-btn {
   @include icon('/assets/img/save_icon.svg');
