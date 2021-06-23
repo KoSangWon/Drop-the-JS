@@ -22,7 +22,8 @@
 .inst-list {
   display: flex;
   flex-direction: column;
-  margin-right: 10px;
+  margin-right: -10px;
+  padding: 20px 0 20px 20px;
 }
 
 .inst-item {
@@ -49,7 +50,7 @@
     top: 0;
     opacity: 0;
     position: absolute;
-    @include circleButton(15px, 15px, $cell-red, false);
+    @include circleButton(20px, 20px, $cell-red, false);
     @include icon('/assets/img/x_icon.svg');
   }
   &:hover > .inst-delete-btn,
@@ -62,19 +63,83 @@
   &-drum {
     width: 100%;
     height: 100%;
-    @include icon('/assets/img/drum-icon.svg');
+    @include icon('/assets/img/drum_icon.svg');
+    background-size: 50%;
+  }
+  &-side-stick {
+    width: 100%;
+    height: 100%;
+    @include icon('/assets/img/sidestick_icon.svg');
+    background-size: 50%;
+  }
+  &-cymbal {
+    width: 100%;
+    height: 100%;
+    @include icon('/assets/img/cymbal_icon.svg');
+    background-size: 50%;
+  }
+  &-opened-hihat {
+    width: 100%;
+    height: 100%;
+    @include icon('/assets/img/opened_hihat_icon.svg');
+    background-size: 50%;
+  }
+  &-clap {
+    width: 100%;
+    height: 100%;
+    @include icon('/assets/img/clap_icon.svg');
+    background-size: 50%;
+  }
+  &-closed-hihat {
+    width: 100%;
+    height: 100%;
+    @include icon('/assets/img/closed_hihat_icon.svg');
+    background-size: 50%;
+  }
+  &-ride {
+    width: 100%;
+    height: 100%;
+    @include icon('/assets/img/ride_icon.svg');
+    background-size: 50%;
+  }
+  &-kick {
+    width: 100%;
+    height: 100%;
+    @include icon('/assets/img/kick_icon.svg');
+    background-size: 50%;
+  }
+  &-hightom {
+    width: 100%;
+    height: 100%;
+    @include icon('/assets/img/hightom_icon.svg');
+    background-size: 50%;
+  }
+  &-lowtom {
+    width: 100%;
+    height: 100%;
+    @include icon('/assets/img/lowtom_icon.svg');
     background-size: 50%;
   }
 }
 
 .music {
+  // box-sizing: border-box;
   display: grid;
   grid-template: auto / repeat($cell-col, auto);
   gap: 8px;
+  overflow-x: hidden;
+  padding: 20px;
+  margin-bottom: 200px;
+
+  max-width: 980px;
+  @include tablet {
+    max-width: 820px;
+  }
   @include mobile {
+    max-width: 284px;
     gap: 4px;
   }
-  justify-content: center;
+  justify-content: start;
   align-content: center;
 }
 
@@ -96,42 +161,67 @@
 }
 
 .add-inst-menu {
-  position: absolute;
-  bottom: 0;
-  left: 50px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
   visibility: hidden;
-  min-width: rem(200px);
+  min-width: rem(400px);
   border-radius: 10px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   background-color: #fff;
   overflow: hidden;
-  z-index: 1;
+  z-index: 5;
   &.active {
     visibility: visible;
   }
 }
 
-.add-inst-btn {
+.add-inst-item {
   background: none;
   border: none;
   width: 100%;
   text-align: left;
+  position: relative;
   padding: 10px 0;
   padding-left: 10px;
   // line-height: 30px;
   // height: 30px;
-  &:active {
+  &:hover {
     background-color: rgba($primary-yellow, 0.4);
     color: inherit;
   }
-  & > .add-inst-name {
+  & .add-inst-name {
     vertical-align: middle;
   }
-  & > .add-icon {
+  & .add-icon {
     vertical-align: middle;
     display: inline-block;
     height: 30px;
     width: 30px;
+  }
+  input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    &:checked + label::before {
+      content: '';
+      display: block;
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: rotate(-45deg) translate3d(0, -100%, 0);
+      width: 10px;
+      height: 5px;
+      border: 2px solid black;
+      border-style: none none solid solid;
+    }
+  }
+  label {
+    display: block;
+    width: 100%;
+    height: 100%;
   }
 }
 
@@ -140,7 +230,7 @@
 //     display: inline-block;
 //     width: 20px;
 //     height: 20px;
-//     @include icon('/assets/img/drum-icon.svg');
+//     @include icon('/assets/img/drum_icon.svg');
 //     background-size: 80%;
 //     vertical-align: top;
 //   }

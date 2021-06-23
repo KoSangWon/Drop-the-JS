@@ -1,17 +1,17 @@
 /* ==== DOMs ==== */
+const $overlay = document.querySelector('.overlay');
 const $playBtn = document.querySelector('.play-btn');
 const $musicPad = document.querySelector('.music');
 
 const $fileUploadBtn = document.querySelector('input[type="file"]');
 const $fileDownloadBtn = document.querySelector('.file-save-btn');
 
-const $instAddBtn = document.querySelector('.inst-add');
-
 const $instList = document.querySelector('.inst-list');
 const $bpmInput = document.querySelector('#bpm-input');
 const $beatInput = document.querySelector('#beat-input');
 
 /* ==== state ==== */
+const MIN_BEAT = 4; // 최소 비트
 const MAX_BEAT = 32; // 최대 비트
 const COLORS = [
   'red',
@@ -26,67 +26,27 @@ const COLORS = [
   'purple'
 ];
 
-const makeAudioObj = $audioEl => {
-  // AudioContext
-  const audioContext = new (window.AudioContext || window.webkitAudioContext)(); // define audio context
-
-  // AudioDestinationNode
-  const audioDestination = audioContext.destination;
-  // MediaElementAudioSourceNode
-  const audioSourceNode = audioContext.createMediaElementSource($audioEl);
-  // GainNode
-  const gainNode = audioContext.createGain();
-  audioSourceNode.connect(gainNode).connect(audioDestination);
-};
-
-const audio1 = document.getElementById('audio1');
-makeAudioObj(audio1);
-
-const audio2 = document.getElementById('audio2');
-makeAudioObj(audio2);
-
-const audio3 = document.getElementById('audio3');
-const audio4 = document.getElementById('audio4');
-const audio5 = document.getElementById('audio5');
-
-const makeMergeAudio = someStereoBuffer => {
-  // const ac = new AudioContext();
-  audio1.decodeAudioData(someStereoBuffer, data => {
-    const source = audio1.createBufferSource();
-    source.buffer = data;
-    const splitter = audio1.createChannelSplitter(2);
-    source.connect(splitter);
-    const merger = audio1.createChannelMerger(2);
-
-    const gainNode = audio1.createGain();
-    gainNode.gain.setValueAtTime(0.5, audio1.currentTime);
-    splitter.connect(gainNode, 0);
-
-    gainNode.connect(merger, 0, 1);
-    splitter.connect(merger, 1, 0);
-
-    const dest = audio1.createMediaStreamDestination();
-
-    merger.connect(dest);
-  });
-};
-
-const $test = document.querySelector('.test');
-$test.onclick = () => {
-  makeMergeAudio(audio2);
-  audio1.play();
-};
-
-const instSet = [{ inst: 'drum', file: './sound/1.wav', used: false }];
+const instSet = [
+  { instName: 'drum', file: './sound/1.wav', used: true },
+  { instName: 'side-stick', file: './sound/2.wav', used: true },
+  { instName: 'cymbal', file: './sound/3.wav', used: true },
+  { instName: 'opened-hihat', file: './sound/4.wav', used: true },
+  { instName: 'clap', file: './sound/5.wav', used: true },
+  { instName: 'closed-hihat', file: './sound/6.wav', used: false },
+  { instName: 'ride', file: './sound/7.wav', used: false },
+  { instName: 'kick', file: './sound/8.wav', used: false },
+  { instName: 'hightom', file: './sound/9.wav', used: false },
+  { instName: 'lowtom', file: './sound/10.wav', used: false }
+];
 
 const MIN_TO_MS = 60000; // 1min = 60000ms
 let beat = 8; // 초기 비트
 let musicInfo = [
-  { inst: 'drum', file: audio1, beat },
-  { inst: 'drum', file: audio2, beat },
-  { inst: 'drum', file: audio3, beat },
-  { inst: 'drum', file: audio4, beat }
-  // { inst: 'drum', file: './sound/5.wav', beat }
+  { inst: 'drum', file: './sound/1.wav', beat },
+  { inst: 'side-stick', file: './sound/2.wav', beat },
+  { inst: 'cymbal', file: './sound/3.wav', beat },
+  { inst: 'opened-hihat', file: './sound/4.wav', beat },
+  { inst: 'clap', file: './sound/5.wav', beat }
 ];
 
 // real data
@@ -100,8 +60,8 @@ let padArr = [
   [0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0]
-  // [1, 1, 1, 1, 0, 0, 1, 0]
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [1, 1, 1, 1, 0, 0, 1, 0]
 ];
 
 let bpm = 150;
@@ -109,6 +69,31 @@ let playingColumn = 0;
 let timerId = null;
 
 /* ==== functions ==== */
+
+const initAddInstList = () => {
+  const $div = document.createElement('div');
+  $div.className = 'add-inst-menu';
+  const $ul = document.createElement('ul');
+  $ul.className = 'add-inst-list';
+  $ul.innerHTML = instSet
+    .map(
+      inst => `<li class="add-inst-item">
+          <input type="checkbox" id="inst-item-${inst.instName}" ${
+        inst.used ? 'checked' : ''
+      }/>
+          <label for="inst-item-${inst.instName}">
+            <span class="add-icon icon-${inst.instName}"></span>
+            <span class="add-inst-name">${inst.instName
+              .replace('-', ' ')
+              .toUpperCase()}</span>
+          </label>
+        </li>`
+    )
+    .join('');
+  $div.appendChild($ul);
+  document.body.appendChild($div);
+};
+
 const initCellElements = () => {
   $musicPad.style.setProperty('--cell-col', beat);
   $instList.innerHTML =
@@ -145,38 +130,68 @@ const initCellElements = () => {
 
   // TODO: 메뉴 토글이벤트
   $instAddBtn.addEventListener('click', () => {
-    const $instMenu = $instList.querySelector('.add-inst-menu');
-    console.log($instMenu.classList.contains('active'));
+    const $instMenu = document.querySelector('.add-inst-menu');
     if ($instMenu.classList.contains('active')) return;
     $instMenu.classList.add('active');
+    $overlay.classList.add('active');
     document.addEventListener('mouseup', function closeMenuHandler(e) {
       if (e.target.closest('.add-inst-menu')) return;
       $instMenu.classList.remove('active');
-      console.log(e);
+      $overlay.classList.remove('active');
       document.removeEventListener('mouseup', closeMenuHandler);
     });
-  });
-};
+    initAddInstList();
 
-const initAddInstList = () => {
-  const $instAddBtn = document.querySelector('.inst-add');
-  const $div = document.createElement('div');
-  $div.className = 'add-inst-menu';
-  const $ul = document.createElement('ul');
-  $ul.className = 'add-inst-list';
-  $ul.innerHTML = instSet
-    .map(inst => {
-      if (inst.used) return '';
-      return `<li class="add-inst-item">
-    <button class="add-inst-btn">
-      <span class="add-icon icon-${inst.inst}"></span>
-      <span class="add-inst-name">${inst.inst}</span>
-    </button>
-  </li>`;
-    })
-    .join('');
-  $div.appendChild($ul);
-  $instAddBtn.insertAdjacentElement('afterend', $div);
+    $instMenu.addEventListener('change', ({ target: instCheckBox }) => {
+      // 바뀐 체크박스의 인덱스 찾기
+      let changeIndex = -1;
+      const targetName = instCheckBox.id.replace('inst-item-', '');
+      instSet.forEach((inst, index) => {
+        if (inst.instName === targetName) {
+          changeIndex = index;
+          inst.used = !inst.used;
+        }
+      });
+      // 악기 추가 시
+      if (instCheckBox.checked) {
+        let insertIndex = padArr.length;
+        // for문으로 해야함
+        for (let i = 0; i < musicInfo.length; i++) {
+          const music = musicInfo[i];
+          const order = instSet.findIndex(inst => inst.instName === music.inst);
+          if (changeIndex < order) {
+            insertIndex = i;
+            break;
+          }
+        }
+        musicInfo = [
+          ...musicInfo.slice(0, insertIndex),
+          { inst: targetName, file: `./sound/${insertIndex + 1}.wav`, beat },
+          ...musicInfo.slice(insertIndex)
+        ];
+        padArr = [
+          ...padArr.slice(0, insertIndex),
+          Array.from({ length: beat }, () => 0),
+          ...padArr.slice(insertIndex)
+        ];
+      }
+      // 악기 제거 시
+      else {
+        const deleteIndex = musicInfo.findIndex(
+          ({ inst }) => 'inst-item-' + inst === instCheckBox.id
+        );
+        musicInfo = [
+          ...musicInfo.slice(0, deleteIndex),
+          ...musicInfo.slice(deleteIndex + 1)
+        ];
+        padArr = [
+          ...padArr.slice(0, deleteIndex),
+          ...padArr.slice(deleteIndex + 1)
+        ];
+      }
+      initCellElements();
+    });
+  });
 };
 
 const stopMusic = () => {
@@ -210,18 +225,13 @@ const playMusic = startColumn => {
       eachStatus.forEach((v, i) => {
         if (v) instsToPlay.push(musicInfo[i].file);
       });
-      console.log(instsToPlay);
-      instsToPlay.forEach(v => {
-        makeAudioObj(v);
-        const copyv = v;
-        copyv.play();
-      });
+
       // 오디오 객체 생성
-      // const audios = instsToPlay.map(file => new Audio(file));
-      // // async
-      // audios.forEach(audio => {
-      //   audio.play();
-      // });
+      const audios = instsToPlay.map(file => new Audio(file));
+      // async
+      audios.forEach(audio => {
+        audio.play();
+      });
 
       document.querySelectorAll('.running').forEach($label => {
         $label.classList.remove('running');
@@ -394,8 +404,8 @@ document
     if (!target.matches('button')) return;
     const delta = target.classList.contains('beat-up-btn') ? 1 : -1;
     beat += delta;
-    if (beat < 4) beat = 4;
-    if (beat > 16) beat = 16;
+    if (beat < MIN_BEAT) beat = MIN_BEAT;
+    if (beat > MAX_BEAT) beat = MAX_BEAT;
     $beatInput.value = beat;
     changeBeat();
   });
