@@ -25,7 +25,7 @@ const instSet = [{ inst: 'drum', file: './sound/1.wav', used: false }];
 
 const MIN_TO_MS = 60000; // 1min = 60000ms
 let beat = 8; // 초기 비트
-const musicInfo = [
+let musicInfo = [
   { inst: 'drum', file: './sound/1.wav', beat },
   { inst: 'drum', file: './sound/2.wav', beat },
   { inst: 'drum', file: './sound/3.wav', beat },
@@ -181,6 +181,10 @@ const playMusic = startColumn => {
 
 // change bpm
 const changeBeat = () => {
+  musicInfo = musicInfo.map(inst => {
+    if (inst.beat === padArr[0].length) return { ...inst, beat };
+    return { ...inst };
+  });
   padArr = padArr.map(row =>
     row.length < beat
       ? [...row, ...Array.from({ length: beat - row.length }, () => 0)]
