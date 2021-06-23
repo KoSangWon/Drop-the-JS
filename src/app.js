@@ -2,8 +2,8 @@
 const $playBtn = document.querySelector('.play-btn');
 const $musicPad = document.querySelector('.music');
 
-const $fileUploadBtn = document.querySelector('.file-load-btn');
-const $fileDownloadBtn = document.querySelector('.file-upload-btn');
+const $fileUploadBtn = document.querySelector('input[type="file"]');
+const $fileDownloadBtn = document.querySelector('.file-save-btn');
 
 const $instAddBtn = document.querySelector('.inst-add');
 
@@ -31,7 +31,7 @@ const instSet = [{ inst: 'drum', file: './sound/1.wav', used: false }];
 
 const MIN_TO_MS = 60000; // 1min = 60000ms
 let beat = 8; // 초기 비트
-const musicInfo = [
+let musicInfo = [
   { inst: 'drum', file: './sound/1.wav', beat },
   { inst: 'drum', file: './sound/2.wav', beat },
   { inst: 'drum', file: './sound/3.wav', beat },
@@ -355,20 +355,43 @@ $bpmInput.addEventListener('input', () => {
 });
 
 // file upload
-$fileUploadBtn.onchange = () => {
+$fileUploadBtn.addEventListener('change', () => {
   const selectedFile = $fileUploadBtn.files[0];
-  console.log(selectedFile);
 
   const reader = new FileReader();
+  if (reader) {
+    reader.readAsText(selectedFile, 'UTF-8');
 
-  reader.readAsText(selectedFile, 'UTF-8');
+    reader.onload = e => {
+      let fileData = e.target.result;
+      fileData = JSON.parse(fileData);
+      // console.log('업로드한 데이터', fileData);
+      musicInfo = fileData.musicInfo;
+      padArr = fileData.padArr;
+      bpm = fileData.bpm;
+      beat = fileData.beat;
+      initCellElements();
+      $beatInput.value = beat;
+      $bpmInput.value = bpm;
+    };
+  }
+});
 
-  reader.onload = function (e) {
-    const fileData = e.target.result;
-    // fileData = JSON.parse(fileData);
-    console.log(fileData);
+// file download
+$fileDownloadBtn.addEventListener('click', () => {
+  const infoToSave = {
+    musicInfo,
+    padArr,
+    bpm,
+    beat
   };
-};
+  const jsonString = JSON.stringify(infoToSave);
+  const link = document.createElement('a');
+  link.download = `dropthejs-${Date.now()}.txt`;
+  const blob = new Blob([jsonString], { type: 'text/plain' });
+  link.href = window.URL.createObjectURL(blob);
+  link.click();
+});
 
 // keyboard interaction 리팩토링 필요]
 document.addEventListener('keyup', event => {
