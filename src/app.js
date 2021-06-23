@@ -1,19 +1,33 @@
 /* ==== DOMs ==== */
 const $playBtn = document.querySelector('.play-btn');
 const $musicPad = document.querySelector('.music');
+const $instAddBtn = document.querySelector('.inst-add');
 // 임시
 const $bpmInput = document.querySelector('#bpm-input');
 $musicPad.style['background-color'] = 'pink';
 /* ==== state ==== */
 const MAX_BEAT = 32; // 최대 비트
+const COLORS = [
+  'red',
+  'orange',
+  'yellow',
+  'leafgreen',
+  'green',
+  'jade',
+  'skyblue',
+  'blue',
+  'plum',
+  'purple'
+];
+
 const MIN_TO_MS = 60000; // 1min = 60000ms
 const beat = 8; // 초기 비트
 const musicInfo = [
   { inst: 'drum', file: './sound/1.wav', beat },
-  { inst: 'B', file: './sound/2.wav', beat: 6 }
-  // { inst: 'D', file: './sound/3.wav', beat: 4 },
-  // { inst: 'C', file: './sound/4.wav', beat: 3 },
-  // { inst: 'E', file: './sound/5.wav', beat: 2 }
+  { inst: 'drum', file: './sound/2.wav', beat },
+  { inst: 'drum', file: './sound/3.wav', beat },
+  { inst: 'drum', file: './sound/4.wav', beat }
+  // { inst: 'drum', file: './sound/5.wav', beat }
 ];
 
 // real data
@@ -23,11 +37,11 @@ const musicInfo = [
 // );
 
 // dummy data
-let padArr = [
-  [0, 0, 0, 0, 0, 0, 0, 0]
-  // [1, 0, 0, 0, 0, 0, 1, 0],
-  // [1, 0, 1, 0, 1, 0, 1, 0],
-  // [1, 0, 0, 1, 0, 0, 0, 0],
+const padArr = [
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [1, 0, 0, 0, 0, 0, 1, 0],
+  [1, 0, 1, 0, 1, 0, 1, 0],
+  [1, 0, 0, 1, 0, 0, 0, 0]
   // [1, 1, 1, 1, 0, 0, 1, 0]
 ];
 
@@ -36,8 +50,40 @@ let playingColumn = 0;
 let timerId = null;
 
 /* ==== functions ==== */
+const initCellElements = () => {
+  $instAddBtn.insertAdjacentHTML(
+    'afterbegin',
+    padArr
+      .map(
+        (_, idx) => `
+          <li class="inst-item">
+            <div class="inst-item icon-${musicInfo[idx].inst} color-${COLORS[idx]}"></div>
+            <button class="inst-delete-btn"></button>
+          </li>
+    `
+      )
+      .join('')
+  );
+  $musicPad.innerHTML = padArr
+    .map((padRow, rowIdx) =>
+      padRow.map(
+        (padCell, colIdx) => `
+        <div class="panel--${COLORS[rowIdx]}">
+          <input type="checkbox" id="cell-${rowIdx}-${colIdx}" ${
+          padCell ? 'checked' : ''
+        } />
+          <label class="panel-cell" for="cell-${rowIdx}-${colIdx}"></label>
+        </div>`
+      )
+    )
+    .flat()
+    .join('');
+};
 
 const stopMusic = () => {
+  document.querySelectorAll('.running').forEach($label => {
+    $label.classList.remove('running');
+  });
   clearInterval(timerId);
   timerId = null;
 };
@@ -72,6 +118,16 @@ const playMusic = startColumn => {
         audio.play();
       });
 
+      document.querySelectorAll('.running').forEach($label => {
+        $label.classList.remove('running');
+      });
+
+      eachPlayingColumns.forEach((col, row) => {
+        document
+          .querySelector(`#cell-${row}-${col} + label`)
+          .classList.add('running');
+      });
+
       playingColumn += 1;
     }, oneBeatTime);
     return;
@@ -83,6 +139,7 @@ const playMusic = startColumn => {
 /* ==== event handlers ==== */
 window.addEventListener('DOMContentLoaded', () => {
   $bpmInput.value = bpm;
+  initCellElements();
 });
 
 $playBtn.addEventListener('click', () => {
@@ -100,7 +157,6 @@ let isActive = false;
 
 const handleMouseOver = e => {
   if (!e.target.matches('label.panel-cell')) return;
-  // console.log('타겟', e.target);
 
   const checkbox = e.target.previousElementSibling;
   const cellId = checkbox.id;
@@ -122,7 +178,6 @@ $musicPad.addEventListener('mousedown', e => {
   if (!e.target.matches('label.panel-cell')) return;
 
   const checkbox = e.target.previousElementSibling;
-  console.log('checkbox', checkbox);
 
   isActive = checkbox.checked;
 
@@ -216,7 +271,6 @@ document.onkeyup = event => {
   const insts = [...document.querySelector('.inst-list').children];
 
   if (event.key === 'ArrowRight') {
-    console.log($activeElem);
     // last panel
     if (xLoc === lastXLoc && yLoc === lastYLoc) {
       document.querySelector('.add-btn').focus();
