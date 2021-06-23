@@ -1,11 +1,10 @@
 /* ==== DOMs ==== */
+const $overlay = document.querySelector('.overlay');
 const $playBtn = document.querySelector('.play-btn');
 const $musicPad = document.querySelector('.music');
 
 const $fileUploadBtn = document.querySelector('input[type="file"]');
 const $fileDownloadBtn = document.querySelector('.file-save-btn');
-
-const $instAddBtn = document.querySelector('.inst-add');
 
 const $instList = document.querySelector('.inst-list');
 // 임시
@@ -13,6 +12,7 @@ const $bpmInput = document.querySelector('#bpm-input');
 const $beatInput = document.querySelector('#beat-input');
 // $musicPad.style['background-color'] = 'pink';
 /* ==== state ==== */
+const MIN_BEAT = 4; // 최소 비트
 const MAX_BEAT = 32; // 최대 비트
 const COLORS = [
   'red',
@@ -27,16 +27,27 @@ const COLORS = [
   'purple'
 ];
 
-const instSet = [{ inst: 'drum', file: './sound/1.wav', used: false }];
+const instSet = [
+  { inst: 'drum', file: './sound/1.wav', used: true },
+  { inst: 'side-stick', file: './sound/2.wav', used: true },
+  { inst: 'cymbal', file: './sound/3.wav', used: true },
+  { inst: 'opened-hihat', file: './sound/4.wav', used: true },
+  { inst: 'clap', file: './sound/5.wav', used: true },
+  { inst: 'closed-hihat', file: './sound/6.wav', used: false },
+  { inst: 'ride', file: './sound/7.wav', used: false },
+  { inst: 'kick', file: './sound/8.wav', used: false },
+  { inst: 'hightom', file: './sound/9.wav', used: false },
+  { inst: 'lowtom', file: './sound/10.wav', used: false }
+];
 
 const MIN_TO_MS = 60000; // 1min = 60000ms
 let beat = 8; // 초기 비트
 let musicInfo = [
   { inst: 'drum', file: './sound/1.wav', beat },
-  { inst: 'drum', file: './sound/2.wav', beat },
-  { inst: 'drum', file: './sound/3.wav', beat },
-  { inst: 'drum', file: './sound/4.wav', beat }
-  // { inst: 'drum', file: './sound/5.wav', beat }
+  { inst: 'side-stick', file: './sound/2.wav', beat },
+  { inst: 'cymbal', file: './sound/3.wav', beat },
+  { inst: 'opened-hihat', file: './sound/4.wav', beat },
+  { inst: 'clap', file: './sound/5.wav', beat }
 ];
 
 // real data
@@ -50,8 +61,8 @@ let padArr = [
   [0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0]
-  // [1, 1, 1, 1, 0, 0, 1, 0]
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [1, 1, 1, 1, 0, 0, 1, 0]
 ];
 
 let bpm = 150;
@@ -95,38 +106,41 @@ const initCellElements = () => {
 
   // TODO: 메뉴 토글이벤트
   $instAddBtn.addEventListener('click', () => {
-    const $instMenu = $instList.querySelector('.add-inst-menu');
-    console.log($instMenu.classList.contains('active'));
+    const $instMenu = document.querySelector('.add-inst-menu');
     if ($instMenu.classList.contains('active')) return;
     $instMenu.classList.add('active');
+    $overlay.classList.add('active');
     document.addEventListener('mouseup', function closeMenuHandler(e) {
       if (e.target.closest('.add-inst-menu')) return;
       $instMenu.classList.remove('active');
-      console.log(e);
+      $overlay.classList.remove('active');
       document.removeEventListener('mouseup', closeMenuHandler);
     });
   });
 };
 
 const initAddInstList = () => {
-  const $instAddBtn = document.querySelector('.inst-add');
   const $div = document.createElement('div');
   $div.className = 'add-inst-menu';
   const $ul = document.createElement('ul');
   $ul.className = 'add-inst-list';
   $ul.innerHTML = instSet
-    .map(inst => {
-      if (inst.used) return '';
-      return `<li class="add-inst-item">
-    <button class="add-inst-btn">
-      <span class="add-icon icon-${inst.inst}"></span>
-      <span class="add-inst-name">${inst.inst}</span>
-    </button>
-  </li>`;
-    })
+    .map(
+      inst => `<li class="add-inst-item">
+          <input type="checkbox" id="inst-item-${inst.inst}" ${
+        inst.used ? 'checked' : ''
+      }/>
+          <label for="inst-item-${inst.inst}">
+            <span class="add-icon icon-${inst.inst}"></span>
+            <span class="add-inst-name">${inst.inst
+              .replace('-', ' ')
+              .toUpperCase()}</span>
+          </label>
+        </li>`
+    )
     .join('');
   $div.appendChild($ul);
-  $instAddBtn.insertAdjacentElement('afterend', $div);
+  document.body.appendChild($div);
 };
 
 const stopMusic = () => {
@@ -338,8 +352,8 @@ document
     if (!target.matches('button')) return;
     const delta = target.classList.contains('beat-up-btn') ? 1 : -1;
     beat += delta;
-    if (beat < 4) beat = 4;
-    if (beat > 16) beat = 16;
+    if (beat < MIN_BEAT) beat = MIN_BEAT;
+    if (beat > MAX_BEAT) beat = MAX_BEAT;
     $beatInput.value = beat;
     changeBeat();
   });
@@ -373,8 +387,8 @@ document.querySelector('.file-clear-btn').addEventListener('click', () => {
 $beatInput.addEventListener('keyup', e => {
   if (e.key === 'Enter') {
     beat = +$beatInput.value;
-    if (beat < 4) beat = 4;
-    if (beat > 16) beat = 16;
+    if (beat < MIN_BEAT) beat = MIN_BEAT;
+    if (beat > MAX_BEAT) beat = MAX_BEAT;
     $beatInput.value = beat;
     $beatInput.blur();
     changeBeat();
