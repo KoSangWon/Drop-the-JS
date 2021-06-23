@@ -1,7 +1,7 @@
 /* ==== DOMs ==== */
 const $playBtn = document.querySelector('.play-btn');
 const $musicPad = document.querySelector('.music');
-const $instAddBtn = document.querySelector('.inst-add');
+const $instList = document.querySelector('.inst-list');
 // 임시
 const $bpmInput = document.querySelector('#bpm-input');
 $musicPad.style['background-color'] = 'pink';
@@ -20,6 +20,8 @@ const COLORS = [
   'purple'
 ];
 
+const instSet = [{ inst: 'drum', file: './sound/1.wav', used: false }];
+
 const MIN_TO_MS = 60000; // 1min = 60000ms
 const beat = 8; // 초기 비트
 const musicInfo = [
@@ -37,7 +39,7 @@ const musicInfo = [
 // );
 
 // dummy data
-const padArr = [
+let padArr = [
   [0, 0, 0, 0, 0, 0, 0, 0],
   [1, 0, 0, 0, 0, 0, 1, 0],
   [1, 0, 1, 0, 1, 0, 1, 0],
@@ -51,19 +53,19 @@ let timerId = null;
 
 /* ==== functions ==== */
 const initCellElements = () => {
-  $instAddBtn.insertAdjacentHTML(
-    'afterbegin',
+  $instList.innerHTML =
     padArr
       .map(
         (_, idx) => `
-          <li class="inst-item">
-            <div class="inst-item icon-${musicInfo[idx].inst} color-${COLORS[idx]}"></div>
-            <button class="inst-delete-btn"></button>
-          </li>
-    `
+    <li class="inst-item">
+      <div class="icon-${musicInfo[idx].inst} color-${COLORS[idx]}"></div>
+      <button class="inst-delete-btn"></button>
+    </li>`
       )
-      .join('')
-  );
+      .join('') +
+    `<li class="inst-item inst-add">
+  <button class="add-btn"></button>
+</li>`;
   $musicPad.innerHTML = padArr
     .map((padRow, rowIdx) =>
       padRow.map(
@@ -78,6 +80,43 @@ const initCellElements = () => {
     )
     .flat()
     .join('');
+
+  const $instAddBtn = $instList.querySelector('.add-btn');
+
+  // TODO: 메뉴 토글이벤트
+  $instAddBtn.addEventListener('click', () => {
+    const $instMenu = $instList.querySelector('.add-inst-menu');
+    console.log($instMenu.classList.contains('active'));
+    if ($instMenu.classList.contains('active')) return;
+    $instMenu.classList.add('active');
+    document.addEventListener('mouseup', function closeMenuHandler(e) {
+      if (e.target.closest('.add-inst-menu')) return;
+      $instMenu.classList.remove('active');
+      console.log(e);
+      document.removeEventListener('mouseup', closeMenuHandler);
+    });
+  });
+};
+
+const initAddInstList = () => {
+  const $instAddBtn = document.querySelector('.inst-add');
+  const $div = document.createElement('div');
+  $div.className = 'add-inst-menu';
+  const $ul = document.createElement('ul');
+  $ul.className = 'add-inst-list';
+  $ul.innerHTML = instSet
+    .map(inst => {
+      if (inst.used) return '';
+      return `<li class="add-inst-item">
+    <button class="add-inst-btn">
+      <span class="add-icon icon-${inst.inst}"></span>
+      <span class="add-inst-name">${inst.inst}</span>
+    </button>
+  </li>`;
+    })
+    .join('');
+  $div.appendChild($ul);
+  $instAddBtn.insertAdjacentElement('afterend', $div);
 };
 
 const stopMusic = () => {
@@ -140,6 +179,7 @@ const playMusic = startColumn => {
 window.addEventListener('DOMContentLoaded', () => {
   $bpmInput.value = bpm;
   initCellElements();
+  initAddInstList();
 });
 
 $playBtn.addEventListener('click', () => {
@@ -232,7 +272,8 @@ document
 
 // pad 초기화
 document.querySelector('.file-clear-btn').addEventListener('click', () => {
-  padArr = Array.from(Array(musicInfo.length), () => Array(MAX_BEAT).fill(0));
+  padArr = padArr.map(row => row.fill(0));
+  initCellElements();
 });
 
 // BPM input 변경
