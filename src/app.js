@@ -500,6 +500,11 @@ $fileDownloadBtn.addEventListener('click', () => {
 
 // keyboard interaction 리팩토링 필요]
 document.addEventListener('keyup', event => {
+  if(event.key === 'Escape'){
+    const $instMenu = document.querySelector('.add-inst-menu');
+    $instMenu?.classList.remove('active');
+    $overlay?.classList.remove('active');
+  }
   if (document.activeElement.matches('.body')) return;
 
   const $activeElem = document.activeElement;
@@ -528,7 +533,6 @@ document.addEventListener('keyup', event => {
     // inst -> first panel
     else if ($activeElem.parentElement.matches('.inst-item')) {
       const instInd = insts.indexOf($activeElem.parentElement);
-      console.log(instInd);
       document.getElementById(`cell-${instInd}-0`).focus();
     }
     // move panel to right
