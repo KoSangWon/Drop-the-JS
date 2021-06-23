@@ -1,3 +1,16 @@
+// const AudioContext = window.AudioContext || window.webkitAudioContext;
+// const audioContext = new AudioContext();
+// const audioEmitter = new Audio();
+// const audio1 = new Audio('./sound/1.wav');
+// const audioDestination = audioContext.destination;
+// const emitterNode = audioContext.createMediaElementSource(audioEmitter);
+// const audio1Node = audioContext.createMediaElementSource(audio1);
+// const channelMerger = audioContext.createChannelMerger();
+// audio1
+// audio1Node.connect(emitterNode);
+// audioContext.resume();
+// audioEmitter.play();
+
 /* ==== DOMs ==== */
 const $overlay = document.querySelector('.overlay');
 const $playBtn = document.querySelector('.play-btn');
@@ -49,7 +62,7 @@ const instSet = [
 ];
 
 const MIN_TO_MS = 60000; // 1min = 60000ms
-let beat = 32; // 초기 비트
+let beat = 16; // 초기 비트
 let musicInfo = [
   { inst: 'drum', file: './sound/1.wav', beat },
   { inst: 'side-stick', file: './sound/2.wav', beat },
@@ -60,35 +73,10 @@ let musicInfo = [
 
 // real data
 // Pad 좌표 모두 0으로 초기화(32비트)
-// const padArr = Array.from(Array(musicInfo.length), () =>
-//   Array(MAX_BEAT).fill(0)
-// );
+let padArr = Array.from(Array(musicInfo.length), () => Array(beat).fill(0));
 
 // dummy data
 let currentPage = 1;
-
-let padArr = [
-  [
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 1
-  ],
-  [
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 1
-  ],
-  [
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 1
-  ],
-  [
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 1
-  ],
-  [
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 1
-  ]
-];
 
 let bpm = 150;
 let playingColumn = 0;
