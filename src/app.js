@@ -8,6 +8,7 @@ const $fileDownloadBtn = document.querySelector('.file-upload-btn');
 const $instAddBtn = document.querySelector('.inst-add');
 // 임시
 const $bpmInput = document.querySelector('#bpm-input');
+const $beatInput = document.querySelector('#beat-input');
 $musicPad.style['background-color'] = 'pink';
 /* ==== state ==== */
 const MAX_BEAT = 32; // 최대 비트
@@ -25,7 +26,7 @@ const COLORS = [
 ];
 
 const MIN_TO_MS = 60000; // 1min = 60000ms
-const beat = 8; // 초기 비트
+let beat = 8; // 초기 비트
 const musicInfo = [
   { inst: 'drum', file: './sound/1.wav', beat },
   { inst: 'drum', file: './sound/2.wav', beat },
@@ -56,7 +57,7 @@ let timerId = null;
 /* ==== functions ==== */
 const initCellElements = () => {
   $instAddBtn.insertAdjacentHTML(
-    'afterbegin',
+    'beforebegin',
     padArr
       .map(
         (_, idx) => `
@@ -140,9 +141,20 @@ const playMusic = startColumn => {
   stopMusic();
 };
 
+// change bpm
+const changeBeat = () => {
+  padArr = padArr.map(row =>
+    row.length < beat
+      ? [...row, ...Array.from({ length: beat - row.length }, () => 0)]
+      : row.slice(0, beat)
+  );
+  initCellElements();
+};
+
 /* ==== event handlers ==== */
 window.addEventListener('DOMContentLoaded', () => {
   $bpmInput.value = bpm;
+  $beatInput.value = 8;
   initCellElements();
 });
 
@@ -215,8 +227,26 @@ $musicPad.addEventListener('click', e => {
   e.preventDefault();
 });
 
-// down up
+// mobile touch event
+$musicPad.addEventListener('touchmove', e => {
+  e.preventDefault();
+});
+
 // beat 변경
+document
+  .querySelector('.beat-control')
+  .addEventListener('click', ({ target }) => {
+    if (!target.matches('button')) return;
+    const delta = target.classList.contains('beat-up-btn') ? 1 : -1;
+    beat += delta;
+    if (beat < 4) beat = 4;
+    if (beat > 16) beat = 16;
+    $beatInput.value = beat;
+    changeBeat();
+  });
+
+// down up
+// bpm 변경
 document
   .querySelector('.bpm-control')
   .addEventListener('click', ({ target }) => {
@@ -239,6 +269,18 @@ document.querySelector('.file-clear-btn').addEventListener('click', () => {
   padArr = Array.from(Array(musicInfo.length), () => Array(MAX_BEAT).fill(0));
 });
 
+// Beat input 변경
+$beatInput.addEventListener('keyup', e => {
+  if (e.key === 'Enter') {
+    beat = +$beatInput.value;
+    if (beat < 4) beat = 4;
+    if (beat > 16) beat = 16;
+    $beatInput.value = beat;
+    $beatInput.blur();
+    changeBeat();
+  }
+});
+
 // BPM input 변경
 $bpmInput.addEventListener('keyup', e => {
   if (e.key === 'Enter') {
@@ -252,6 +294,12 @@ $bpmInput.addEventListener('keyup', e => {
       playMusic(playingColumn);
     }
   }
+});
+
+$beatInput.addEventListener('input', () => {
+  $beatInput.value = $beatInput.value
+    .replace(/[^0-9]/g, '')
+    .replace(/(\..*)\./g, '$1');
 });
 
 $bpmInput.addEventListener('input', () => {
@@ -276,9 +324,9 @@ $fileUploadBtn.onchange = () => {
   };
 };
 
-// keyboard interaction
-document.onkeyup = event => {
-  // if(!document.activeElement.parentElement.matches('.inst-item') && !document.activeElement.nextElementSibling?.matches('.panel-cell'))return;
+// keyboard interaction 리팩토링 필요]
+document.addEventListener('keyup', event => {
+  if (document.activeElement.matches('.body')) return;
 
   const $activeElem = document.activeElement;
   // get position
@@ -306,10 +354,11 @@ document.onkeyup = event => {
     // inst -> first panel
     else if ($activeElem.parentElement.matches('.inst-item')) {
       const instInd = insts.indexOf($activeElem.parentElement);
+      console.log(instInd);
       document.getElementById(`cell-${instInd}-0`).focus();
     }
     // move panel to right
-    else {
+    else if (yLoc < lastYLoc) {
       document.getElementById(`cell-${xLoc}-${+yLoc + 1}`).focus();
     }
   } else if (event.key === 'ArrowLeft') {
@@ -326,16 +375,40 @@ document.onkeyup = event => {
       document.getElementById(`cell-${instInd - 1}-${lastYLoc}`).focus();
     }
     // move panel to left
-    else {
+    else if (yLoc > 0) {
       document.getElementById(`cell-${xLoc}-${+yLoc - 1}`).focus();
     }
   } else if (event.key === 'ArrowDown') {
-    // inst -> inst
     if ($activeElem.parentElement.matches('.inst-item')) {
       const instInd = insts.indexOf($activeElem.parentElement);
+      // inst -> inst
       if (instInd === insts.length - 1) {
         document.querySelector('.play-btn').focus();
       }
+      // plus -> play
+      else {
+        insts[instInd + 1].lastElementChild.focus();
+      }
+    } else if (xLoc === lastXLoc) {
+      document.querySelector('.add-btn').focus();
+    } else if ($activeElem.matches('.add-btn')) {
+      document.querySelector('.play-btn').focus();
+    } else if (xLoc < lastXLoc) {
+      document.getElementById(`cell-${+xLoc + 1}-${yLoc}`).focus();
+    }
+  } else if (event.key === 'ArrowUp') {
+    if ($activeElem.parentElement.matches('.inst-item')) {
+      const instInd = insts.indexOf($activeElem.parentElement);
+      // inst -> inst
+      if (instInd !== 0) {
+        insts[instInd - 1].lastElementChild.focus();
+      }
+    } else if ($activeElem.matches('.add-btn')) {
+      insts[insts.length - 1].lastElementChild.focus();
+    } else if ($activeElem.matches('.play-btn')) {
+      document.querySelector('.add-btn').focus();
+    } else if (xLoc > 0) {
+      document.getElementById(`cell-${+xLoc - 1}-${yLoc}`).focus();
     }
   }
-};
+});
