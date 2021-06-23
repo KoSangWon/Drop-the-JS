@@ -4,6 +4,7 @@ const $musicPad = document.querySelector('.music');
 const $instAddBtn = document.querySelector('.inst-add');
 // 임시
 const $bpmInput = document.querySelector('#bpm-input');
+const $beatInput = document.querySelector('#beat-input');
 $musicPad.style['background-color'] = 'pink';
 /* ==== state ==== */
 const MAX_BEAT = 32; // 최대 비트
@@ -21,7 +22,7 @@ const COLORS = [
 ];
 
 const MIN_TO_MS = 60000; // 1min = 60000ms
-const beat = 8; // 초기 비트
+let beat = 8; // 초기 비트
 const musicInfo = [
   { inst: 'drum', file: './sound/1.wav', beat },
   { inst: 'drum', file: './sound/2.wav', beat },
@@ -37,7 +38,7 @@ const musicInfo = [
 // );
 
 // dummy data
-const padArr = [
+let padArr = [
   [0, 0, 0, 0, 0, 0, 0, 0],
   [1, 0, 0, 0, 0, 0, 1, 0],
   [1, 0, 1, 0, 1, 0, 1, 0],
@@ -52,7 +53,7 @@ let timerId = null;
 /* ==== functions ==== */
 const initCellElements = () => {
   $instAddBtn.insertAdjacentHTML(
-    'afterbegin',
+    'beforebegin',
     padArr
       .map(
         (_, idx) => `
@@ -136,9 +137,18 @@ const playMusic = startColumn => {
   stopMusic();
 };
 
+// change bpm
+const changeBeat = () => {
+  padArr = padArr.map(row =>row.length < beat
+      ?  [...row, ...Array.from({ length: beat - row.length }, () => 0)]
+      : row.slice(0, beat));
+    initCellElements()
+};
+
 /* ==== event handlers ==== */
 window.addEventListener('DOMContentLoaded', () => {
   $bpmInput.value = bpm;
+  $beatInput.value = 8;
   initCellElements();
 });
 
@@ -211,8 +221,24 @@ $musicPad.addEventListener('click', e => {
   e.preventDefault();
 });
 
-// down up
+// mobile touch event
+$musicPad.addEventListener('touchmove', e => {
+  e.preventDefault();
+});
+
 // beat 변경
+document.querySelector('.beat-control').addEventListener('click', ({target}) => {
+  if(!target.matches('button')) return;
+  const delta = target.classList.contains('beat-up-btn') ? 1 : -1;
+  beat += delta;
+  if (beat < 4) beat = 4;
+  if (beat > 16) beat = 16;
+  $beatInput.value = beat;
+  changeBeat();
+});
+
+// down up
+// bpm 변경
 document
   .querySelector('.bpm-control')
   .addEventListener('click', ({ target }) => {
@@ -235,6 +261,18 @@ document.querySelector('.file-clear-btn').addEventListener('click', () => {
   padArr = Array.from(Array(musicInfo.length), () => Array(MAX_BEAT).fill(0));
 });
 
+// Beat input 변경
+$beatInput.addEventListener('keyup', e => {
+  if (e.key === 'Enter') {
+    beat = +$beatInput.value;
+    if (beat < 4) beat = 4;
+    if (beat > 16) beat = 16;
+    $beatInput.value = beat;
+    $beatInput.blur();
+    changeBeat();
+  }
+});
+
 // BPM input 변경
 $bpmInput.addEventListener('keyup', e => {
   if (e.key === 'Enter') {
@@ -250,76 +288,17 @@ $bpmInput.addEventListener('keyup', e => {
   }
 });
 
+$beatInput.addEventListener('input', () => {
+  $beatInput.value = $beatInput.value
+    .replace(/[^0-9]/g, '')
+    .replace(/(\..*)\./g, '$1');
+});
+
 $bpmInput.addEventListener('input', () => {
   $bpmInput.value = $bpmInput.value
     .replace(/[^0-9]/g, '')
     .replace(/(\..*)\./g, '$1');
 });
-
-// keyboard interaction
-document.onkeyup = event => {
-  // if(!document.activeElement.parentElement.matches('.inst-item') && !document.activeElement.nextElementSibling?.matches('.panel-cell'))return;
-
-  const $activeElem = document.activeElement;
-  // get position
-  const [, xLoc, yLoc] = $activeElem.id.split('-');
-  const [, lastXLoc, lastYLoc] = document
-    .querySelector('.music')
-    .lastElementChild.firstElementChild.id.split('-');
-
-  // instrument list
-  const insts = [...document.querySelector('.inst-list').children];
-
-  if (event.key === 'ArrowRight') {
-    // last panel
-    if (xLoc === lastXLoc && yLoc === lastYLoc) {
-      document.querySelector('.add-btn').focus();
-    }
-    // panel is end of line
-    else if (yLoc === lastYLoc) {
-      insts[+xLoc + 1].lastElementChild.focus();
-    }
-    // add button -> play button
-    else if ($activeElem.matches('.inst-item > .add-btn')) {
-      document.querySelector('.play-btn').focus();
-    }
-    // inst -> first panel
-    else if ($activeElem.parentElement.matches('.inst-item')) {
-      const instInd = insts.indexOf($activeElem.parentElement);
-      document.getElementById(`cell-${instInd}-0`).focus();
-    }
-    // move panel to right
-    else {
-      document.getElementById(`cell-${xLoc}-${+yLoc + 1}`).focus();
-    }
-  } else if (event.key === 'ArrowLeft') {
-    // if first panel, move to deltet button
-    if (yLoc === '0') {
-      insts[xLoc].lastElementChild.focus();
-    } else if ($activeElem.matches('.add-btn')) {
-      document.getElementById(`cell-${lastXLoc}-${lastYLoc}`).focus();
-    }
-    // if panel is first panel, move to inst
-    else if ($activeElem.parentElement.matches('.inst-item')) {
-      const instInd = insts.indexOf($activeElem.parentElement);
-      if (instInd === 0) return;
-      document.getElementById(`cell-${instInd - 1}-${lastYLoc}`).focus();
-    }
-    // move panel to left
-    else {
-      document.getElementById(`cell-${xLoc}-${+yLoc - 1}`).focus();
-    }
-  } else if (event.key === 'ArrowDown') {
-    // inst -> inst
-    if ($activeElem.parentElement.matches('.inst-item')) {
-      const instInd = insts.indexOf($activeElem.parentElement);
-      if (instInd === insts.length - 1) {
-        document.querySelector('.play-btn').focus();
-      }
-    }
-  }
-};
-
 // keyboard interaction 리팩토링 필요]
 document.addEventListener('keyup', event => {
   if (document.activeElement.matches('.body')) return;
@@ -350,6 +329,7 @@ document.addEventListener('keyup', event => {
     // inst -> first panel
     else if ($activeElem.parentElement.matches('.inst-item')) {
       const instInd = insts.indexOf($activeElem.parentElement);
+      console.log(instInd);
       document.getElementById(`cell-${instInd}-0`).focus();
     }
     // move panel to right
