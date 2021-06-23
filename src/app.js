@@ -273,12 +273,12 @@ $musicPad.addEventListener('click', e => {
 // mobile touch event
 
 const handleTouchMove = e => {
-  const {clientX, clientY} = e.touches[0];
+  const { clientX, clientY } = e.touches[0];
   console.log(e.touches);
-  if(!clientX || !clientY) return;
+  if (!clientX || !clientY) return;
 
   const $touchElem = document.elementFromPoint(clientX, clientY);
-  if(!$touchElem.matches('label.panel-cell')) return;
+  if (!$touchElem.matches('label.panel-cell')) return;
 
   const checkbox = $touchElem.previousElementSibling;
 
@@ -295,8 +295,7 @@ const handleTouchMove = e => {
     padArr[xLoc][yLoc] = 0;
     checkbox.checked = false;
   }
-
-}
+};
 
 $musicPad.addEventListener('touchstart', e => {
   e.preventDefault();
@@ -322,7 +321,6 @@ $musicPad.addEventListener('touchstart', e => {
   }
 
   $musicPad.addEventListener('touchmove', handleTouchMove);
-  
 });
 
 $musicPad.removeEventListener('touchend', handleTouchMove);

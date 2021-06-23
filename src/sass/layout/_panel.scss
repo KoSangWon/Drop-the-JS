@@ -22,7 +22,8 @@
 .inst-list {
   display: flex;
   flex-direction: column;
-  margin-right: 10px;
+  margin-right: -10px;
+  padding: 20px 0 20px 20px;
 }
 
 .inst-item {
@@ -49,7 +50,7 @@
     top: 0;
     opacity: 0;
     position: absolute;
-    @include circleButton(15px, 15px, $cell-red, false);
+    @include circleButton(20px, 20px, $cell-red, false);
     @include icon('/assets/img/x_icon.svg');
   }
   &:hover > .inst-delete-btn,
@@ -71,6 +72,8 @@
   display: grid;
   grid-template: auto / repeat($cell-col, auto);
   gap: 8px;
+  overflow-x: hidden;
+  padding: 20px;
   @include mobile {
     gap: 4px;
   }
