@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
     <title>Drop the JS</title>
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link
@@ -48,9 +49,10 @@
             <button class="add-btn"></button>
           </li>
         </ul>
-        <section class="music">
-          <h2 class="a11y-hidden" lang="en">Beat Pad</h2>
-          <!-- <div class="panel--red">
+        <div class="music-mask">
+          <section class="music">
+            <h2 class="a11y-hidden" lang="en">Beat Pad</h2>
+            <!-- <div class="panel--red">
             <input type="checkbox" id="cell-0-0" />
             <label class="panel-cell" for="cell-0-0"></label>
           </div>
@@ -82,8 +84,9 @@
             <input type="checkbox" id="cell-0-7" />
             <label class="panel-cell" for="cell-0-7"></label>
           </div> -->
-        </section>
-        <section class="controls">
+          </section>
+        </div>
+        <section class="controls" draggable="true">
           <h2 class="a11y-hidden" lang="en">Control Panel</h2>
           <button class="play-btn"></button>
           <div class="control-wrapper">

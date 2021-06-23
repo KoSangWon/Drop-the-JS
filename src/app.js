@@ -2,6 +2,13 @@
 const $overlay = document.querySelector('.overlay');
 const $playBtn = document.querySelector('.play-btn');
 const $musicPad = document.querySelector('.music');
+const $musicPadMask = document.querySelector('.music-mask');
+const $controls = document.querySelector('.controls');
+
+const $pageUpBtn = document.querySelector('.page-up-btn');
+const $pageDownBtn = document.querySelector('.page-down-btn');
+const $currentPage = document.querySelector('.current-page');
+const $totalPage = document.querySelector('.total-page');
 
 const $fileUploadBtn = document.querySelector('input[type="file"]');
 const $fileDownloadBtn = document.querySelector('.file-save-btn');
@@ -11,6 +18,7 @@ const $bpmInput = document.querySelector('#bpm-input');
 const $beatInput = document.querySelector('#beat-input');
 
 /* ==== state ==== */
+const VIEW_PAGE = matchMedia('screen and (max-width: 767px)').matches ? 8 : 16;
 const MIN_BEAT = 4; // 최소 비트
 const MAX_BEAT = 32; // 최대 비트
 const COLORS = [
@@ -40,7 +48,7 @@ const instSet = [
 ];
 
 const MIN_TO_MS = 60000; // 1min = 60000ms
-let beat = 8; // 초기 비트
+let beat = 32; // 초기 비트
 let musicInfo = [
   { inst: 'drum', file: './sound/1.wav', beat },
   { inst: 'side-stick', file: './sound/2.wav', beat },
@@ -56,12 +64,29 @@ let musicInfo = [
 // );
 
 // dummy data
+let currentPage = 1;
+
 let padArr = [
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [1, 1, 1, 1, 0, 0, 1, 0]
+  [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 1
+  ],
+  [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 1
+  ],
+  [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 1
+  ],
+  [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 1
+  ],
+  [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 1
+  ]
 ];
 
 let bpm = 150;
@@ -96,6 +121,8 @@ const initAddInstList = () => {
 
 const initCellElements = () => {
   $musicPad.style.setProperty('--cell-col', beat);
+  $totalPage.textContent = '/' + Math.floor(beat / VIEW_PAGE);
+  $currentPage.textContent = currentPage;
   $instList.innerHTML =
     padArr
       .map(
@@ -194,6 +221,12 @@ const initCellElements = () => {
   });
 };
 
+const movePage = page => {
+  currentPage = page;
+  $currentPage.textContent = currentPage;
+  $musicPad.style.setProperty('--page-offset', currentPage - 1);
+};
+
 const stopMusic = () => {
   document.querySelectorAll('.running').forEach($label => {
     $label.classList.remove('running');
@@ -268,9 +301,20 @@ const changeBeat = () => {
 /* ==== event handlers ==== */
 window.addEventListener('DOMContentLoaded', () => {
   $bpmInput.value = bpm;
-  $beatInput.value = 8;
+  $beatInput.value = beat;
   initCellElements();
   initAddInstList();
+});
+
+// 페이지 이동
+$pageUpBtn.addEventListener('click', () => {
+  if (currentPage >= Math.floor(beat / VIEW_PAGE)) return;
+  movePage(currentPage + 1);
+});
+
+$pageDownBtn.addEventListener('click', () => {
+  if (currentPage <= 1) return;
+  movePage(currentPage - 1);
 });
 
 $playBtn.addEventListener('click', () => {
@@ -305,7 +349,7 @@ const handleMouseOver = e => {
   }
 };
 
-$musicPad.addEventListener('mousedown', e => {
+$musicPadMask.addEventListener('mousedown', e => {
   if (!e.target.matches('label.panel-cell')) return;
 
   const checkbox = e.target.previousElementSibling;
@@ -327,18 +371,18 @@ $musicPad.addEventListener('mousedown', e => {
     checkbox.checked = false;
   }
 
-  $musicPad.addEventListener('mouseover', handleMouseOver);
+  $musicPadMask.addEventListener('mouseover', handleMouseOver);
 });
 
-$musicPad.addEventListener('mouseup', () => {
-  $musicPad.removeEventListener('mouseover', handleMouseOver);
+$musicPadMask.addEventListener('mouseup', () => {
+  $musicPadMask.removeEventListener('mouseover', handleMouseOver);
 });
 
-$musicPad.addEventListener('mouseleave', () => {
-  $musicPad.removeEventListener('mouseover', handleMouseOver);
+$musicPadMask.addEventListener('mouseleave', () => {
+  $musicPadMask.removeEventListener('mouseover', handleMouseOver);
 });
 
-$musicPad.addEventListener('click', e => {
+$musicPadMask.addEventListener('click', e => {
   e.preventDefault();
 });
 
