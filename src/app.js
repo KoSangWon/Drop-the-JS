@@ -1,6 +1,10 @@
 /* ==== DOMs ==== */
 const $playBtn = document.querySelector('.play-btn');
 const $musicPad = document.querySelector('.music');
+
+const $fileUploadBtn = document.querySelector('.file-load-btn');
+const $fileDownloadBtn = document.querySelector('.file-upload-btn');
+
 const $instAddBtn = document.querySelector('.inst-add');
 // 임시
 const $bpmInput = document.querySelector('#bpm-input');
@@ -37,11 +41,11 @@ const musicInfo = [
 // );
 
 // dummy data
-const padArr = [
+let padArr = [
   [0, 0, 0, 0, 0, 0, 0, 0],
-  [1, 0, 0, 0, 0, 0, 1, 0],
-  [1, 0, 1, 0, 1, 0, 1, 0],
-  [1, 0, 0, 1, 0, 0, 0, 0]
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0]
   // [1, 1, 1, 1, 0, 0, 1, 0]
 ];
 
@@ -255,6 +259,22 @@ $bpmInput.addEventListener('input', () => {
     .replace(/[^0-9]/g, '')
     .replace(/(\..*)\./g, '$1');
 });
+
+// file upload
+$fileUploadBtn.onchange = () => {
+  const selectedFile = $fileUploadBtn.files[0];
+  console.log(selectedFile);
+
+  const reader = new FileReader();
+
+  reader.readAsText(selectedFile, 'UTF-8');
+
+  reader.onload = function (e) {
+    const fileData = e.target.result;
+    // fileData = JSON.parse(fileData);
+    console.log(fileData);
+  };
+};
 
 // keyboard interaction
 document.onkeyup = event => {
