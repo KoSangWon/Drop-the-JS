@@ -29,7 +29,14 @@
   position: relative;
   width: $cell-size;
   height: $cell-size;
-  margin-bottom: rem(10px);
+  border: 1px solid transparent;
+  margin-bottom: rem(8px);
+  @include mobile {
+    margin-bottom: rem(4px);
+  }
+  &:first-child {
+    margin-top: 0;
+  }
 
   .add-btn {
     @include circleButton($cell-size, $cell-size, transparent, false);
@@ -53,6 +60,8 @@
 
 .icon {
   &-drum {
+    width: 100%;
+    height: 100%;
     @include icon('/assets/img/drum-icon.svg');
     background-size: 50%;
   }
@@ -61,7 +70,7 @@
 .music {
   display: grid;
   grid-template: auto / repeat($cell-col, auto);
-  gap: 8px 8px;
+  gap: 8px;
   @include mobile {
     gap: 4px;
   }
@@ -73,10 +82,9 @@
   .panel {
     &--#{$key} {
       @include panelBox($value);
-      &:nth-child(4n) {
+      &.beat-gap {
         margin-right: 10px;
       }
-
       input {
         position: absolute;
         opacity: 0;
@@ -87,14 +95,20 @@
   }
 }
 
-.add-inst-list {
+.add-inst-menu {
   position: absolute;
-  display: none;
+  bottom: 0;
+  left: 50px;
+  visibility: hidden;
   min-width: rem(200px);
   border-radius: 10px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   background-color: #fff;
   overflow: hidden;
+  z-index: 1;
+  &.active {
+    visibility: visible;
+  }
 }
 
 .add-inst-btn {
@@ -104,21 +118,33 @@
   text-align: left;
   padding: 10px 0;
   padding-left: 10px;
+  // line-height: 30px;
+  // height: 30px;
   &:active {
     background-color: rgba($primary-yellow, 0.4);
+    color: inherit;
+  }
+  & > .add-inst-name {
+    vertical-align: middle;
+  }
+  & > .add-icon {
+    vertical-align: middle;
+    display: inline-block;
+    height: 30px;
+    width: 30px;
   }
 }
 
-.add-inst-icon {
-  &--drum {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    @include icon('/assets/img/drum-icon.svg');
-    background-size: 80%;
-    vertical-align: top;
-  }
-}
+// .inst-icon {
+//   &--drum {
+//     display: inline-block;
+//     width: 20px;
+//     height: 20px;
+//     @include icon('/assets/img/drum-icon.svg');
+//     background-size: 80%;
+//     vertical-align: top;
+//   }
+// }
 
 .add-inst-name {
   vertical-align: bottom;
