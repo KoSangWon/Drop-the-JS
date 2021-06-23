@@ -1,0 +1,17 @@
+@import 'header';
+@import 'panel';
+@import 'controller';
+
+.color {
+  @each $key, $value in $cell-colors {
+    &-#{$key} {
+      filter: colorToFilter($value);
+    }
+  }
+}
+
+.step-sequencer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

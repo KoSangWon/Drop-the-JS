@@ -1,0 +1,170 @@
+.page-control {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin-bottom: rem(24px);
+  animation: fadeIn 1s 0.5s backwards;
+  @include mobile {
+    margin-bottom: rem(18px);
+  }
+  .total-page {
+    margin-right: (8px);
+    font-size: rem(16px);
+    color: $dark-gray;
+    @include mobile {
+      font-size: rem(14px);
+    }
+  }
+  .current-page {
+    margin-left: rem(8px);
+    font-size: rem(18px);
+    @include mobile {
+      font-size: rem(16px);
+    }
+  }
+}
+
+.page-down-btn,
+.page-up-btn {
+  @include circleButton(20px, 20px);
+  @include mobile {
+    @include circleButton(15px, 15px);
+  }
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 25px 60px;
+  background-color: #fff;
+  border-radius: 50px 50px 0 0;
+  box-shadow: 0 0 100px rgba(0, 0, 0, 0.05);
+  animation: appearUp 1s 0.5s backwards;
+  @include mobile {
+    bottom: -140px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    min-height: 200px;
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 10px;
+      width: 60px;
+      height: 2px;
+      border-radius: 1px;
+      background-color: rgba($dark-gray, 0.3);
+    }
+  }
+}
+
+// buttons
+
+.play-btn {
+  @include circleButton(80px, 80px);
+  @include mobile {
+    @include circleButton(60px, 60px);
+  }
+  @include icon('/assets/img/play_icon.svg');
+}
+
+.control-wrapper {
+  display: flex;
+  justify-content: space-between;
+  @include mobile {
+    min-width: 300px;
+    max-width: 350px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+.beat-control,
+.bpm-control {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  &:first-child {
+    margin-right: rem(24px);
+  }
+  @include mobile {
+    margin: 0;
+    margin-bottom: 12px;
+  }
+  label {
+    display: block;
+    font-size: rem(14px);
+    font-weight: 700;
+  }
+  input {
+    width: rem(72px);
+    font-size: rem(36px);
+    font-weight: 700;
+    color: $dark-yellow;
+    text-align: center;
+    border: none;
+    @include mobile {
+      font-size: rem(28px);
+      width: rem(50px);
+    }
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+.beat-down-btn,
+.beat-up-btn,
+.bpm-down-btn,
+.bpm-up-btn {
+  @include circleButton(30px, 30px);
+  @include mobile {
+    @include circleButton(25px, 25px);
+  }
+}
+
+.plus-icon {
+  @include icon('/assets/img/plus_icon.svg');
+  order: 1;
+}
+.minus-icon {
+  @include icon('/assets/img/minus_icon.svg');
+}
+
+.file-control {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: rem(42px);
+  @include mobile {
+    margin: 0;
+  }
+}
+
+.file-load-btn,
+.file-save-btn,
+.file-clear-btn {
+  @include circleButton(40px, 40px);
+  @include mobile {
+    @include circleButton(40px, 40px);
+  }
+  &:not(:last-child) {
+    margin-right: rem(16px);
+  }
+}
+
+.file-load-btn {
+  @include icon('/assets/img/load_icon.svg');
+}
+.file-save-btn {
+  @include icon('/assets/img/save_icon.svg');
+}
+.file-clear-btn {
+  @include icon('/assets/img/clear_icon.svg');
+}
