@@ -27,10 +27,9 @@ const $fileUploadBtn = document.querySelector('input[type="file"]');
 const $fileDownloadBtn = document.querySelector('.file-save-btn');
 
 const $instList = document.querySelector('.inst-list');
-// 임시
 const $bpmInput = document.querySelector('#bpm-input');
 const $beatInput = document.querySelector('#beat-input');
-// $musicPad.style['background-color'] = 'pink';
+
 /* ==== state ==== */
 const VIEW_PAGE = matchMedia('screen and (max-width: 767px)').matches ? 8 : 16;
 const MIN_BEAT = 4; // 최소 비트
@@ -240,9 +239,10 @@ const playMusic = startColumn => {
 
       // 각 재생 중인 column에서의 Pad 값
       const eachStatus = padArr.map((row, i) => row[eachPlayingColumns[i]]);
-
+      console.log('eachSTa', eachStatus);
       // 플레이할 악기 배열
       const instsToPlay = [];
+
       eachStatus.forEach((v, i) => {
         if (v) instsToPlay.push(musicInfo[i].file);
       });
@@ -471,30 +471,46 @@ document.querySelector('.file-clear-btn').addEventListener('click', () => {
 });
 
 // Beat input 변경
+const setBeatInputValue = val => {
+  beat = val;
+  if (beat < 4) beat = 4;
+  if (beat > 16) beat = 16;
+  $beatInput.value = beat;
+  $beatInput.blur();
+  changeBeat();
+};
+
 $beatInput.addEventListener('keyup', e => {
   if (e.key === 'Enter') {
-    beat = +$beatInput.value;
-    if (beat < MIN_BEAT) beat = MIN_BEAT;
-    if (beat > MAX_BEAT) beat = MAX_BEAT;
-    $beatInput.value = beat;
-    $beatInput.blur();
-    changeBeat();
+    setBeatInputValue(+$beatInput.value);
   }
 });
+
+$beatInput.addEventListener('focusout', () => {
+  setBeatInputValue(+$beatInput.value);
+});
+
+const setBpmInputValue = val => {
+  bpm = val;
+  if (bpm < 100) bpm = 100;
+  if (bpm > 800) bpm = 800;
+  $bpmInput.value = bpm;
+  $bpmInput.blur();
+  if (timerId) {
+    stopMusic();
+    playMusic(playingColumn);
+  }
+};
 
 // BPM input 변경
 $bpmInput.addEventListener('keyup', e => {
   if (e.key === 'Enter') {
-    bpm = +$bpmInput.value;
-    if (bpm < 100) bpm = 100;
-    if (bpm > 800) bpm = 800;
-    $bpmInput.value = bpm;
-    $bpmInput.blur();
-    if (timerId) {
-      stopMusic();
-      playMusic(playingColumn);
-    }
+    setBpmInputValue(+$bpmInput.value);
   }
+});
+
+$bpmInput.addEventListener('focusout', () => {
+  setBpmInputValue(+$bpmInput.value);
 });
 
 $beatInput.addEventListener('input', () => {
