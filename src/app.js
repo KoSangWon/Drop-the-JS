@@ -3,14 +3,14 @@ const $playBtn = document.querySelector('.play-btn');
 const $musicPad = document.querySelector('.music');
 // 임시
 const $bpmInput = document.querySelector('#bpm-input');
-
+$musicPad.style['background-color'] = 'pink';
 /* ==== state ==== */
-// const MAX_BEAT = 32; // 최대 비트
+const MAX_BEAT = 32; // 최대 비트
 const MIN_TO_MS = 60000; // 1min = 60000ms
 const beat = 8; // 초기 비트
 const musicInfo = [
-  { inst: 'drum', file: './sound/1.wav', beat }
-  // { inst: 'B', file: './sound/2.wav', beat: 6 },
+  { inst: 'drum', file: './sound/1.wav', beat },
+  { inst: 'B', file: './sound/2.wav', beat: 6 }
   // { inst: 'D', file: './sound/3.wav', beat: 4 },
   // { inst: 'C', file: './sound/4.wav', beat: 3 },
   // { inst: 'E', file: './sound/5.wav', beat: 2 }
@@ -23,7 +23,7 @@ const musicInfo = [
 // );
 
 // dummy data
-const padArr = [
+let padArr = [
   [0, 0, 0, 0, 0, 0, 0, 0]
   // [1, 0, 0, 0, 0, 0, 1, 0],
   // [1, 0, 1, 0, 1, 0, 1, 0],
@@ -73,8 +73,6 @@ const playMusic = startColumn => {
       });
 
       playingColumn += 1;
-
-      // if (playingColumn === beat) clearInterval(timerId);
     }, oneBeatTime);
     return;
   }
@@ -98,21 +96,12 @@ $playBtn.addEventListener('click', () => {
   playMusic(0);
 });
 
-// Pad 클릭 시 active class 토글, pad 값 업데이트(0 | 1)
-// $musicPad.addEventListener('click', e => {
-//   if (!e.target.matches('.panel')) return;
-//   const xLoc = e.target.dataset.row;
-//   const yLoc = e.target.dataset.col;
-//   e.target.classList.toggle('active', padArr[xLoc][yLoc] === 0);
-
-//   padArr[xLoc][yLoc] = padArr[xLoc][yLoc] === 0 ? 1 : 0;
-// });
-
 let isActive = false;
 
 const handleMouseOver = e => {
-  console.log('mouseover일어남');
   if (!e.target.matches('label.panel-cell')) return;
+  // console.log('타겟', e.target);
+
   const checkbox = e.target.previousElementSibling;
   const cellId = checkbox.id;
   const splitedCell = cellId.split('-');
@@ -128,15 +117,11 @@ const handleMouseOver = e => {
     checkbox.checked = false;
   }
 };
-let startCheckBox;
-$musicPad.addEventListener('mousedown', e => {
-  console.log('mousedown일어남');
 
+$musicPad.addEventListener('mousedown', e => {
   if (!e.target.matches('label.panel-cell')) return;
 
-  // checkbox check 여부
   const checkbox = e.target.previousElementSibling;
-  startCheckBox = e.target.previousElementSibling;
   console.log('checkbox', checkbox);
 
   isActive = checkbox.checked;
@@ -150,7 +135,7 @@ $musicPad.addEventListener('mousedown', e => {
   // 리팩토링 필요
   if (!isActive) {
     padArr[xLoc][yLoc] = 1;
-    checkbox.checked = 'checked';
+    checkbox.checked = true;
   } else {
     padArr[xLoc][yLoc] = 0;
     checkbox.checked = false;
@@ -159,14 +144,18 @@ $musicPad.addEventListener('mousedown', e => {
   $musicPad.addEventListener('mouseover', handleMouseOver);
 });
 
-$musicPad.addEventListener('mouseup', e => {
-  if (!e.target.matches('label.panel-cell')) return;
-  console.log(e.target.previousElementSibling, startCheckBox);
-  if (e.target.previousElementSibling === startCheckBox) return;
-  console.log('mouseup일어남');
-
+$musicPad.addEventListener('mouseup', () => {
   $musicPad.removeEventListener('mouseover', handleMouseOver);
 });
+
+$musicPad.addEventListener('mouseleave', () => {
+  $musicPad.removeEventListener('mouseover', handleMouseOver);
+});
+
+$musicPad.addEventListener('click', e => {
+  e.preventDefault();
+});
+
 // down up
 // beat 변경
 document
@@ -175,6 +164,8 @@ document
     if (!target.matches('button')) return;
     const delta = target.classList.contains('bpm-up-btn') ? 10 : -10;
     bpm += delta;
+    if (bpm < 100) bpm = 100;
+    if (bpm > 800) bpm = 800;
     $bpmInput.value = bpm;
 
     // Play 중 일 경우
@@ -183,6 +174,32 @@ document
       playMusic(playingColumn);
     }
   });
+
+// pad 초기화
+document.querySelector('.file-clear-btn').addEventListener('click', () => {
+  padArr = Array.from(Array(musicInfo.length), () => Array(MAX_BEAT).fill(0));
+});
+
+// BPM input 변경
+$bpmInput.addEventListener('keyup', e => {
+  if (e.key === 'Enter') {
+    bpm = +$bpmInput.value;
+    if (bpm < 100) bpm = 100;
+    if (bpm > 800) bpm = 800;
+    $bpmInput.value = bpm;
+    $bpmInput.blur();
+    if (timerId) {
+      stopMusic();
+      playMusic(playingColumn);
+    }
+  }
+});
+
+$bpmInput.addEventListener('input', () => {
+  $bpmInput.value = $bpmInput.value
+    .replace(/[^0-9]/g, '')
+    .replace(/(\..*)\./g, '$1');
+});
 
 // keyboard interaction
 document.onkeyup = event => {
