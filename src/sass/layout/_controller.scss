@@ -37,6 +37,7 @@
   justify-content: space-between;
   align-items: center;
   position: fixed;
+  z-index: 1;
   bottom: 0;
   left: 0;
   right: 0;
@@ -46,7 +47,7 @@
   box-shadow: 0 0 100px rgba(0, 0, 0, 0.05);
   animation: appearUp 1s 0.5s backwards;
   @include mobile {
-    bottom: -140px;
+    margin-bottom: -150px;
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
@@ -161,6 +162,12 @@
 
 .file-load-btn {
   @include icon('/assets/img/load_icon.svg');
+  input {
+    width: 40px;
+    height: 40px;
+    opacity: 0;
+    cursor: pointer;
+  }
 }
 .file-save-btn {
   @include icon('/assets/img/save_icon.svg');
