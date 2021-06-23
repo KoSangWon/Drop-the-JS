@@ -13,6 +13,18 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <div class="overlay"></div>
+    <!-- <div class="add-inst-menu">
+      <ul class="add-inst-list">
+        <li class="add-inst-item">
+          <input type="checkbox" id="inst-item-drum" />
+          <label for="inst-item-drum">
+            <span class="add-icon icon-drum"></span>
+            <span class="add-inst-name">Drum</span>
+          </label>
+        </li>
+      </ul>
+    </div> -->
     <div class="step-sequencer">
       <header class="header">
         <h1 class="a11y-hidden">Drop the JavaScript</h1>
@@ -31,33 +43,13 @@
             <div class="inst-item icon-drum color-red"></div>
             <button class="inst-delete-btn"></button>
           </li> -->
-          <!-- <div class="add-inst-menu">
-            <ul class="add-inst-list">
-              <li class="add-inst-item">
-                <button class="add-inst-btn">
-                  <span class="add-icon icon-drum"></span>
-                  <span class="add-inst-name">Drum</span>
-                </button>
-              </li>
-              <li class="add-inst-item">
-                <button class="add-inst-btn">
-                  <span class="add-icon icon-drum"></span>
-                  <span class="add-inst-name">Drum</span>
-                </button>
-              </li>
-              <li class="add-inst-item">
-                <button class="add-inst-btn">
-                  <span class="add-icon icon-drum"></span>
-                  <span class="add-inst-name">Drum</span>
-                </button>
-              </li>
-            </ul>
-          </div>
+
           <li class="inst-item inst-add">
             <button class="add-btn"></button>
-          </li> -->
+          </li>
         </ul>
         <section class="music">
+          <h2 class="a11y-hidden" lang="en">Beat Pad</h2>
           <!-- <div class="panel--red">
             <input type="checkbox" id="cell-0-0" />
             <label class="panel-cell" for="cell-0-0"></label>
@@ -92,6 +84,7 @@
           </div> -->
         </section>
         <section class="controls">
+          <h2 class="a11y-hidden" lang="en">Control Panel</h2>
           <button class="play-btn"></button>
           <div class="control-wrapper">
             <div class="beat-control">
@@ -112,7 +105,7 @@
             </div>
             <div class="file-control">
               <div class="file-load-btn">
-                <input type="file" />
+                <input type="file" accept=".djs, .txt" />
               </div>
 
               <button class="file-save-btn"></button>
