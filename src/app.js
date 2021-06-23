@@ -8,10 +8,9 @@ const $fileDownloadBtn = document.querySelector('.file-save-btn');
 const $instAddBtn = document.querySelector('.inst-add');
 
 const $instList = document.querySelector('.inst-list');
-// 임시
 const $bpmInput = document.querySelector('#bpm-input');
 const $beatInput = document.querySelector('#beat-input');
-// $musicPad.style['background-color'] = 'pink';
+
 /* ==== state ==== */
 const MAX_BEAT = 32; // 최대 비트
 const COLORS = [
@@ -27,15 +26,66 @@ const COLORS = [
   'purple'
 ];
 
+const makeAudioObj = $audioEl => {
+  // AudioContext
+  const audioContext = new (window.AudioContext || window.webkitAudioContext)(); // define audio context
+
+  // AudioDestinationNode
+  const audioDestination = audioContext.destination;
+  // MediaElementAudioSourceNode
+  const audioSourceNode = audioContext.createMediaElementSource($audioEl);
+  // GainNode
+  const gainNode = audioContext.createGain();
+  audioSourceNode.connect(gainNode).connect(audioDestination);
+};
+
+const audio1 = document.getElementById('audio1');
+makeAudioObj(audio1);
+
+const audio2 = document.getElementById('audio2');
+makeAudioObj(audio2);
+
+const audio3 = document.getElementById('audio3');
+const audio4 = document.getElementById('audio4');
+const audio5 = document.getElementById('audio5');
+
+const makeMergeAudio = someStereoBuffer => {
+  // const ac = new AudioContext();
+  audio1.decodeAudioData(someStereoBuffer, data => {
+    const source = audio1.createBufferSource();
+    source.buffer = data;
+    const splitter = audio1.createChannelSplitter(2);
+    source.connect(splitter);
+    const merger = audio1.createChannelMerger(2);
+
+    const gainNode = audio1.createGain();
+    gainNode.gain.setValueAtTime(0.5, audio1.currentTime);
+    splitter.connect(gainNode, 0);
+
+    gainNode.connect(merger, 0, 1);
+    splitter.connect(merger, 1, 0);
+
+    const dest = audio1.createMediaStreamDestination();
+
+    merger.connect(dest);
+  });
+};
+
+const $test = document.querySelector('.test');
+$test.onclick = () => {
+  makeMergeAudio(audio2);
+  audio1.play();
+};
+
 const instSet = [{ inst: 'drum', file: './sound/1.wav', used: false }];
 
 const MIN_TO_MS = 60000; // 1min = 60000ms
 let beat = 8; // 초기 비트
 let musicInfo = [
-  { inst: 'drum', file: './sound/1.wav', beat },
-  { inst: 'drum', file: './sound/2.wav', beat },
-  { inst: 'drum', file: './sound/3.wav', beat },
-  { inst: 'drum', file: './sound/4.wav', beat }
+  { inst: 'drum', file: audio1, beat },
+  { inst: 'drum', file: audio2, beat },
+  { inst: 'drum', file: audio3, beat },
+  { inst: 'drum', file: audio4, beat }
   // { inst: 'drum', file: './sound/5.wav', beat }
 ];
 
@@ -153,19 +203,25 @@ const playMusic = startColumn => {
 
       // 각 재생 중인 column에서의 Pad 값
       const eachStatus = padArr.map((row, i) => row[eachPlayingColumns[i]]);
-
+      console.log('eachSTa', eachStatus);
       // 플레이할 악기 배열
       const instsToPlay = [];
+
       eachStatus.forEach((v, i) => {
         if (v) instsToPlay.push(musicInfo[i].file);
       });
-
-      // 오디오 객체 생성
-      const audios = instsToPlay.map(file => new Audio(file));
-      // async
-      audios.forEach(audio => {
-        audio.play();
+      console.log(instsToPlay);
+      instsToPlay.forEach(v => {
+        makeAudioObj(v);
+        const copyv = v;
+        copyv.play();
       });
+      // 오디오 객체 생성
+      // const audios = instsToPlay.map(file => new Audio(file));
+      // // async
+      // audios.forEach(audio => {
+      //   audio.play();
+      // });
 
       document.querySelectorAll('.running').forEach($label => {
         $label.classList.remove('running');
@@ -370,30 +426,46 @@ document.querySelector('.file-clear-btn').addEventListener('click', () => {
 });
 
 // Beat input 변경
+const setBeatInputValue = val => {
+  beat = val;
+  if (beat < 4) beat = 4;
+  if (beat > 16) beat = 16;
+  $beatInput.value = beat;
+  $beatInput.blur();
+  changeBeat();
+};
+
 $beatInput.addEventListener('keyup', e => {
   if (e.key === 'Enter') {
-    beat = +$beatInput.value;
-    if (beat < 4) beat = 4;
-    if (beat > 16) beat = 16;
-    $beatInput.value = beat;
-    $beatInput.blur();
-    changeBeat();
+    setBeatInputValue(+$beatInput.value);
   }
 });
+
+$beatInput.addEventListener('focusout', () => {
+  setBeatInputValue(+$beatInput.value);
+});
+
+const setBpmInputValue = val => {
+  bpm = val;
+  if (bpm < 100) bpm = 100;
+  if (bpm > 800) bpm = 800;
+  $bpmInput.value = bpm;
+  $bpmInput.blur();
+  if (timerId) {
+    stopMusic();
+    playMusic(playingColumn);
+  }
+};
 
 // BPM input 변경
 $bpmInput.addEventListener('keyup', e => {
   if (e.key === 'Enter') {
-    bpm = +$bpmInput.value;
-    if (bpm < 100) bpm = 100;
-    if (bpm > 800) bpm = 800;
-    $bpmInput.value = bpm;
-    $bpmInput.blur();
-    if (timerId) {
-      stopMusic();
-      playMusic(playingColumn);
-    }
+    setBpmInputValue(+$bpmInput.value);
   }
+});
+
+$bpmInput.addEventListener('focusout', () => {
+  setBpmInputValue(+$bpmInput.value);
 });
 
 $beatInput.addEventListener('input', () => {
