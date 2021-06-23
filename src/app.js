@@ -28,16 +28,16 @@ const COLORS = [
 ];
 
 const instSet = [
-  { inst: 'drum', file: './sound/1.wav', used: true },
-  { inst: 'side-stick', file: './sound/2.wav', used: true },
-  { inst: 'cymbal', file: './sound/3.wav', used: true },
-  { inst: 'opened-hihat', file: './sound/4.wav', used: true },
-  { inst: 'clap', file: './sound/5.wav', used: true },
-  { inst: 'closed-hihat', file: './sound/6.wav', used: false },
-  { inst: 'ride', file: './sound/7.wav', used: false },
-  { inst: 'kick', file: './sound/8.wav', used: false },
-  { inst: 'hightom', file: './sound/9.wav', used: false },
-  { inst: 'lowtom', file: './sound/10.wav', used: false }
+  { instName: 'drum', file: './sound/1.wav', used: true },
+  { instName: 'side-stick', file: './sound/2.wav', used: true },
+  { instName: 'cymbal', file: './sound/3.wav', used: true },
+  { instName: 'opened-hihat', file: './sound/4.wav', used: true },
+  { instName: 'clap', file: './sound/5.wav', used: true },
+  { instName: 'closed-hihat', file: './sound/6.wav', used: false },
+  { instName: 'ride', file: './sound/7.wav', used: false },
+  { instName: 'kick', file: './sound/8.wav', used: false },
+  { instName: 'hightom', file: './sound/9.wav', used: false },
+  { instName: 'lowtom', file: './sound/10.wav', used: false }
 ];
 
 const MIN_TO_MS = 60000; // 1min = 60000ms
@@ -70,6 +70,31 @@ let playingColumn = 0;
 let timerId = null;
 
 /* ==== functions ==== */
+
+const initAddInstList = () => {
+  const $div = document.createElement('div');
+  $div.className = 'add-inst-menu';
+  const $ul = document.createElement('ul');
+  $ul.className = 'add-inst-list';
+  $ul.innerHTML = instSet
+    .map(
+      inst => `<li class="add-inst-item">
+          <input type="checkbox" id="inst-item-${inst.instName}" ${
+        inst.used ? 'checked' : ''
+      }/>
+          <label for="inst-item-${inst.instName}">
+            <span class="add-icon icon-${inst.instName}"></span>
+            <span class="add-inst-name">${inst.instName
+              .replace('-', ' ')
+              .toUpperCase()}</span>
+          </label>
+        </li>`
+    )
+    .join('');
+  $div.appendChild($ul);
+  document.body.appendChild($div);
+};
+
 const initCellElements = () => {
   $musicPad.style.setProperty('--cell-col', beat);
   $instList.innerHTML =
@@ -116,31 +141,43 @@ const initCellElements = () => {
       $overlay.classList.remove('active');
       document.removeEventListener('mouseup', closeMenuHandler);
     });
+    initAddInstList();
+    
+    $instMenu.addEventListener('change', ({target:instCheckBox}) => {
+      // 바뀐 체크박스의 인덱스 찾기
+      let changeIndex = -1;
+      const targetName = instCheckBox.id.replace('inst-item-','');
+      instSet.forEach((inst, index) => {
+        if(inst.instName === targetName){
+          changeIndex = index;
+          inst.used = !inst.used;
+        }
+      })
+      // 악기 추가 시
+      if(instCheckBox.checked){
+        let insertIndex = padArr.length;
+        // for문으로 해야함
+        for(let i = 0; i < musicInfo.length; i++){
+          const music = musicInfo[i];
+          const order = instSet.findIndex(inst => inst.instName === music.inst)
+          if(changeIndex < order){
+            insertIndex = i;
+            break;
+          }
+        }
+        musicInfo = [...musicInfo.slice(0, insertIndex), {inst:targetName, file:`./sound/${insertIndex+1}.wav`, beat}, ...musicInfo.slice(insertIndex)];
+        padArr = [...padArr.slice(0, insertIndex), Array.from({length:beat}, () => 0), ...padArr.slice(insertIndex)];
+      }
+      // 악기 제거 시
+      else{
+        const deleteIndex = musicInfo.findIndex(({inst}) => 'inst-item-'+inst === instCheckBox.id)
+        musicInfo = [...musicInfo.slice(0, deleteIndex), ...musicInfo.slice(deleteIndex+1)];
+        padArr = [...padArr.slice(0, deleteIndex), ...padArr.slice(deleteIndex+1)];
+      }
+      initCellElements();
+    })
+    
   });
-};
-
-const initAddInstList = () => {
-  const $div = document.createElement('div');
-  $div.className = 'add-inst-menu';
-  const $ul = document.createElement('ul');
-  $ul.className = 'add-inst-list';
-  $ul.innerHTML = instSet
-    .map(
-      inst => `<li class="add-inst-item">
-          <input type="checkbox" id="inst-item-${inst.inst}" ${
-        inst.used ? 'checked' : ''
-      }/>
-          <label for="inst-item-${inst.inst}">
-            <span class="add-icon icon-${inst.inst}"></span>
-            <span class="add-inst-name">${inst.inst
-              .replace('-', ' ')
-              .toUpperCase()}</span>
-          </label>
-        </li>`
-    )
-    .join('');
-  $div.appendChild($ul);
-  document.body.appendChild($div);
 };
 
 const stopMusic = () => {
