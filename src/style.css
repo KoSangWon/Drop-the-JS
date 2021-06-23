@@ -631,7 +631,7 @@ li {
   transition: transform 0.2s background-color 0.2s;
   transform: scale(1);
 }
-.inst-item:hover .inst-delete-btn,
+.inst-item:hover > .inst-delete-btn,
 .inst-item .inst-delete-btn:focus {
   opacity: 1;
 }

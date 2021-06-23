@@ -45,7 +45,7 @@
     @include circleButton(15px, 15px, $cell-red, false);
     @include icon('/assets/img/x_icon.svg');
   }
-  &:hover .inst-delete-btn,
+  &:hover > .inst-delete-btn,
   .inst-delete-btn:focus {
     opacity: 1;
   }
