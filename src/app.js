@@ -441,7 +441,7 @@ $fileDownloadBtn.addEventListener('click', () => {
   };
   const jsonString = JSON.stringify(infoToSave);
   const link = document.createElement('a');
-  link.download = `dropthejs-${Date.now()}.txt`;
+  link.download = `dropthejs-${Date.now()}.djs`;
   const blob = new Blob([jsonString], { type: 'text/plain' });
   link.href = window.URL.createObjectURL(blob);
   link.click();
