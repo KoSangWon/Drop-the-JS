@@ -156,7 +156,7 @@ const initCellElements = () => {
 
   const $instAddBtn = $instList.querySelector('.add-btn');
 
-  // TODO: 메뉴 토글이벤트
+  // 메뉴 토글이벤트
   $instAddBtn.addEventListener('click', () => {
     const $instMenu = document.querySelector('.add-inst-menu');
     if ($instMenu.classList.contains('active')) return;
@@ -275,7 +275,10 @@ const playMusic = startColumn => {
           .querySelector(`#cell-${row}-${col} + label`)
           .classList.add('running');
       });
-
+      const willMovePage = Math.floor((playingColumn % beat) / VIEW_PAGE) + 1;
+      if (currentPage !== willMovePage) {
+        movePage(willMovePage);
+      }
       playingColumn += 1;
     }, oneBeatTime);
     return;
