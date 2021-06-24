@@ -679,19 +679,15 @@ document.addEventListener('keyup', event => {
 
 document.addEventListener('keydown', e => {
   const [, xLoc, yLoc] = document.activeElement.id.split('-');
- 
   if (e.shiftKey && e.key === 'Tab') {
-    if (+yLoc === VIEW_PAGE) {
+    if (+yLoc+1 === VIEW_PAGE) {
       currentPage = 1
       movePage(currentPage);
     }
   }
   else if(e.key === 'Tab' && (+yLoc+1) % VIEW_PAGE === 0){
     if(+yLoc === 0) return;
-    if(!document.getElementById(`cell-${xLoc}-${+yLoc + 1}`)) return;
-    console.log(+yLoc+1, beat);
     if((+yLoc+1) === beat){
-      console.log('here')
       currentPage = 1;
       movePage(currentPage);
     }
