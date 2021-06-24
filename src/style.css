@@ -765,7 +765,9 @@ li {
   transform: scale(1);
 }
 .panel--red label.running {
-  transform: scale(1.2);
+  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.23, 1.49, 0.69, 1.42), box-shadow 0.2s;
+  transform: scale(1.1);
+  filter: brightness(1.2);
 }
 .panel--red input:checked + label {
   background-color: #ff3939;
@@ -817,7 +819,9 @@ li {
   transform: scale(1);
 }
 .panel--orange label.running {
-  transform: scale(1.2);
+  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.23, 1.49, 0.69, 1.42), box-shadow 0.2s;
+  transform: scale(1.1);
+  filter: brightness(1.2);
 }
 .panel--orange input:checked + label {
   background-color: #ff8c39;
@@ -869,7 +873,9 @@ li {
   transform: scale(1);
 }
 .panel--yellow label.running {
-  transform: scale(1.2);
+  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.23, 1.49, 0.69, 1.42), box-shadow 0.2s;
+  transform: scale(1.1);
+  filter: brightness(1.2);
 }
 .panel--yellow input:checked + label {
   background-color: #ffdf39;
@@ -921,7 +927,9 @@ li {
   transform: scale(1);
 }
 .panel--leafgreen label.running {
-  transform: scale(1.2);
+  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.23, 1.49, 0.69, 1.42), box-shadow 0.2s;
+  transform: scale(1.1);
+  filter: brightness(1.2);
 }
 .panel--leafgreen input:checked + label {
   background-color: #9dd400;
@@ -973,7 +981,9 @@ li {
   transform: scale(1);
 }
 .panel--green label.running {
-  transform: scale(1.2);
+  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.23, 1.49, 0.69, 1.42), box-shadow 0.2s;
+  transform: scale(1.1);
+  filter: brightness(1.2);
 }
 .panel--green input:checked + label {
   background-color: #39dd00;
@@ -1025,7 +1035,9 @@ li {
   transform: scale(1);
 }
 .panel--jade label.running {
-  transform: scale(1.2);
+  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.23, 1.49, 0.69, 1.42), box-shadow 0.2s;
+  transform: scale(1.1);
+  filter: brightness(1.2);
 }
 .panel--jade input:checked + label {
   background-color: #00dba6;
@@ -1077,7 +1089,9 @@ li {
   transform: scale(1);
 }
 .panel--skyblue label.running {
-  transform: scale(1.2);
+  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.23, 1.49, 0.69, 1.42), box-shadow 0.2s;
+  transform: scale(1.1);
+  filter: brightness(1.2);
 }
 .panel--skyblue input:checked + label {
   background-color: #3eb9ff;
@@ -1129,7 +1143,9 @@ li {
   transform: scale(1);
 }
 .panel--blue label.running {
-  transform: scale(1.2);
+  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.23, 1.49, 0.69, 1.42), box-shadow 0.2s;
+  transform: scale(1.1);
+  filter: brightness(1.2);
 }
 .panel--blue input:checked + label {
   background-color: #355deb;
@@ -1181,7 +1197,9 @@ li {
   transform: scale(1);
 }
 .panel--plum label.running {
-  transform: scale(1.2);
+  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.23, 1.49, 0.69, 1.42), box-shadow 0.2s;
+  transform: scale(1.1);
+  filter: brightness(1.2);
 }
 .panel--plum input:checked + label {
   background-color: #8a43ff;
@@ -1233,7 +1251,9 @@ li {
   transform: scale(1);
 }
 .panel--purple label.running {
-  transform: scale(1.2);
+  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.23, 1.49, 0.69, 1.42), box-shadow 0.2s;
+  transform: scale(1.1);
+  filter: brightness(1.2);
 }
 .panel--purple input:checked + label {
   background-color: #ef39ff;
