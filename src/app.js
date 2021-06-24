@@ -109,7 +109,7 @@ const initAddInstList = () => {
 
 const initCellElements = () => {
   $musicPad.style.setProperty('--cell-col', beat);
-  $totalPage.textContent = '/' + Math.floor(beat / VIEW_PAGE);
+  $totalPage.textContent = '/' + Math.ceil(beat / VIEW_PAGE);
   $currentPage.textContent = currentPage;
   $instList.innerHTML =
     padArr
@@ -299,7 +299,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // 페이지 이동
 $pageUpBtn.addEventListener('click', () => {
-  if (currentPage >= Math.floor(beat / VIEW_PAGE)) return;
+  if (currentPage >= Math.ceil(beat / VIEW_PAGE)) return;
   movePage(currentPage + 1);
 });
 
@@ -473,8 +473,8 @@ document.querySelector('.file-clear-btn').addEventListener('click', () => {
 // Beat input 변경
 const setBeatInputValue = val => {
   beat = val;
-  if (beat < 4) beat = 4;
-  if (beat > 16) beat = 16;
+  if (beat < MIN_BEAT) beat = MIN_BEAT;
+  if (beat > MAX_BEAT) beat = MAX_BEAT;
   $beatInput.value = beat;
   $beatInput.blur();
   changeBeat();
