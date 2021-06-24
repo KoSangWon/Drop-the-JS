@@ -501,6 +501,7 @@ body {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   overflow-x: hidden;
   touch-action: manipulation;
+  height: 100vh;
 }
 
 button:focus {
@@ -525,6 +526,19 @@ li {
   list-style: none;
   margin: 0;
   padding: 0;
+}
+
+#player {
+  display: block;
+  position: fixed;
+  z-index: -10;
+  bottom: 0;
+  height: 100vh;
+}
+#player canvas {
+  opacity: 0.2;
+  width: 100%;
+  height: 100%;
 }
 
 .header {
@@ -696,7 +710,7 @@ li {
   background-size: 50%;
   background-size: 50%;
 }
-.icon-hightom {
+.icon-high-tom {
   width: 100%;
   height: 100%;
   background-image: url("/assets/img/hightom_icon.svg");
@@ -705,7 +719,7 @@ li {
   background-size: 50%;
   background-size: 50%;
 }
-.icon-lowtom {
+.icon-low-tom {
   width: 100%;
   height: 100%;
   background-image: url("/assets/img/lowtom_icon.svg");
@@ -781,12 +795,12 @@ li {
 .panel--red input:focus + label {
   outline: none;
   transform: scale(1.1);
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 4px rgba(255, 57, 57, 0.8);
 }
-.panel--red input:focus:not(:focus-visible) + label {
-  transform: scale(1);
+.panel--red input:focus-visible + label {
+  transform: scale(1.1);
 }
-.panel--red input:focus:not(:focus-visible):hover + label {
+.panel--red input:focus-visible:hover + label {
   transform: scale(1.1);
 }
 .panel--red.beat-gap {
@@ -835,12 +849,12 @@ li {
 .panel--orange input:focus + label {
   outline: none;
   transform: scale(1.1);
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 4px rgba(255, 140, 57, 0.8);
 }
-.panel--orange input:focus:not(:focus-visible) + label {
-  transform: scale(1);
+.panel--orange input:focus-visible + label {
+  transform: scale(1.1);
 }
-.panel--orange input:focus:not(:focus-visible):hover + label {
+.panel--orange input:focus-visible:hover + label {
   transform: scale(1.1);
 }
 .panel--orange.beat-gap {
@@ -889,12 +903,12 @@ li {
 .panel--yellow input:focus + label {
   outline: none;
   transform: scale(1.1);
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 4px rgba(255, 223, 57, 0.8);
 }
-.panel--yellow input:focus:not(:focus-visible) + label {
-  transform: scale(1);
+.panel--yellow input:focus-visible + label {
+  transform: scale(1.1);
 }
-.panel--yellow input:focus:not(:focus-visible):hover + label {
+.panel--yellow input:focus-visible:hover + label {
   transform: scale(1.1);
 }
 .panel--yellow.beat-gap {
@@ -943,12 +957,12 @@ li {
 .panel--leafgreen input:focus + label {
   outline: none;
   transform: scale(1.1);
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 4px rgba(157, 212, 0, 0.8);
 }
-.panel--leafgreen input:focus:not(:focus-visible) + label {
-  transform: scale(1);
+.panel--leafgreen input:focus-visible + label {
+  transform: scale(1.1);
 }
-.panel--leafgreen input:focus:not(:focus-visible):hover + label {
+.panel--leafgreen input:focus-visible:hover + label {
   transform: scale(1.1);
 }
 .panel--leafgreen.beat-gap {
@@ -997,12 +1011,12 @@ li {
 .panel--green input:focus + label {
   outline: none;
   transform: scale(1.1);
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 4px rgba(57, 221, 0, 0.8);
 }
-.panel--green input:focus:not(:focus-visible) + label {
-  transform: scale(1);
+.panel--green input:focus-visible + label {
+  transform: scale(1.1);
 }
-.panel--green input:focus:not(:focus-visible):hover + label {
+.panel--green input:focus-visible:hover + label {
   transform: scale(1.1);
 }
 .panel--green.beat-gap {
@@ -1051,12 +1065,12 @@ li {
 .panel--jade input:focus + label {
   outline: none;
   transform: scale(1.1);
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 4px rgba(0, 219, 166, 0.8);
 }
-.panel--jade input:focus:not(:focus-visible) + label {
-  transform: scale(1);
+.panel--jade input:focus-visible + label {
+  transform: scale(1.1);
 }
-.panel--jade input:focus:not(:focus-visible):hover + label {
+.panel--jade input:focus-visible:hover + label {
   transform: scale(1.1);
 }
 .panel--jade.beat-gap {
@@ -1105,12 +1119,12 @@ li {
 .panel--skyblue input:focus + label {
   outline: none;
   transform: scale(1.1);
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 4px rgba(62, 185, 255, 0.8);
 }
-.panel--skyblue input:focus:not(:focus-visible) + label {
-  transform: scale(1);
+.panel--skyblue input:focus-visible + label {
+  transform: scale(1.1);
 }
-.panel--skyblue input:focus:not(:focus-visible):hover + label {
+.panel--skyblue input:focus-visible:hover + label {
   transform: scale(1.1);
 }
 .panel--skyblue.beat-gap {
@@ -1159,12 +1173,12 @@ li {
 .panel--blue input:focus + label {
   outline: none;
   transform: scale(1.1);
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 4px rgba(53, 93, 235, 0.8);
 }
-.panel--blue input:focus:not(:focus-visible) + label {
-  transform: scale(1);
+.panel--blue input:focus-visible + label {
+  transform: scale(1.1);
 }
-.panel--blue input:focus:not(:focus-visible):hover + label {
+.panel--blue input:focus-visible:hover + label {
   transform: scale(1.1);
 }
 .panel--blue.beat-gap {
@@ -1213,12 +1227,12 @@ li {
 .panel--plum input:focus + label {
   outline: none;
   transform: scale(1.1);
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 4px rgba(138, 67, 255, 0.8);
 }
-.panel--plum input:focus:not(:focus-visible) + label {
-  transform: scale(1);
+.panel--plum input:focus-visible + label {
+  transform: scale(1.1);
 }
-.panel--plum input:focus:not(:focus-visible):hover + label {
+.panel--plum input:focus-visible:hover + label {
   transform: scale(1.1);
 }
 .panel--plum.beat-gap {
@@ -1267,12 +1281,12 @@ li {
 .panel--purple input:focus + label {
   outline: none;
   transform: scale(1.1);
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 4px rgba(239, 57, 255, 0.8);
 }
-.panel--purple input:focus:not(:focus-visible) + label {
-  transform: scale(1);
+.panel--purple input:focus-visible + label {
+  transform: scale(1.1);
 }
-.panel--purple input:focus:not(:focus-visible):hover + label {
+.panel--purple input:focus-visible:hover + label {
   transform: scale(1.1);
 }
 .panel--purple.beat-gap {
@@ -1875,10 +1889,10 @@ li {
 }
 
 #player {
-  width: 80vw;
-  height: 60vh;
-  background: black;
-  margin: 20px auto 20px auto;
+  position: fixed;
+  bottom: 0;
+  height: 100vh;
+  background: transparent;
   display: block;
 }
 

@@ -27,12 +27,12 @@
   & input:focus + label {
     outline: none;
     transform: scale(1.1);
-    box-shadow: 0 0 4px rgba(black, 0.8);
+    box-shadow: 0 0 4px rgba($color, 0.8);
   }
-  & input:focus:not(:focus-visible) + label {
-    transform: scale(1);
+  & input:focus-visible + label {
+    transform: scale(1.1);
   }
-  & input:focus:not(:focus-visible):hover + label {
+  & input:focus-visible:hover + label {
     transform: scale(1.1);
   }
 }
