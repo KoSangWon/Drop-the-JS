@@ -180,7 +180,7 @@
   width: 100%;
   text-align: left;
   position: relative;
-  padding-left: 10px;
+  // padding-left: 10px;
   // line-height: 30px;
   // height: 30px;
   &:hover {
@@ -201,6 +201,10 @@
     opacity: 0;
     width: 1px;
     height: 1px;
+    &:focus + label {
+      background-color: rgba($primary-yellow, 0.4);
+      color: inherit;
+    }
     &:checked + label::before {
       content: '';
       display: block;
@@ -218,7 +222,8 @@
     display: block;
     width: 100%;
     height: 100%;
-    padding: 10px 0;
+    padding: 10px 10px;
+    margin: 0;
     cursor: pointer;
   }
 }
