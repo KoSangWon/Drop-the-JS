@@ -30,6 +30,8 @@ const $instList = document.querySelector('.inst-list');
 const $bpmInput = document.querySelector('#bpm-input');
 const $beatInput = document.querySelector('#beat-input');
 
+const $menuToggleBtn = document.querySelector('.menu-toggle-btn');
+
 /* ==== state ==== */
 const VIEW_PAGE = matchMedia('screen and (max-width: 767px)').matches ? 8 : 16;
 const MIN_BEAT = 4; // 최소 비트
@@ -117,7 +119,6 @@ const initCellElements = () => {
         (_, idx) => `
     <li class="inst-item">
       <div class="icon-${musicInfo[idx].inst} color-${COLORS[idx]}"></div>
-      <button class="inst-delete-btn"></button>
     </li>`
       )
       .join('') +
@@ -227,7 +228,7 @@ const playMusic = startColumn => {
   const oneBeatTime = Math.floor(MIN_TO_MS / bpm);
   if (!timerId) {
     // $playBtn.textContent = 'stop';
-    $playBtn.style['background-image'] = 'url("/assets/img/stop_icon.svg")';
+    $playBtn.classList.add('playing');
     playingColumn = startColumn;
     timerId = setInterval(() => {
       // 각 악기의 비트 추출
@@ -264,7 +265,7 @@ const playMusic = startColumn => {
           .querySelector(`#cell-${row}-${col} + label`)
           .classList.add('running');
       });
-      const willMovePage = Math.floor((playingColumn % beat) / VIEW_PAGE) + 1;
+      const willMovePage = Math.ceil(((playingColumn % beat) + 1) / VIEW_PAGE);
       if (currentPage !== willMovePage) {
         movePage(willMovePage);
       }
@@ -272,7 +273,7 @@ const playMusic = startColumn => {
     }, oneBeatTime);
     return;
   }
-  $playBtn.style['background-image'] = 'url("/assets/img/play_icon.svg")';
+  $playBtn.classList.remove('playing');
   stopMusic();
 };
 
@@ -564,6 +565,10 @@ $fileDownloadBtn.addEventListener('click', () => {
   const blob = new Blob([jsonString], { type: 'text/plain' });
   link.href = window.URL.createObjectURL(blob);
   link.click();
+});
+
+$menuToggleBtn.addEventListener('click', () => {
+  $controls.classList.toggle('active');
 });
 
 // keyboard interaction 리팩토링 필요]
