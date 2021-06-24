@@ -80,7 +80,7 @@ let currentPage = 1;
 let bpm = 150;
 let playingColumn = 0;
 let timerId = null;
-
+const pageNum = +(getComputedStyle(document.querySelector('.music')).getPropertyValue('--page-offset'))+1;
 /* ==== functions ==== */
 
 const initAddInstList = () => {
@@ -677,13 +677,25 @@ document.addEventListener('keydown', e => {
  
   if (e.shiftKey && e.key === 'Tab') {
     if (+yLoc === VIEW_PAGE) {
-      movePage(1);
+      currentPage = 1
+      movePage(currentPage);
     }
   }
-  else if(e.key === 'Tab' && +yLoc === VIEW_PAGE-1){
+  else if(e.key === 'Tab' && (+yLoc+1) % VIEW_PAGE === 0){
+    if(+yLoc === 0) return;
+    if(!document.getElementById(`cell-${xLoc}-${+yLoc + 1}`)) return;
+    console.log(+yLoc+1, beat);
+    if((+yLoc+1) === beat){
+      console.log('here')
+      currentPage = 1;
+      movePage(currentPage);
+    }
+    else{
       e.preventDefault();
       document.getElementById(`cell-${xLoc}-${+yLoc + 1}`).focus();
       $musicPadMask.scrollLeft = 0;
-      movePage(2);
-  } 
+      currentPage += 1;
+      movePage(currentPage);
+    }
+  }
 })
