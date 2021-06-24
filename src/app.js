@@ -277,6 +277,10 @@ const stopMusic = () => {
 const playMusic = startColumn => {
   const oneBeatTime = Math.floor(MIN_TO_MS / bpm);
   if (!timerId) {
+    context ||= new AudioContext();
+    analyser ||= context.createAnalyser();
+
+    frameLooper();
     $playBtn.classList.add('playing');
     playingColumn = startColumn;
     timerId = setInterval(() => {
@@ -363,12 +367,7 @@ window.addEventListener('DOMContentLoaded', () => {
   window.AudioContext = window.AudioContext || window.webkitAudioContext;
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-
-  context = new AudioContext();
-  analyser = context.createAnalyser();
-
   ctx = canvas.getContext('2d');
-  frameLooper();
 });
 
 // 페이지 이동
