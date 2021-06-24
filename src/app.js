@@ -10,32 +10,15 @@ const $pageDownBtn = document.querySelector('.page-down-btn');
 const $currentPage = document.querySelector('.current-page');
 const $totalPage = document.querySelector('.total-page');
 
-const $fileUploadBtn = document.querySelector('input[type="file"]');
-const $fileDownloadBtn = document.querySelector('.file-save-btn');
-
 const $instList = document.querySelector('.inst-list');
 const $bpmInput = document.querySelector('#bpm-input');
 const $beatInput = document.querySelector('#beat-input');
 
 const $menuToggleBtn = document.querySelector('.menu-toggle-btn');
 
-/* ==== state ==== */
-const VIEW_PAGE = matchMedia('screen and (max-width: 767px)').matches ? 8 : 16;
-const MIN_BEAT = 4; // 최소 비트
-const MAX_BEAT = 32; // 최대 비트
-const COLORS = [
-  'red',
-  'orange',
-  'yellow',
-  'leafgreen',
-  'green',
-  'jade',
-  'skyblue',
-  'blue',
-  'plum',
-  'purple'
-];
+const canvas = document.getElementById('canvas');
 
+/* ==== state ==== */
 const instSet = [
   { instName: 'drum', file: './sound/1.wav', used: true },
   { instName: 'side-stick', file: './sound/2.wav', used: true },
@@ -50,7 +33,7 @@ const instSet = [
 ];
 
 const MIN_TO_MS = 60000; // 1min = 60000ms
-let beat = 16; // 초기 비트
+let beat = 16; // initial beat
 let musicInfo = [
   { inst: 'drum', file: './sound/1.wav', beat },
   { inst: 'side-stick', file: './sound/2.wav', beat },
@@ -59,8 +42,7 @@ let musicInfo = [
   { inst: 'clap', file: './sound/5.wav', beat }
 ];
 
-// data
-// Pad 좌표 모두 0으로 초기화(32비트)
+// init pad array
 let padArr = Array.from(Array(musicInfo.length), () => Array(beat).fill(0));
 
 let currentPage = 1;
@@ -68,6 +50,39 @@ let currentPage = 1;
 let bpm = 150;
 let playingColumn = 0;
 let timerId = null;
+
+// 드래그 시작 지점 활성화 여부
+let isActive = false;
+
+/* ==== constants ==== */
+const VIEW_PAGE = matchMedia('screen and (max-width: 767px)').matches ? 8 : 16;
+const MIN_BEAT = 4;
+const MAX_BEAT = 32;
+const MIN_BPM = 100;
+const MAX_BPM = 800;
+const COLORS = [
+  'red',
+  'orange',
+  'yellow',
+  'leafgreen',
+  'green',
+  'jade',
+  'skyblue',
+  'blue',
+  'plum',
+  'purple'
+];
+
+/* ==== variables for equalizer ==== */
+let ctx;
+let source;
+
+let analyser;
+let fbcArray;
+let barCount;
+let barPos;
+let barWidth;
+let barHeight;
 
 /* ==== functions ==== */
 
@@ -128,10 +143,10 @@ const initCellElements = () => {
     .flat()
     .join('');
 
-  const $instAddBtn = $instList.querySelector('.add-btn');
+  const $instEditBtn = $instList.querySelector('.add-btn');
 
   // 메뉴 토글이벤트
-  $instAddBtn.addEventListener('click', () => {
+  $instEditBtn.addEventListener('click', () => {
     const $instMenu = document.querySelector('.add-inst-menu');
     const ToggleInstrument = ({ target: instCheckBox }) => {
       // 바뀐 체크박스의 인덱스 찾기
@@ -203,17 +218,6 @@ const movePage = page => {
   $musicPad.style.setProperty('--page-offset', currentPage - 1);
 };
 
-let canvas;
-let ctx;
-let source;
-
-let analyser;
-let fbcArray;
-let barCount;
-let barPos;
-let barWidth;
-let barHeight;
-
 const frameLooper = () => {
   window.RequestAnimationFrame =
     window.requestAnimationFrame(frameLooper) ||
@@ -238,6 +242,28 @@ const frameLooper = () => {
   }
 };
 
+const togglePannel = $checkbox => {
+  const cellId = $checkbox.id;
+  const splitedCell = cellId.split('-');
+  const xLoc = splitedCell[1];
+  const yLoc = splitedCell[2];
+
+  if (!isActive) {
+    padArr[xLoc][yLoc] = 1;
+    $checkbox.checked = true;
+  } else {
+    padArr[xLoc][yLoc] = 0;
+    $checkbox.checked = false;
+  }
+};
+
+const handleMouseOver = ({ target }) => {
+  if (!target.matches('label.panel-cell')) return;
+
+  const $checkbox = target.previousElementSibling;
+  togglePannel($checkbox);
+};
+
 const stopMusic = () => {
   document.querySelectorAll('.running').forEach($label => {
     $label.classList.remove('running');
@@ -246,17 +272,11 @@ const stopMusic = () => {
   timerId = null;
 };
 
-canvas = document.getElementById('canvas');
-canvas.width = window.innerWidth * 0.8;
-canvas.height = window.innerHeight * 0.6;
-window.AudioContext = window.AudioContext || window.webkitAudioContext;
-
 const playMusic = startColumn => {
   const context = new AudioContext();
   analyser = context.createAnalyser();
   const oneBeatTime = Math.floor(MIN_TO_MS / bpm);
   if (!timerId) {
-    // $playBtn.textContent = 'stop';
     $playBtn.classList.add('playing');
     playingColumn = startColumn;
     timerId = setInterval(() => {
@@ -312,18 +332,51 @@ const playMusic = startColumn => {
   stopMusic();
 };
 
-// change bpm
 const changeBeat = () => {
-  musicInfo = musicInfo.map(inst => {
-    if (inst.beat === padArr[0].length) return { ...inst, beat };
-    return { ...inst };
-  });
+  musicInfo = musicInfo.map(inst =>
+    inst.beat === padArr[0].length ? { ...inst, beat } : { ...inst }
+  );
+
   padArr = padArr.map(row =>
     row.length < beat
       ? [...row, ...Array.from({ length: beat - row.length }, () => 0)]
       : row.slice(0, beat)
   );
+
   initCellElements();
+};
+
+const setBeatInputValue = val => {
+  beat = val;
+  if (beat < MIN_BEAT) beat = MIN_BEAT;
+  if (beat > MAX_BEAT) beat = MAX_BEAT;
+  $beatInput.value = beat;
+  $beatInput.blur();
+  changeBeat();
+};
+
+const setBpmInputValue = val => {
+  bpm = val;
+  if (bpm < 100) bpm = 100;
+  if (bpm > 800) bpm = 800;
+  $bpmInput.value = bpm;
+  $bpmInput.blur();
+  if (timerId) {
+    stopMusic();
+    playMusic(playingColumn);
+  }
+};
+
+const handleTouchMove = ({ touches }) => {
+  const { clientX, clientY } = touches[0];
+
+  if (!clientX || !clientY) return;
+
+  const $touchElem = document.elementFromPoint(clientX, clientY);
+  if (!$touchElem.matches('label.panel-cell')) return;
+
+  const $checkbox = $touchElem.previousElementSibling;
+  togglePannel($checkbox);
 };
 
 /* ==== event handlers ==== */
@@ -332,6 +385,9 @@ window.addEventListener('DOMContentLoaded', () => {
   $beatInput.value = beat;
   initCellElements();
   initAddInstList();
+  window.AudioContext = window.AudioContext || window.webkitAudioContext;
+  canvas.width = window.innerWidth * 0.8;
+  canvas.height = window.innerHeight * 0.6;
 });
 
 // 페이지 이동
@@ -346,7 +402,7 @@ $pageDownBtn.addEventListener('click', () => {
 });
 
 $playBtn.addEventListener('click', () => {
-  // 인터랙션 위해서 임의로 추가(해결 방법 찾는 중)
+  // 인터랙션 위해서 임의로 추가 for Safari
   const audio = new Audio('./sound/1.wav');
   audio.muted = true;
   audio.play();
@@ -356,53 +412,19 @@ $playBtn.addEventListener('click', () => {
   playMusic(0);
 });
 
-let isActive = false;
-
-const handleMouseOver = e => {
-  if (!e.target.matches('label.panel-cell')) return;
-
-  const checkbox = e.target.previousElementSibling;
-  const cellId = checkbox.id;
-  const splitedCell = cellId.split('-');
-  const xLoc = splitedCell[1];
-  const yLoc = splitedCell[2];
-
-  // 리팩토링 필요
-  if (!isActive) {
-    padArr[xLoc][yLoc] = 1;
-    checkbox.checked = true;
-  } else {
-    padArr[xLoc][yLoc] = 0;
-    checkbox.checked = false;
-  }
-};
-
-$musicPadMask.addEventListener('mousedown', e => {
-  if (!e.target.matches('label.panel-cell')) return;
-  const checkbox = e.target.previousElementSibling;
-
-  isActive = checkbox.checked;
-
-  const cellId = checkbox.id;
-  const splitedCell = cellId.split('-');
-
-  const xLoc = splitedCell[1];
-  const yLoc = splitedCell[2];
-
-  // 리팩토링 필요
-  if (!isActive) {
-    padArr[xLoc][yLoc] = 1;
-    checkbox.checked = true;
-  } else {
-    padArr[xLoc][yLoc] = 0;
-    checkbox.checked = false;
-  }
+$musicPadMask.addEventListener('mousedown', ({ target }) => {
+  if (!target.matches('label.panel-cell')) return;
+  const $checkbox = target.previousElementSibling;
+  // mousedown 시 pannel의 active 상태 가져오기(드래그 시작 지점)
+  isActive = $checkbox.checked;
+  togglePannel($checkbox);
 
   $musicPadMask.addEventListener('mouseover', handleMouseOver);
 });
 
 $musicPadMask.addEventListener('mouseup', ({ target }) => {
   $musicPadMask.removeEventListener('mouseover', handleMouseOver);
+  // mouseup 후 focus 제거되는 문제 해결
   if (target.htmlFor) {
     document.getElementById(target.htmlFor).focus();
   }
@@ -412,59 +434,19 @@ $musicPadMask.addEventListener('mouseleave', () => {
   $musicPadMask.removeEventListener('mouseover', handleMouseOver);
 });
 
+// mousedown, mouseup이 click으로 인식되는 문제 해결
 $musicPadMask.addEventListener('click', e => {
   e.preventDefault();
 });
 
 // mobile touch event
-
-const handleTouchMove = e => {
-  const { clientX, clientY } = e.touches[0];
-
-  if (!clientX || !clientY) return;
-
-  const $touchElem = document.elementFromPoint(clientX, clientY);
-  if (!$touchElem.matches('label.panel-cell')) return;
-
-  const checkbox = $touchElem.previousElementSibling;
-
-  const cellId = checkbox.id;
-  const splitedCell = cellId.split('-');
-
-  const xLoc = splitedCell[1];
-  const yLoc = splitedCell[2];
-
-  if (!isActive) {
-    padArr[xLoc][yLoc] = 1;
-    checkbox.checked = true;
-  } else {
-    padArr[xLoc][yLoc] = 0;
-    checkbox.checked = false;
-  }
-};
-
 $musicPad.addEventListener('touchstart', e => {
   e.preventDefault();
   if (!e.target.matches('label.panel-cell')) return;
 
-  const checkbox = e.target.previousElementSibling;
-
-  isActive = checkbox.checked;
-
-  const cellId = checkbox.id;
-  const splitedCell = cellId.split('-');
-
-  const xLoc = splitedCell[1];
-  const yLoc = splitedCell[2];
-
-  // 리팩토링 필요
-  if (!isActive) {
-    padArr[xLoc][yLoc] = 1;
-    checkbox.checked = true;
-  } else {
-    padArr[xLoc][yLoc] = 0;
-    checkbox.checked = false;
-  }
+  const $checkbox = e.target.previousElementSibling;
+  isActive = $checkbox.checked;
+  togglePannel($checkbox);
 
   $musicPad.addEventListener('touchmove', handleTouchMove);
 });
@@ -484,7 +466,6 @@ document
     changeBeat();
   });
 
-// down up
 // bpm 변경
 document
   .querySelector('.bpm-control')
@@ -492,8 +473,8 @@ document
     if (!target.matches('button')) return;
     const delta = target.classList.contains('bpm-up-btn') ? 10 : -10;
     bpm += delta;
-    if (bpm < 100) bpm = 100;
-    if (bpm > 800) bpm = 800;
+    if (bpm < MIN_BPM) bpm = MIN_BPM;
+    if (bpm > MAX_BPM) bpm = MAX_BPM;
     $bpmInput.value = bpm;
 
     // Play 중 일 경우
@@ -502,22 +483,6 @@ document
       playMusic(playingColumn);
     }
   });
-
-// pad 초기화
-document.querySelector('.file-clear-btn').addEventListener('click', () => {
-  padArr = padArr.map(row => row.fill(0));
-  initCellElements();
-});
-
-// Beat input 변경
-const setBeatInputValue = val => {
-  beat = val;
-  if (beat < MIN_BEAT) beat = MIN_BEAT;
-  if (beat > MAX_BEAT) beat = MAX_BEAT;
-  $beatInput.value = beat;
-  $beatInput.blur();
-  changeBeat();
-};
 
 $beatInput.addEventListener('keyup', e => {
   if (e.key === 'Enter') {
@@ -528,18 +493,6 @@ $beatInput.addEventListener('keyup', e => {
 $beatInput.addEventListener('focusout', () => {
   setBeatInputValue(+$beatInput.value);
 });
-
-const setBpmInputValue = val => {
-  bpm = val;
-  if (bpm < 100) bpm = 100;
-  if (bpm > 800) bpm = 800;
-  $bpmInput.value = bpm;
-  $bpmInput.blur();
-  if (timerId) {
-    stopMusic();
-    playMusic(playingColumn);
-  }
-};
 
 // BPM input 변경
 $bpmInput.addEventListener('keyup', e => {
@@ -564,8 +517,7 @@ $bpmInput.addEventListener('input', () => {
     .replace(/(\..*)\./g, '$1');
 });
 
-// file upload
-$fileUploadBtn.addEventListener('change', () => {
+document.querySelector('input[type="file"]').addEventListener('change', () => {
   const selectedFile = $fileUploadBtn.files[0];
 
   const reader = new FileReader();
@@ -588,7 +540,7 @@ $fileUploadBtn.addEventListener('change', () => {
 });
 
 // file download
-$fileDownloadBtn.addEventListener('click', () => {
+document.querySelector('.file-save-btn').addEventListener('click', () => {
   const infoToSave = {
     musicInfo,
     padArr,
@@ -605,6 +557,12 @@ $fileDownloadBtn.addEventListener('click', () => {
 
 $menuToggleBtn.addEventListener('click', () => {
   $controls.classList.toggle('active');
+});
+
+// pad 초기화
+document.querySelector('.file-clear-btn').addEventListener('click', () => {
+  padArr = padArr.map(row => row.fill(0));
+  initCellElements();
 });
 
 // keyboard interaction 리팩토링 필요]
@@ -632,7 +590,7 @@ document.addEventListener('keyup', event => {
     }
     // panel is end of line
     else if (yLoc === lastYLoc) {
-      document.getElementById(`cell-${+xLoc+1}-0`).focus();
+      document.getElementById(`cell-${+xLoc + 1}-0`).focus();
       movePage(1);
     }
     // add button -> play button
@@ -720,26 +678,30 @@ document.addEventListener('keydown', e => {
     .querySelector('.music')
     .lastElementChild.firstElementChild.id.split('-');
   if (e.shiftKey && e.key === 'Tab') {
-    if(+yLoc === 0 && +xLoc !== 0){
+    if (+yLoc === 0 && +xLoc !== 0) {
       e.preventDefault();
-      document.getElementById(`cell-${xLoc-1}-${beat-1}`).focus();
+      document.getElementById(`cell-${xLoc - 1}-${beat - 1}`).focus();
       $musicPadMask.scrollLeft = 0;
-      currentPage = beat % VIEW_PAGE === 0 ? beat / VIEW_PAGE : Math.floor(beat / VIEW_PAGE)+1;
+      currentPage =
+        beat % VIEW_PAGE === 0
+          ? beat / VIEW_PAGE
+          : Math.floor(beat / VIEW_PAGE) + 1;
       movePage(currentPage);
-    }
-    else if ((+yLoc + 1) % (VIEW_PAGE+1) === 0) {
+    } else if ((+yLoc + 1) % (VIEW_PAGE + 1) === 0) {
       currentPage -= 1;
       movePage(currentPage);
-    }
-    else if(document.activeElement.matches('.play-btn')){
+    } else if (document.activeElement.matches('.play-btn')) {
       e.preventDefault();
       document.getElementById(`cell-${lastXLoc}-${lastYLoc}`).focus();
       $musicPadMask.scrollLeft = 0;
-      currentPage = beat % VIEW_PAGE === 0 ? beat / VIEW_PAGE : Math.floor(beat / VIEW_PAGE)+1;
+      currentPage =
+        beat % VIEW_PAGE === 0
+          ? beat / VIEW_PAGE
+          : Math.floor(beat / VIEW_PAGE) + 1;
       movePage(currentPage);
     }
-  } else if (+yLoc + 1 === beat && e.key ==='Tab') {
-    if(+xLoc === musicInfo.length-1) return;
+  } else if (+yLoc + 1 === beat && e.key === 'Tab') {
+    if (+xLoc === musicInfo.length - 1) return;
     currentPage = 1;
     movePage(currentPage);
   } else if (e.key === 'Tab' && (+yLoc + 1) % VIEW_PAGE === 0) {
