@@ -47,11 +47,19 @@
   box-shadow: 0 0 100px rgba(0, 0, 0, 0.05);
   animation: appearUp 1s 0.5s backwards;
   @include mobile {
-    // margin-bottom: -150px;
-    padding: 20px 40px;
+    margin-bottom: -70px;
+    padding: 20px 20px;
+    padding-bottom: 50px;
     align-items: flex-start;
     justify-content: space-between;
-    height: 120px;
+    height: 100px;
+    transition: margin 0.5s;
+    &.active {
+      margin-bottom: 0;
+      & .menu-toggle-btn::after {
+        transform: translate3d(0, -25%, 0) rotate(135deg);
+      }
+    }
   }
 }
 
@@ -63,6 +71,9 @@
     @include circleButton(60px, 60px);
   }
   @include icon('/assets/img/play_icon.svg');
+  &.playing {
+    @include icon('/assets/img/stop_icon.svg');
+  }
 }
 
 .control-wrapper {
@@ -71,10 +82,11 @@
   margin-left: auto;
   @include mobile {
     justify-content: center;
+    align-items: center;
     min-width: 200px;
     max-width: 300px;
     height: 60px;
-    flex-wrap: wrap;
+    // flex-wrap: wrap;
   }
 }
 
@@ -85,6 +97,9 @@
   text-align: center;
   &:first-child {
     margin-right: rem(24px);
+    @include mobile {
+      margin-right: rem(12px);
+    }
   }
   @include mobile {
     margin: 0;
@@ -95,15 +110,18 @@
     font-weight: 700;
   }
   input {
+    box-sizing: border-box;
     width: rem(72px);
     font-size: rem(36px);
     font-weight: 700;
     color: $dark-yellow;
     text-align: center;
     border: none;
+    margin: 0;
+    padding: 0;
     @include mobile {
-      font-size: rem(28px);
-      width: rem(50px);
+      font-size: rem(24px);
+      width: rem(48px);
     }
     &:focus {
       outline: none;
@@ -117,7 +135,7 @@
 .bpm-up-btn {
   @include circleButton(30px, 30px);
   @include mobile {
-    @include circleButton(25px, 25px);
+    @include circleButton(20px, 20px);
   }
 }
 
@@ -137,6 +155,9 @@
   @include mobile {
     position: absolute;
     margin: 0;
+    left: 50%;
+    transform: translate3d(-50%, 0, 0);
+    bottom: 20px;
   }
 }
 
@@ -155,8 +176,11 @@
 .file-load-btn {
   @include icon('/assets/img/load_icon.svg');
   input {
+    position: absolute;
     width: 40px;
     height: 40px;
+    margin: 0;
+    padding: 0;
     opacity: 0;
     cursor: pointer;
   }
@@ -166,9 +190,26 @@
 }
 .file-clear-btn {
   @include icon('/assets/img/clear_icon.svg');
+  background-size: 40%;
 }
 
 .menu-toggle-btn {
-  position: absolute;
-  @include circleButton(30px, 30px);
+  &::after {
+    content: '';
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: solid 2px black;
+    border-width: 2px 2px 0 0;
+    transform: translate3d(0, 25%, 0) rotate(-45deg);
+
+    vertical-align: middle;
+  }
+  @include circleButton(30px, 30px, transparent, false);
+  text-align: center;
+  display: none;
+  margin-left: 10px;
+  @include mobile {
+    display: block;
+  }
 }
