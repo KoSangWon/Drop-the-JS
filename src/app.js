@@ -255,7 +255,7 @@ const frameLooper = () => {
     // console.log(i);
     barPos = i * 4;
     barWidth = 2;
-    barHeight = -(fbcArray[i] * (window.innerHeight / 500));
+    barHeight = -(fbcArray[i] * (window.innerHeight / 400));
     ctx.fillRect(barPos, canvas.height, barWidth, barHeight);
   }
 };
@@ -384,8 +384,8 @@ window.addEventListener('DOMContentLoaded', () => {
   initCellElements();
   initAddInstList();
   window.AudioContext = window.AudioContext || window.webkitAudioContext;
-  canvas.width = window.innerWidth * 0.8;
-  canvas.height = window.innerHeight * 0.6;
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 });
 
 // 페이지 이동
