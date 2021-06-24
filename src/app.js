@@ -346,8 +346,8 @@ const changeBeat = () => {
   initCellElements();
 };
 
-const setBeatInputValue = val => {
-  beat = val;
+const setBeatInputValue = newBeat => {
+  beat = newBeat;
   if (beat < MIN_BEAT) beat = MIN_BEAT;
   if (beat > MAX_BEAT) beat = MAX_BEAT;
   $beatInput.value = beat;
@@ -355,16 +355,12 @@ const setBeatInputValue = val => {
   changeBeat();
 };
 
-const setBpmInputValue = val => {
-  bpm = val;
-  if (bpm < 100) bpm = 100;
-  if (bpm > 800) bpm = 800;
+const setBpmInputValue = newBpm => {
+  bpm = newBpm;
+  if (bpm < MIN_BPM) bpm = MIN_BPM;
+  if (bpm > MAX_BPM) bpm = MAX_BPM;
   $bpmInput.value = bpm;
   $bpmInput.blur();
-  if (timerId) {
-    stopMusic();
-    playMusic(playingColumn);
-  }
 };
 
 const handleTouchMove = ({ touches }) => {
@@ -459,11 +455,7 @@ document
   .addEventListener('click', ({ target }) => {
     if (!target.matches('button')) return;
     const delta = target.classList.contains('beat-up-btn') ? 1 : -1;
-    beat += delta;
-    if (beat < MIN_BEAT) beat = MIN_BEAT;
-    if (beat > MAX_BEAT) beat = MAX_BEAT;
-    $beatInput.value = beat;
-    changeBeat();
+    setBeatInputValue(beat + delta);
   });
 
 // bpm 변경
@@ -472,10 +464,8 @@ document
   .addEventListener('click', ({ target }) => {
     if (!target.matches('button')) return;
     const delta = target.classList.contains('bpm-up-btn') ? 10 : -10;
-    bpm += delta;
-    if (bpm < MIN_BPM) bpm = MIN_BPM;
-    if (bpm > MAX_BPM) bpm = MAX_BPM;
-    $bpmInput.value = bpm;
+
+    setBpmInputValue(beat + delta);
 
     // Play 중 일 경우
     if (timerId) {
@@ -494,6 +484,10 @@ $beatInput.addEventListener('focusout', () => {
   setBeatInputValue(+$beatInput.value);
 });
 
+$beatInput.addEventListener('input', () => {
+  $beatInput.value = $beatInput.value.replace(/[^0-9]/g, '');
+});
+
 // BPM input 변경
 $bpmInput.addEventListener('keyup', e => {
   if (e.key === 'Enter') {
@@ -505,16 +499,8 @@ $bpmInput.addEventListener('focusout', () => {
   setBpmInputValue(+$bpmInput.value);
 });
 
-$beatInput.addEventListener('input', () => {
-  $beatInput.value = $beatInput.value
-    .replace(/[^0-9]/g, '')
-    .replace(/(\..*)\./g, '$1');
-});
-
 $bpmInput.addEventListener('input', () => {
-  $bpmInput.value = $bpmInput.value
-    .replace(/[^0-9]/g, '')
-    .replace(/(\..*)\./g, '$1');
+  $bpmInput.value = $bpmInput.value.replace(/[^0-9]/g, '');
 });
 
 document.querySelector('input[type="file"]').addEventListener('change', () => {
