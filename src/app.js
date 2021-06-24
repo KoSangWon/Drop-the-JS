@@ -1,22 +1,9 @@
-// const AudioContext = window.AudioContext || window.webkitAudioContext;
-// const audioContext = new AudioContext();
-// const audioEmitter = new Audio();
-// const audio1 = new Audio('./sound/1.wav');
-// const audioDestination = audioContext.destination;
-// const emitterNode = audioContext.createMediaElementSource(audioEmitter);
-// const audio1Node = audioContext.createMediaElementSource(audio1);
-// const channelMerger = audioContext.createChannelMerger();
-// audio1
-// audio1Node.connect(emitterNode);
-// audioContext.resume();
-// audioEmitter.play();
-
 /* ==== DOMs ==== */
 const $overlay = document.querySelector('.overlay');
 const $playBtn = document.querySelector('.play-btn');
 const $musicPad = document.querySelector('.music');
 const $musicPadMask = document.querySelector('.music-mask');
-const $controls = document.querySelector('.controls');
+// const $controls = document.querySelector('.controls');
 
 const $pageUpBtn = document.querySelector('.page-up-btn');
 const $pageDownBtn = document.querySelector('.page-down-btn');
@@ -215,6 +202,41 @@ const movePage = page => {
   $musicPad.style.setProperty('--page-offset', currentPage - 1);
 };
 
+let canvas;
+let ctx;
+let source;
+
+let analyser;
+let fbcArray;
+let barCount;
+let barPos;
+let barWidth;
+let barHeight;
+
+const frameLooper = () => {
+  window.RequestAnimationFrame =
+    window.requestAnimationFrame(frameLooper) ||
+    window.msRequestAnimationFrame(frameLooper) ||
+    window.mozRequestAnimationFrame(frameLooper) ||
+    window.webkitRequestAnimationFrame(frameLooper);
+
+  fbcArray = new Uint8Array(analyser.frequencyBinCount);
+  barCount = window.innerWidth / 2;
+
+  analyser.getByteFrequencyData(fbcArray);
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#ffffff';
+
+  for (let i = 0; i < barCount; i++) {
+    barPos = i * 4;
+    barWidth = 2;
+    barHeight = -(fbcArray[i] / 2);
+
+    ctx.fillRect(barPos, canvas.height, barWidth, barHeight);
+  }
+};
+
 const stopMusic = () => {
   document.querySelectorAll('.running').forEach($label => {
     $label.classList.remove('running');
@@ -222,7 +244,15 @@ const stopMusic = () => {
   clearInterval(timerId);
   timerId = null;
 };
+
+canvas = document.getElementById('canvas');
+canvas.width = window.innerWidth * 0.8;
+canvas.height = window.innerHeight * 0.6;
+window.AudioContext = window.AudioContext || window.webkitAudioContext;
+
 const playMusic = startColumn => {
+  const context = new AudioContext();
+  analyser = context.createAnalyser();
   const oneBeatTime = Math.floor(MIN_TO_MS / bpm);
   if (!timerId) {
     // $playBtn.textContent = 'stop';
@@ -239,8 +269,7 @@ const playMusic = startColumn => {
 
       // 각 재생 중인 column에서의 Pad 값
       const eachStatus = padArr.map((row, i) => row[eachPlayingColumns[i]]);
-      console.log('eachSTa', eachStatus);
-      // 플레이할 악기 배열
+
       const instsToPlay = [];
 
       eachStatus.forEach((v, i) => {
@@ -249,9 +278,16 @@ const playMusic = startColumn => {
 
       // 오디오 객체 생성
       const audios = instsToPlay.map(file => new Audio(file));
-      // async
+
       audios.forEach(audio => {
         audio.play();
+        ctx = canvas.getContext('2d');
+        source = context.createMediaElementSource(audio);
+
+        source.connect(analyser);
+
+        analyser.connect(context.destination);
+        frameLooper();
       });
 
       document.querySelectorAll('.running').forEach($label => {
@@ -381,7 +417,7 @@ $musicPadMask.addEventListener('click', e => {
 
 const handleTouchMove = e => {
   const { clientX, clientY } = e.touches[0];
-  console.log(e.touches);
+  // console.log(e.touches);
   if (!clientX || !clientY) return;
 
   const $touchElem = document.elementFromPoint(clientX, clientY);
@@ -594,7 +630,7 @@ document.addEventListener('keyup', event => {
     // inst -> first panel
     else if ($activeElem.parentElement.matches('.inst-item')) {
       const instInd = insts.indexOf($activeElem.parentElement);
-      console.log(instInd);
+      // console.log(instInd);
       document.getElementById(`cell-${instInd}-0`).focus();
     }
     // move panel to right

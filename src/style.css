@@ -6,6 +6,24 @@
  * 2. Prevent adjustments of font size after orientation changes in
  *    IE on Windows Phone and in iOS.
  */
+
+/* body {
+  background: ;
+
+  padding-bottom: 1vw;
+}*/
+.canvas {
+  background-color: black;
+}
+
+div#player {
+  width: 80vw;
+  height: 60vh;
+  background: black;
+  margin: 20px auto 20px auto;
+  display: block;
+}
+
 html {
   line-height: 1.15;
   /* 1 */
@@ -88,7 +106,8 @@ main {
  */
 code,
 kbd,
-samp, pre {
+samp,
+pre {
   font-family: monospace, monospace;
   /* 1 */
   font-size: 1em;
@@ -285,17 +304,17 @@ select {
  * 2. Correct the inability to style clickable types in iOS and Safari.
  */
 button,
-html [type=button],
-[type=reset],
-[type=submit] {
+html [type='button'],
+[type='reset'],
+[type='submit'] {
   -webkit-appearance: button;
   /* 2 */
 }
 
 button,
-[type=button],
-[type=reset],
-[type=submit] {
+[type='button'],
+[type='reset'],
+[type='submit'] {
   /**
    * Remove the inner border and padding in Firefox.
    */
@@ -304,16 +323,16 @@ button,
    */
 }
 button::-moz-focus-inner,
-[type=button]::-moz-focus-inner,
-[type=reset]::-moz-focus-inner,
-[type=submit]::-moz-focus-inner {
+[type='button']::-moz-focus-inner,
+[type='reset']::-moz-focus-inner,
+[type='submit']::-moz-focus-inner {
   border-style: none;
   padding: 0;
 }
 button:-moz-focusring,
-[type=button]:-moz-focusring,
-[type=reset]:-moz-focusring,
-[type=submit]:-moz-focusring {
+[type='button']:-moz-focusring,
+[type='reset']:-moz-focusring,
+[type='submit']:-moz-focusring {
   outline: 1px dotted ButtonText;
 }
 
@@ -328,8 +347,8 @@ input {
  * 1. Add the correct box sizing in IE 10-.
  * 2. Remove the padding in IE 10-.
  */
-[type=checkbox],
-[type=radio] {
+[type='checkbox'],
+[type='radio'] {
   box-sizing: border-box;
   /* 1 */
   padding: 0;
@@ -339,8 +358,8 @@ input {
 /**
  * Correct the cursor style of increment and decrement buttons in Chrome.
  */
-[type=number]::-webkit-inner-spin-button,
-[type=number]::-webkit-outer-spin-button {
+[type='number']::-webkit-inner-spin-button,
+[type='number']::-webkit-outer-spin-button {
   height: auto;
 }
 
@@ -348,7 +367,7 @@ input {
  * 1. Correct the odd appearance in Chrome and Safari.
  * 2. Correct the outline style in Safari.
  */
-[type=search] {
+[type='search'] {
   -webkit-appearance: textfield;
   /* 1 */
   outline-offset: -2px;
@@ -357,7 +376,8 @@ input {
    * Remove the inner padding and cancel buttons in Chrome and Safari on macOS.
    */
 }
-[type=search]::-webkit-search-cancel-button, [type=search]::-webkit-search-decoration {
+[type='search']::-webkit-search-cancel-button,
+[type='search']::-webkit-search-decoration {
   -webkit-appearance: none;
 }
 
@@ -492,7 +512,7 @@ template {
   }
 }
 body {
-  font-family: "Noto Sans KR", sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
   -ms-user-select: none;
   -moz-user-select: -moz-none;
   -khtml-user-select: none;
@@ -589,7 +609,7 @@ li {
   -webkit-appearance: none;
   cursor: pointer;
   transition: transform 0.4s;
-  background-image: url("/assets/img/plus_icon.svg");
+  background-image: url('/assets/img/plus_icon.svg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 50%;
@@ -624,7 +644,7 @@ li {
   -webkit-appearance: none;
   cursor: pointer;
   transition: transform 0.4s;
-  background-image: url("/assets/img/x_icon.svg");
+  background-image: url('/assets/img/x_icon.svg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 50%;
@@ -650,7 +670,7 @@ li {
 .icon-drum {
   width: 100%;
   height: 100%;
-  background-image: url("/assets/img/drum_icon.svg");
+  background-image: url('/assets/img/drum_icon.svg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 50%;
@@ -659,7 +679,7 @@ li {
 .icon-side-stick {
   width: 100%;
   height: 100%;
-  background-image: url("/assets/img/sidestick_icon.svg");
+  background-image: url('/assets/img/sidestick_icon.svg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 50%;
@@ -668,7 +688,7 @@ li {
 .icon-cymbal {
   width: 100%;
   height: 100%;
-  background-image: url("/assets/img/cymbal_icon.svg");
+  background-image: url('/assets/img/cymbal_icon.svg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 50%;
@@ -677,7 +697,7 @@ li {
 .icon-opened-hihat {
   width: 100%;
   height: 100%;
-  background-image: url("/assets/img/opened_hihat_icon.svg");
+  background-image: url('/assets/img/opened_hihat_icon.svg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 50%;
@@ -686,7 +706,7 @@ li {
 .icon-clap {
   width: 100%;
   height: 100%;
-  background-image: url("/assets/img/clap_icon.svg");
+  background-image: url('/assets/img/clap_icon.svg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 50%;
@@ -695,7 +715,7 @@ li {
 .icon-closed-hihat {
   width: 100%;
   height: 100%;
-  background-image: url("/assets/img/closed_hihat_icon.svg");
+  background-image: url('/assets/img/closed_hihat_icon.svg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 50%;
@@ -704,7 +724,7 @@ li {
 .icon-ride {
   width: 100%;
   height: 100%;
-  background-image: url("/assets/img/ride_icon.svg");
+  background-image: url('/assets/img/ride_icon.svg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 50%;
@@ -713,7 +733,7 @@ li {
 .icon-kick {
   width: 100%;
   height: 100%;
-  background-image: url("/assets/img/kick_icon.svg");
+  background-image: url('/assets/img/kick_icon.svg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 50%;
@@ -722,7 +742,7 @@ li {
 .icon-hightom {
   width: 100%;
   height: 100%;
-  background-image: url("/assets/img/hightom_icon.svg");
+  background-image: url('/assets/img/hightom_icon.svg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 50%;
@@ -731,7 +751,7 @@ li {
 .icon-lowtom {
   width: 100%;
   height: 100%;
-  background-image: url("/assets/img/lowtom_icon.svg");
+  background-image: url('/assets/img/lowtom_icon.svg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 50%;
@@ -762,7 +782,11 @@ li {
   grid-template: auto/repeat(var(--cell-col), auto);
   gap: 8px;
   margin-bottom: 200px;
-  transform: translate3d(calc(calc(var(--page-offset) * -100%) - calc(var(--page-offset) * 18px)), 0, 0);
+  transform: translate3d(
+    calc(calc(var(--page-offset) * -100%) - calc(var(--page-offset) * 18px)),
+    0,
+    0
+  );
   justify-content: start;
   align-content: center;
   transition: transform 0.5s;
@@ -1313,7 +1337,7 @@ li {
   height: 1px;
 }
 .add-inst-item input:checked + label::before {
-  content: "";
+  content: '';
   display: block;
   position: absolute;
   right: 20px;
@@ -1400,7 +1424,7 @@ li {
 }
 @media screen and (max-width: 767px) {
   .page-down-btn,
-.page-up-btn {
+  .page-up-btn {
     background-color: #f8e543;
     padding: 0;
     margin: 0;
@@ -1414,18 +1438,18 @@ li {
     transition: transform 0.4s;
   }
   .page-down-btn:hover,
-.page-up-btn:hover {
+  .page-up-btn:hover {
     outline: none;
     transform: scale(1.1);
   }
   .page-down-btn:focus,
-.page-up-btn:focus {
+  .page-up-btn:focus {
     outline: none;
     box-shadow: 0, 0, 100px, rgba(105, 88, 27, 0.5);
     transform: scale(1.1);
   }
   .page-down-btn:active,
-.page-up-btn:active {
+  .page-up-btn:active {
     transition: transform 0.2s background-color 0.2s;
     transform: scale(1);
   }
@@ -1454,7 +1478,7 @@ li {
     min-height: 200px;
   }
   .controls::after {
-    content: "";
+    content: '';
     display: block;
     position: absolute;
     top: 10px;
@@ -1477,7 +1501,7 @@ li {
   cursor: pointer;
   box-shadow: 0px 0px 20px rgba(248, 229, 67, 0.5);
   transition: transform 0.4s;
-  background-image: url("/assets/img/play_icon.svg");
+  background-image: url('/assets/img/play_icon.svg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 50%;
@@ -1549,7 +1573,7 @@ li {
 }
 @media screen and (max-width: 767px) {
   .beat-control,
-.bpm-control {
+  .bpm-control {
     margin: 0;
     margin-bottom: 12px;
   }
@@ -1571,7 +1595,7 @@ li {
 }
 @media screen and (max-width: 767px) {
   .beat-control input,
-.bpm-control input {
+  .bpm-control input {
     font-size: 1.75rem;
     width: 3.125rem;
   }
@@ -1621,9 +1645,9 @@ li {
 }
 @media screen and (max-width: 767px) {
   .beat-down-btn,
-.beat-up-btn,
-.bpm-down-btn,
-.bpm-up-btn {
+  .beat-up-btn,
+  .bpm-down-btn,
+  .bpm-up-btn {
     background-color: #f8e543;
     padding: 0;
     margin: 0;
@@ -1637,31 +1661,31 @@ li {
     transition: transform 0.4s;
   }
   .beat-down-btn:hover,
-.beat-up-btn:hover,
-.bpm-down-btn:hover,
-.bpm-up-btn:hover {
+  .beat-up-btn:hover,
+  .bpm-down-btn:hover,
+  .bpm-up-btn:hover {
     outline: none;
     transform: scale(1.1);
   }
   .beat-down-btn:focus,
-.beat-up-btn:focus,
-.bpm-down-btn:focus,
-.bpm-up-btn:focus {
+  .beat-up-btn:focus,
+  .bpm-down-btn:focus,
+  .bpm-up-btn:focus {
     outline: none;
     box-shadow: 0, 0, 100px, rgba(105, 88, 27, 0.5);
     transform: scale(1.1);
   }
   .beat-down-btn:active,
-.beat-up-btn:active,
-.bpm-down-btn:active,
-.bpm-up-btn:active {
+  .beat-up-btn:active,
+  .bpm-down-btn:active,
+  .bpm-up-btn:active {
     transition: transform 0.2s background-color 0.2s;
     transform: scale(1);
   }
 }
 
 .plus-icon {
-  background-image: url("/assets/img/plus_icon.svg");
+  background-image: url('/assets/img/plus_icon.svg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 50%;
@@ -1669,7 +1693,7 @@ li {
 }
 
 .minus-icon {
-  background-image: url("/assets/img/minus_icon.svg");
+  background-image: url('/assets/img/minus_icon.svg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 50%;
@@ -1723,8 +1747,8 @@ li {
 }
 @media screen and (max-width: 767px) {
   .file-load-btn,
-.file-save-btn,
-.file-clear-btn {
+  .file-save-btn,
+  .file-clear-btn {
     background-color: #f8e543;
     padding: 0;
     margin: 0;
@@ -1738,21 +1762,21 @@ li {
     transition: transform 0.4s;
   }
   .file-load-btn:hover,
-.file-save-btn:hover,
-.file-clear-btn:hover {
+  .file-save-btn:hover,
+  .file-clear-btn:hover {
     outline: none;
     transform: scale(1.1);
   }
   .file-load-btn:focus,
-.file-save-btn:focus,
-.file-clear-btn:focus {
+  .file-save-btn:focus,
+  .file-clear-btn:focus {
     outline: none;
     box-shadow: 0, 0, 100px, rgba(105, 88, 27, 0.5);
     transform: scale(1.1);
   }
   .file-load-btn:active,
-.file-save-btn:active,
-.file-clear-btn:active {
+  .file-save-btn:active,
+  .file-clear-btn:active {
     transition: transform 0.2s background-color 0.2s;
     transform: scale(1);
   }
@@ -1764,7 +1788,7 @@ li {
 }
 
 .file-load-btn {
-  background-image: url("/assets/img/load_icon.svg");
+  background-image: url('/assets/img/load_icon.svg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 50%;
@@ -1777,14 +1801,14 @@ li {
 }
 
 .file-save-btn {
-  background-image: url("/assets/img/save_icon.svg");
+  background-image: url('/assets/img/save_icon.svg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 50%;
 }
 
 .file-clear-btn {
-  background-image: url("/assets/img/clear_icon.svg");
+  background-image: url('/assets/img/clear_icon.svg');
   background-position: center;
   background-repeat: no-repeat;
   background-size: 50%;
@@ -1805,34 +1829,44 @@ li {
 }
 
 .color-red {
-  filter: invert(33%) sepia(66%) saturate(5964%) hue-rotate(346deg) brightness(121%) contrast(99%);
+  filter: invert(33%) sepia(66%) saturate(5964%) hue-rotate(346deg)
+    brightness(121%) contrast(99%);
 }
 .color-orange {
-  filter: invert(72%) sepia(31%) saturate(4580%) hue-rotate(333deg) brightness(102%) contrast(101%);
+  filter: invert(72%) sepia(31%) saturate(4580%) hue-rotate(333deg)
+    brightness(102%) contrast(101%);
 }
 .color-yellow {
-  filter: invert(89%) sepia(75%) saturate(3334%) hue-rotate(324deg) brightness(104%) contrast(103%);
+  filter: invert(89%) sepia(75%) saturate(3334%) hue-rotate(324deg)
+    brightness(104%) contrast(103%);
 }
 .color-leafgreen {
-  filter: invert(87%) sepia(35%) saturate(6443%) hue-rotate(30deg) brightness(101%) contrast(101%);
+  filter: invert(87%) sepia(35%) saturate(6443%) hue-rotate(30deg)
+    brightness(101%) contrast(101%);
 }
 .color-green {
-  filter: invert(45%) sepia(96%) saturate(738%) hue-rotate(66deg) brightness(114%) contrast(108%);
+  filter: invert(45%) sepia(96%) saturate(738%) hue-rotate(66deg)
+    brightness(114%) contrast(108%);
 }
 .color-jade {
-  filter: invert(80%) sepia(59%) saturate(3106%) hue-rotate(110deg) brightness(89%) contrast(101%);
+  filter: invert(80%) sepia(59%) saturate(3106%) hue-rotate(110deg)
+    brightness(89%) contrast(101%);
 }
 .color-skyblue {
-  filter: invert(80%) sepia(53%) saturate(5555%) hue-rotate(176deg) brightness(103%) contrast(103%);
+  filter: invert(80%) sepia(53%) saturate(5555%) hue-rotate(176deg)
+    brightness(103%) contrast(103%);
 }
 .color-blue {
-  filter: invert(30%) sepia(38%) saturate(4295%) hue-rotate(220deg) brightness(94%) contrast(97%);
+  filter: invert(30%) sepia(38%) saturate(4295%) hue-rotate(220deg)
+    brightness(94%) contrast(97%);
 }
 .color-plum {
-  filter: invert(37%) sepia(47%) saturate(6897%) hue-rotate(249deg) brightness(99%) contrast(105%);
+  filter: invert(37%) sepia(47%) saturate(6897%) hue-rotate(249deg)
+    brightness(99%) contrast(105%);
 }
 .color-purple {
-  filter: invert(54%) sepia(69%) saturate(6773%) hue-rotate(273deg) brightness(101%) contrast(109%);
+  filter: invert(54%) sepia(69%) saturate(6773%) hue-rotate(273deg)
+    brightness(101%) contrast(109%);
 }
 
 .step-sequencer {
