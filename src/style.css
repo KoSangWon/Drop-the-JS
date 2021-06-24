@@ -483,6 +483,16 @@ template {
     transform: translate3d(0, 0, 0);
   }
 }
+@keyframes fadeDown {
+  from {
+    transform: translate3d(0, -100%, 0);
+    opacity: 0;
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -543,18 +553,22 @@ li {
 
 .header {
   width: 100%;
-  height: 200px;
+  height: 150px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  animation: fadeDown 1s;
+}
+.header img {
+  width: 280px;
 }
 @media screen and (max-width: 767px) {
   .header {
     height: 120px;
   }
   .header img {
-    width: 120px;
+    width: 180px;
   }
 }
 
