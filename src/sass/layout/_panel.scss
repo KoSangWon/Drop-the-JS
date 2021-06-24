@@ -149,7 +149,7 @@
   );
   justify-content: start;
   align-content: center;
-  transition: transform 1s;
+  transition: transform 0.5s;
 }
 
 @each $key, $value in $cell-colors {

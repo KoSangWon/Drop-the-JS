@@ -1,3 +1,16 @@
+// const AudioContext = window.AudioContext || window.webkitAudioContext;
+// const audioContext = new AudioContext();
+// const audioEmitter = new Audio();
+// const audio1 = new Audio('./sound/1.wav');
+// const audioDestination = audioContext.destination;
+// const emitterNode = audioContext.createMediaElementSource(audioEmitter);
+// const audio1Node = audioContext.createMediaElementSource(audio1);
+// const channelMerger = audioContext.createChannelMerger();
+// audio1
+// audio1Node.connect(emitterNode);
+// audioContext.resume();
+// audioEmitter.play();
+
 /* ==== DOMs ==== */
 const $overlay = document.querySelector('.overlay');
 const $playBtn = document.querySelector('.play-btn');
@@ -48,7 +61,7 @@ const instSet = [
 ];
 
 const MIN_TO_MS = 60000; // 1min = 60000ms
-let beat = 32; // 초기 비트
+let beat = 16; // 초기 비트
 let musicInfo = [
   { inst: 'drum', file: './sound/1.wav', beat },
   { inst: 'side-stick', file: './sound/2.wav', beat },
@@ -59,35 +72,10 @@ let musicInfo = [
 
 // real data
 // Pad 좌표 모두 0으로 초기화(32비트)
-// const padArr = Array.from(Array(musicInfo.length), () =>
-//   Array(MAX_BEAT).fill(0)
-// );
+let padArr = Array.from(Array(musicInfo.length), () => Array(beat).fill(0));
 
 // dummy data
 let currentPage = 1;
-
-let padArr = [
-  [
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 1
-  ],
-  [
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 1
-  ],
-  [
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 1
-  ],
-  [
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 1
-  ],
-  [
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 1
-  ]
-];
 
 let bpm = 150;
 let playingColumn = 0;
@@ -121,7 +109,7 @@ const initAddInstList = () => {
 
 const initCellElements = () => {
   $musicPad.style.setProperty('--cell-col', beat);
-  $totalPage.textContent = '/' + Math.floor(beat / VIEW_PAGE);
+  $totalPage.textContent = '/' + Math.ceil(beat / VIEW_PAGE);
   $currentPage.textContent = currentPage;
   $instList.innerHTML =
     padArr
@@ -155,7 +143,7 @@ const initCellElements = () => {
 
   const $instAddBtn = $instList.querySelector('.add-btn');
 
-  // TODO: 메뉴 토글이벤트
+  // 메뉴 토글이벤트
   $instAddBtn.addEventListener('click', () => {
     const $instMenu = document.querySelector('.add-inst-menu');
     const ToggleInstrument = ({ target: instCheckBox }) => {
@@ -276,7 +264,10 @@ const playMusic = startColumn => {
           .querySelector(`#cell-${row}-${col} + label`)
           .classList.add('running');
       });
-
+      const willMovePage = Math.floor((playingColumn % beat) / VIEW_PAGE) + 1;
+      if (currentPage !== willMovePage) {
+        movePage(willMovePage);
+      }
       playingColumn += 1;
     }, oneBeatTime);
     return;
@@ -309,7 +300,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // 페이지 이동
 $pageUpBtn.addEventListener('click', () => {
-  if (currentPage >= Math.floor(beat / VIEW_PAGE)) return;
+  if (currentPage >= Math.ceil(beat / VIEW_PAGE)) return;
   movePage(currentPage + 1);
 });
 
@@ -484,8 +475,8 @@ document.querySelector('.file-clear-btn').addEventListener('click', () => {
 // Beat input 변경
 const setBeatInputValue = val => {
   beat = val;
-  if (beat < 4) beat = 4;
-  if (beat > 16) beat = 16;
+  if (beat < MIN_BEAT) beat = MIN_BEAT;
+  if (beat > MAX_BEAT) beat = MAX_BEAT;
   $beatInput.value = beat;
   $beatInput.blur();
   changeBeat();
