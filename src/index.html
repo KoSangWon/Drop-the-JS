@@ -3,7 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <title>Drop the JS</title>
     <link rel="preconnect" href="https://fonts.gstatic.com" />
@@ -110,10 +113,11 @@
                 <input type="text" id="bpm-input" maxlength="3" />
               </div>
             </div>
+            <button class="menu-toggle-btn up-icon"></button>
             <div class="file-control">
-              <div class="file-load-btn">
-                <input type="file" accept=".djs, .txt" />
-              </div>
+              <label class="file-load-btn"
+                ><input type="file" accept=".djs, .txt"
+              /></label>
 
               <button class="file-save-btn"></button>
               <button class="file-clear-btn"></button>

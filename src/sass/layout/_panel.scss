@@ -41,21 +41,9 @@
 
   .add-btn {
     @include circleButton($cell-size, $cell-size, transparent, false);
-    @include icon('/assets/img/plus_icon.svg');
-    background-size: 40%;
+    @include icon('/assets/img/adjust_icon.svg');
+    background-size: 60%;
     opacity: 0.5;
-  }
-  .inst-delete-btn {
-    left: 0;
-    top: 0;
-    opacity: 0;
-    position: absolute;
-    @include circleButton(20px, 20px, $cell-red, false);
-    @include icon('/assets/img/x_icon.svg');
-  }
-  &:hover > .inst-delete-btn,
-  .inst-delete-btn:focus {
-    opacity: 1;
   }
 }
 

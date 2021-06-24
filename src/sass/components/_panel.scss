@@ -1,5 +1,6 @@
 @mixin panelBox($color: $cell-red) {
   & label {
+    position: relative;
     display: block;
     border-radius: 5px;
     border: 1px solid rgba($dark-gray, 0.3);
@@ -10,7 +11,10 @@
     @include clickTransition();
     transition: background-color 0.2s, transform 0.4s, box-shadow 0.2s;
     &.running {
-      transform: scale(1.2);
+      transition: background-color 0.2s,
+        transform 0.2s cubic-bezier(0.23, 1.49, 0.69, 1.42), box-shadow 0.2s;
+      transform: scale(1.1);
+      filter: brightness(1.2);
     }
   }
   & input:checked + label {
@@ -23,6 +27,7 @@
   & input:focus + label {
     outline: none;
     transform: scale(1.1);
+    box-shadow: 0 0 4px rgba(black, 0.8);
   }
   & input:focus:not(:focus-visible) + label {
     transform: scale(1);
