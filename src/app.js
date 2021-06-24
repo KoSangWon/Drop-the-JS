@@ -632,7 +632,7 @@ document.addEventListener('keyup', event => {
     }
     // panel is end of line
     else if (yLoc === lastYLoc) {
-      insts[+xLoc + 1].lastElementChild.focus();
+      document.getElementById(`cell-${+xLoc+1}-0`).focus();
       movePage(1);
     }
     // add button -> play button
@@ -716,22 +716,38 @@ document.addEventListener('keyup', event => {
 
 document.addEventListener('keydown', e => {
   const [, xLoc, yLoc] = document.activeElement.id.split('-');
+  const [, lastXLoc, lastYLoc] = document
+    .querySelector('.music')
+    .lastElementChild.firstElementChild.id.split('-');
   if (e.shiftKey && e.key === 'Tab') {
-    if (+yLoc + 1 === VIEW_PAGE) {
-      currentPage = 1;
+    if(+yLoc === 0 && +xLoc !== 0){
+      e.preventDefault();
+      document.getElementById(`cell-${xLoc-1}-${beat-1}`).focus();
+      $musicPadMask.scrollLeft = 0;
+      currentPage = beat % VIEW_PAGE === 0 ? beat / VIEW_PAGE : Math.floor(beat / VIEW_PAGE)+1;
       movePage(currentPage);
     }
+    else if ((+yLoc + 1) % (VIEW_PAGE+1) === 0) {
+      currentPage -= 1;
+      movePage(currentPage);
+    }
+    else if(document.activeElement.matches('.play-btn')){
+      e.preventDefault();
+      document.getElementById(`cell-${lastXLoc}-${lastYLoc}`).focus();
+      $musicPadMask.scrollLeft = 0;
+      currentPage = beat % VIEW_PAGE === 0 ? beat / VIEW_PAGE : Math.floor(beat / VIEW_PAGE)+1;
+      movePage(currentPage);
+    }
+  } else if (+yLoc + 1 === beat && e.key ==='Tab') {
+    if(+xLoc === musicInfo.length-1) return;
+    currentPage = 1;
+    movePage(currentPage);
   } else if (e.key === 'Tab' && (+yLoc + 1) % VIEW_PAGE === 0) {
     if (+yLoc === 0) return;
-    if (+yLoc + 1 === beat) {
-      currentPage = 1;
-      movePage(currentPage);
-    } else {
-      e.preventDefault();
-      document.getElementById(`cell-${xLoc}-${+yLoc + 1}`).focus();
-      $musicPadMask.scrollLeft = 0;
-      currentPage += 1;
-      movePage(currentPage);
-    }
+    e.preventDefault();
+    document.getElementById(`cell-${xLoc}-${+yLoc + 1}`).focus();
+    $musicPadMask.scrollLeft = 0;
+    currentPage += 1;
+    movePage(currentPage);
   }
 });
