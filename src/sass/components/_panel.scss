@@ -12,7 +12,7 @@
     transition: background-color 0.2s, transform 0.4s, box-shadow 0.2s;
     &.running {
       transition: background-color 0.2s,
-        transform 0.2s cubic-bezier(0.23, 1.49, 0.69, 1.42), box-shadow 0.2s;
+        transform 0.2s cubic-bezier(0.28, 1.94, 0.7, 1.69), box-shadow 0.2s;
       transform: scale(1.1);
       filter: brightness(1.2);
     }

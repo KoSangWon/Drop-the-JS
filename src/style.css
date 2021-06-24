@@ -765,7 +765,7 @@ li {
   transform: scale(1);
 }
 .panel--red label.running {
-  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.23, 1.49, 0.69, 1.42), box-shadow 0.2s;
+  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.28, 1.94, 0.7, 1.69), box-shadow 0.2s;
   transform: scale(1.1);
   filter: brightness(1.2);
 }
@@ -819,7 +819,7 @@ li {
   transform: scale(1);
 }
 .panel--orange label.running {
-  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.23, 1.49, 0.69, 1.42), box-shadow 0.2s;
+  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.28, 1.94, 0.7, 1.69), box-shadow 0.2s;
   transform: scale(1.1);
   filter: brightness(1.2);
 }
@@ -873,7 +873,7 @@ li {
   transform: scale(1);
 }
 .panel--yellow label.running {
-  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.23, 1.49, 0.69, 1.42), box-shadow 0.2s;
+  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.28, 1.94, 0.7, 1.69), box-shadow 0.2s;
   transform: scale(1.1);
   filter: brightness(1.2);
 }
@@ -927,7 +927,7 @@ li {
   transform: scale(1);
 }
 .panel--leafgreen label.running {
-  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.23, 1.49, 0.69, 1.42), box-shadow 0.2s;
+  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.28, 1.94, 0.7, 1.69), box-shadow 0.2s;
   transform: scale(1.1);
   filter: brightness(1.2);
 }
@@ -981,7 +981,7 @@ li {
   transform: scale(1);
 }
 .panel--green label.running {
-  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.23, 1.49, 0.69, 1.42), box-shadow 0.2s;
+  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.28, 1.94, 0.7, 1.69), box-shadow 0.2s;
   transform: scale(1.1);
   filter: brightness(1.2);
 }
@@ -1035,7 +1035,7 @@ li {
   transform: scale(1);
 }
 .panel--jade label.running {
-  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.23, 1.49, 0.69, 1.42), box-shadow 0.2s;
+  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.28, 1.94, 0.7, 1.69), box-shadow 0.2s;
   transform: scale(1.1);
   filter: brightness(1.2);
 }
@@ -1089,7 +1089,7 @@ li {
   transform: scale(1);
 }
 .panel--skyblue label.running {
-  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.23, 1.49, 0.69, 1.42), box-shadow 0.2s;
+  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.28, 1.94, 0.7, 1.69), box-shadow 0.2s;
   transform: scale(1.1);
   filter: brightness(1.2);
 }
@@ -1143,7 +1143,7 @@ li {
   transform: scale(1);
 }
 .panel--blue label.running {
-  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.23, 1.49, 0.69, 1.42), box-shadow 0.2s;
+  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.28, 1.94, 0.7, 1.69), box-shadow 0.2s;
   transform: scale(1.1);
   filter: brightness(1.2);
 }
@@ -1197,7 +1197,7 @@ li {
   transform: scale(1);
 }
 .panel--plum label.running {
-  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.23, 1.49, 0.69, 1.42), box-shadow 0.2s;
+  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.28, 1.94, 0.7, 1.69), box-shadow 0.2s;
   transform: scale(1.1);
   filter: brightness(1.2);
 }
@@ -1251,7 +1251,7 @@ li {
   transform: scale(1);
 }
 .panel--purple label.running {
-  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.23, 1.49, 0.69, 1.42), box-shadow 0.2s;
+  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.28, 1.94, 0.7, 1.69), box-shadow 0.2s;
   transform: scale(1.1);
   filter: brightness(1.2);
 }
