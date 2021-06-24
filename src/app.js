@@ -464,8 +464,7 @@ document
   .addEventListener('click', ({ target }) => {
     if (!target.matches('button')) return;
     const delta = target.classList.contains('bpm-up-btn') ? 10 : -10;
-
-    setBpmInputValue(beat + delta);
+    setBpmInputValue(bpm + delta);
 
     // Play 중 일 경우
     if (timerId) {
