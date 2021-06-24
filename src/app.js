@@ -502,6 +502,7 @@ $bpmInput.addEventListener('focusout', () => {
 $bpmInput.addEventListener('input', () => {
   $bpmInput.value = $bpmInput.value.replace(/[^0-9]/g, '');
 });
+
 $fileUploadBtn.addEventListener('change', () => {
   const selectedFile = $fileUploadBtn.files[0];
 
@@ -512,7 +513,7 @@ $fileUploadBtn.addEventListener('change', () => {
     reader.onload = e => {
       let fileData = e.target.result;
       fileData = JSON.parse(fileData);
-      // console.log('업로드한 데이터', fileData);
+
       musicInfo = fileData.musicInfo;
       padArr = fileData.padArr;
       bpm = fileData.bpm;
@@ -550,7 +551,7 @@ document.querySelector('.file-clear-btn').addEventListener('click', () => {
   initCellElements();
 });
 
-// keyboard interaction 리팩토링 필요]
+// keyboard interaction
 document.addEventListener('keyup', event => {
   if (event.key === 'Escape') {
     const $instMenu = document.querySelector('.add-inst-menu');
