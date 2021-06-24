@@ -59,11 +59,10 @@ let musicInfo = [
   { inst: 'clap', file: './sound/5.wav', beat }
 ];
 
-// real data
+// data
 // Pad 좌표 모두 0으로 초기화(32비트)
 let padArr = Array.from(Array(musicInfo.length), () => Array(beat).fill(0));
 
-// dummy data
 let currentPage = 1;
 
 let bpm = 150;
@@ -134,18 +133,7 @@ const initCellElements = () => {
   // 메뉴 토글이벤트
   $instAddBtn.addEventListener('click', () => {
     const $instMenu = document.querySelector('.add-inst-menu');
-    if ($instMenu.classList.contains('active')) return;
-    $instMenu.classList.add('active');
-    $overlay.classList.add('active');
-    document.addEventListener('mouseup', function closeMenuHandler(e) {
-      if (e.target.closest('.add-inst-menu')) return;
-      $instMenu.classList.remove('active');
-      $overlay.classList.remove('active');
-      document.removeEventListener('mouseup', closeMenuHandler);
-    });
-    initAddInstList();
-
-    $instMenu.addEventListener('change', ({ target: instCheckBox }) => {
+    const ToggleInstrument = ({ target: instCheckBox }) => {
       // 바뀐 체크박스의 인덱스 찾기
       let changeIndex = -1;
       const targetName = instCheckBox.id.replace('inst-item-', '');
@@ -193,7 +181,19 @@ const initCellElements = () => {
         ];
       }
       initCellElements();
+    };
+    if ($instMenu.classList.contains('active')) return;
+    $instMenu.classList.add('active');
+    $overlay.classList.add('active');
+    document.addEventListener('mouseup', function closeMenuHandler(e) {
+      if (e.target.closest('.add-inst-menu')) return;
+      $instMenu.classList.remove('active');
+      $overlay.classList.remove('active');
+      document.removeEventListener('mouseup', closeMenuHandler);
+      $instMenu.removeEventListener('change', ToggleInstrument);
     });
+    initAddInstList();
+    $instMenu.addEventListener('change', ToggleInstrument);
   });
 };
 
@@ -379,7 +379,6 @@ const handleMouseOver = e => {
 
 $musicPadMask.addEventListener('mousedown', e => {
   if (!e.target.matches('label.panel-cell')) return;
-
   const checkbox = e.target.previousElementSibling;
 
   isActive = checkbox.checked;
@@ -402,8 +401,11 @@ $musicPadMask.addEventListener('mousedown', e => {
   $musicPadMask.addEventListener('mouseover', handleMouseOver);
 });
 
-$musicPadMask.addEventListener('mouseup', () => {
+$musicPadMask.addEventListener('mouseup', ({ target }) => {
   $musicPadMask.removeEventListener('mouseover', handleMouseOver);
+  if (target.htmlFor) {
+    document.getElementById(target.htmlFor).focus();
+  }
 });
 
 $musicPadMask.addEventListener('mouseleave', () => {
@@ -418,7 +420,7 @@ $musicPadMask.addEventListener('click', e => {
 
 const handleTouchMove = e => {
   const { clientX, clientY } = e.touches[0];
-  // console.log(e.touches);
+
   if (!clientX || !clientY) return;
 
   const $touchElem = document.elementFromPoint(clientX, clientY);
@@ -607,6 +609,11 @@ $menuToggleBtn.addEventListener('click', () => {
 
 // keyboard interaction 리팩토링 필요]
 document.addEventListener('keyup', event => {
+  if (event.key === 'Escape') {
+    const $instMenu = document.querySelector('.add-inst-menu');
+    $instMenu?.classList.remove('active');
+    $overlay?.classList.remove('active');
+  }
   if (document.activeElement.matches('.body')) return;
 
   const $activeElem = document.activeElement;
@@ -618,7 +625,6 @@ document.addEventListener('keyup', event => {
 
   // instrument list
   const insts = [...document.querySelector('.inst-list').children];
-
   if (event.key === 'ArrowRight') {
     // last panel
     if (xLoc === lastXLoc && yLoc === lastYLoc) {
@@ -627,6 +633,7 @@ document.addEventListener('keyup', event => {
     // panel is end of line
     else if (yLoc === lastYLoc) {
       insts[+xLoc + 1].lastElementChild.focus();
+      movePage(1);
     }
     // add button -> play button
     else if ($activeElem.matches('.inst-item > .add-btn')) {
@@ -635,12 +642,16 @@ document.addEventListener('keyup', event => {
     // inst -> first panel
     else if ($activeElem.parentElement.matches('.inst-item')) {
       const instInd = insts.indexOf($activeElem.parentElement);
-      // console.log(instInd);
+
       document.getElementById(`cell-${instInd}-0`).focus();
     }
     // move panel to right
-    else if (yLoc < lastYLoc) {
+    else if (+yLoc < +lastYLoc) {
       document.getElementById(`cell-${xLoc}-${+yLoc + 1}`).focus();
+      $musicPadMask.scrollLeft = 0;
+      if (+yLoc === VIEW_PAGE - 1) {
+        movePage(2);
+      }
     }
   } else if (event.key === 'ArrowLeft') {
     // if first panel, move to deltet button
@@ -656,8 +667,11 @@ document.addEventListener('keyup', event => {
       document.getElementById(`cell-${instInd - 1}-${lastYLoc}`).focus();
     }
     // move panel to left
-    else if (yLoc > 0) {
+    else if (+yLoc > 0) {
       document.getElementById(`cell-${xLoc}-${+yLoc - 1}`).focus();
+      if (+yLoc === VIEW_PAGE) {
+        movePage(1);
+      }
     }
   } else if (event.key === 'ArrowDown') {
     if ($activeElem.parentElement.matches('.inst-item')) {
@@ -674,7 +688,7 @@ document.addEventListener('keyup', event => {
       document.querySelector('.add-btn').focus();
     } else if ($activeElem.matches('.add-btn')) {
       document.querySelector('.play-btn').focus();
-    } else if (xLoc < lastXLoc) {
+    } else if (+xLoc < +lastXLoc) {
       document.getElementById(`cell-${+xLoc + 1}-${yLoc}`).focus();
     }
   } else if (event.key === 'ArrowUp') {
@@ -688,8 +702,36 @@ document.addEventListener('keyup', event => {
       insts[insts.length - 1].lastElementChild.focus();
     } else if ($activeElem.matches('.play-btn')) {
       document.querySelector('.add-btn').focus();
-    } else if (xLoc > 0) {
+    } else if (+xLoc > 0) {
       document.getElementById(`cell-${+xLoc - 1}-${yLoc}`).focus();
+    }
+  } else if (event.key === ' ') {
+    if (xLoc) {
+      const $cell = document.getElementById(`cell-${xLoc}-${yLoc}`);
+      $cell.checked = !$cell.checked;
+      padArr[xLoc][yLoc] = $cell.checked ? 1 : 0;
+    }
+  }
+});
+
+document.addEventListener('keydown', e => {
+  const [, xLoc, yLoc] = document.activeElement.id.split('-');
+  if (e.shiftKey && e.key === 'Tab') {
+    if (+yLoc + 1 === VIEW_PAGE) {
+      currentPage = 1;
+      movePage(currentPage);
+    }
+  } else if (e.key === 'Tab' && (+yLoc + 1) % VIEW_PAGE === 0) {
+    if (+yLoc === 0) return;
+    if (+yLoc + 1 === beat) {
+      currentPage = 1;
+      movePage(currentPage);
+    } else {
+      e.preventDefault();
+      document.getElementById(`cell-${xLoc}-${+yLoc + 1}`).focus();
+      $musicPadMask.scrollLeft = 0;
+      currentPage += 1;
+      movePage(currentPage);
     }
   }
 });
