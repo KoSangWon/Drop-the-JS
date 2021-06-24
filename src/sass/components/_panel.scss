@@ -15,7 +15,10 @@
   }
   & input:checked + label {
     background-color: $color;
-    box-shadow: 0 0 15px rgba($color, 0.5);
+    box-shadow: 0 0 8px rgba($color, 0.5);
+    @include mobile {
+      box-shadow: 0 0 4px rgba($color, 0.5);
+    }
   }
   & input:focus + label {
     outline: none;

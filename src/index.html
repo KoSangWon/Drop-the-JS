@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
     <title>Drop the JS</title>
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link
@@ -13,6 +14,18 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <div class="overlay"></div>
+    <!-- <div class="add-inst-menu">
+      <ul class="add-inst-list">
+        <li class="add-inst-item">
+          <input type="checkbox" id="inst-item-drum" />
+          <label for="inst-item-drum">
+            <span class="add-icon icon-drum"></span>
+            <span class="add-inst-name">Drum</span>
+          </label>
+        </li>
+      </ul>
+    </div> -->
     <div class="step-sequencer">
       <header class="header">
         <h1 class="a11y-hidden">Drop the JavaScript</h1>
@@ -27,69 +40,54 @@
       </div>
       <main class="main">
         <ul class="inst-list">
-          <li class="inst-item">
+          <!-- <li class="inst-item">
             <div class="inst-item icon-drum color-red"></div>
             <button class="inst-delete-btn"></button>
-          </li>
-          <li class="inst-item">
+          </li> -->
+
+          <li class="inst-item inst-add">
             <button class="add-btn"></button>
           </li>
         </ul>
-        <section class="music">
-          <div class="panel--red">
+        <div class="music-mask">
+          <section class="music">
+            <h2 class="a11y-hidden" lang="en">Beat Pad</h2>
+            <!-- <div class="panel--red">
             <input type="checkbox" id="cell-0-0" />
             <label class="panel-cell" for="cell-0-0"></label>
           </div>
           <div class="panel--red">
-            <input type="checkbox" id="cell-1-0" />
-            <label class="panel-cell" for="cell-1-0"></label>
+            <input type="checkbox" id="cell-0-1" />
+            <label class="panel-cell" for="cell-0-1"></label>
           </div>
           <div class="panel--red">
-            <input type="checkbox" id="cell-2-0" />
-            <label class="panel-cell" for="cell-2-0"></label>
+            <input type="checkbox" id="cell-0-2" />
+            <label class="panel-cell" for="cell-0-2"></label>
           </div>
           <div class="panel--red">
-            <input type="checkbox" id="cell-3-0" />
-            <label class="panel-cell" for="cell-3-0"></label>
+            <input type="checkbox" id="cell-0-3" />
+            <label class="panel-cell" for="cell-0-3"></label>
           </div>
           <div class="panel--red">
-            <input type="checkbox" id="cell-4-0" />
-            <label class="panel-cell" for="cell-4-0"></label>
+            <input type="checkbox" id="cell-0-4" />
+            <label class="panel-cell" for="cell-0-4"></label>
           </div>
           <div class="panel--red">
-            <input type="checkbox" id="cell-5-0" />
-            <label class="panel-cell" for="cell-5-0"></label>
+            <input type="checkbox" id="cell-0-5" />
+            <label class="panel-cell" for="cell-0-5"></label>
           </div>
           <div class="panel--red">
-            <input type="checkbox" id="cell-6-0" />
-            <label class="panel-cell" for="cell-6-0"></label>
+            <input type="checkbox" id="cell-0-6" />
+            <label class="panel-cell" for="cell-0-6"></label>
           </div>
           <div class="panel--red">
-            <input type="checkbox" id="cell-7-0" />
-            <label class="panel-cell" for="cell-7-0"></label>
-          </div>
-        </section>
-        <ul class="add-inst-list">
-          <li class="add-inst-item">
-            <button class="add-inst-btn">
-              <span class="add-inst-icon--drum"></span>
-              <span class="add-inst-name">Drum</span>
-            </button>
-          </li>
-          <li class="add-inst-item">
-            <button class="add-inst-btn">
-              <span class="add-inst-icon--drum"></span>
-              <span class="add-inst-name">Drum</span>
-            </button>
-          </li>
-          <li class="add-inst-item">
-            <button class="add-inst-btn">
-              <span class="add-inst-icon--drum"></span>
-              <span class="add-inst-name">Drum</span>
-            </button>
-          </li>
-        </ul>
-        <section class="controls">
+            <input type="checkbox" id="cell-0-7" />
+            <label class="panel-cell" for="cell-0-7"></label>
+          </div> -->
+          </section>
+        </div>
+        <section class="controls" draggable="true">
+          <h2 class="a11y-hidden" lang="en">Control Panel</h2>
           <button class="play-btn"></button>
           <div class="control-wrapper">
             <div class="beat-control">
@@ -97,7 +95,7 @@
               <button class="beat-up-btn plus-icon"></button>
               <div class="beat-input-wrapper">
                 <label for="beat-input">Beat</label>
-                <input type="text" id="beat-input" />
+                <input type="text" id="beat-input" maxlength="2" />
               </div>
             </div>
             <div class="bpm-control">
@@ -105,11 +103,14 @@
               <button class="bpm-up-btn plus-icon"></button>
               <div class="bpm-input-wrapper">
                 <label for="bpm-input">BPM</label>
-                <input type="text" id="bpm-input" />
+                <input type="text" id="bpm-input" maxlength="3" />
               </div>
             </div>
             <div class="file-control">
-              <button class="file-load-btn"></button>
+              <div class="file-load-btn">
+                <input type="file" accept=".djs, .txt" />
+              </div>
+
               <button class="file-save-btn"></button>
               <button class="file-clear-btn"></button>
             </div>
