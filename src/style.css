@@ -765,7 +765,7 @@ li {
   transform: translate3d(calc(calc(var(--page-offset) * -100%) - calc(var(--page-offset) * 18px)), 0, 0);
   justify-content: start;
   align-content: center;
-  transition: transform 1s;
+  transition: transform 0.5s;
 }
 
 .panel--red label {
@@ -1448,7 +1448,6 @@ li {
 }
 @media screen and (max-width: 767px) {
   .controls {
-    margin-bottom: -150px;
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
