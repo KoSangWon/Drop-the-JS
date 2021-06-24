@@ -1,3 +1,16 @@
+// const AudioContext = window.AudioContext || window.webkitAudioContext;
+// const audioContext = new AudioContext();
+// const audioEmitter = new Audio();
+// const audio1 = new Audio('./sound/1.wav');
+// const audioDestination = audioContext.destination;
+// const emitterNode = audioContext.createMediaElementSource(audioEmitter);
+// const audio1Node = audioContext.createMediaElementSource(audio1);
+// const channelMerger = audioContext.createChannelMerger();
+// audio1
+// audio1Node.connect(emitterNode);
+// audioContext.resume();
+// audioEmitter.play();
+
 /* ==== DOMs ==== */
 const $overlay = document.querySelector('.overlay');
 const $playBtn = document.querySelector('.play-btn');
@@ -14,10 +27,9 @@ const $fileUploadBtn = document.querySelector('input[type="file"]');
 const $fileDownloadBtn = document.querySelector('.file-save-btn');
 
 const $instList = document.querySelector('.inst-list');
-// 임시
 const $bpmInput = document.querySelector('#bpm-input');
 const $beatInput = document.querySelector('#beat-input');
-// $musicPad.style['background-color'] = 'pink';
+
 /* ==== state ==== */
 const VIEW_PAGE = matchMedia('screen and (max-width: 767px)').matches ? 8 : 16;
 const MIN_BEAT = 4; // 최소 비트
@@ -49,7 +61,7 @@ const instSet = [
 ];
 
 const MIN_TO_MS = 60000; // 1min = 60000ms
-let beat = 32; // 초기 비트
+let beat = 16; // 초기 비트
 let musicInfo = [
   { inst: 'drum', file: './sound/1.wav', beat },
   { inst: 'side-stick', file: './sound/2.wav', beat },
@@ -60,35 +72,10 @@ let musicInfo = [
 
 // real data
 // Pad 좌표 모두 0으로 초기화(32비트)
-// const padArr = Array.from(Array(musicInfo.length), () =>
-//   Array(MAX_BEAT).fill(0)
-// );
+let padArr = Array.from(Array(musicInfo.length), () => Array(beat).fill(0));
 
 // dummy data
 let currentPage = 1;
-
-let padArr = [
-  [
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 1
-  ],
-  [
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 1
-  ],
-  [
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 1
-  ],
-  [
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 1
-  ],
-  [
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 1
-  ]
-];
 
 let bpm = 150;
 let playingColumn = 0;
@@ -122,7 +109,7 @@ const initAddInstList = () => {
 
 const initCellElements = () => {
   $musicPad.style.setProperty('--cell-col', beat);
-  $totalPage.textContent = '/' + Math.floor(beat / VIEW_PAGE);
+  $totalPage.textContent = '/' + Math.ceil(beat / VIEW_PAGE);
   $currentPage.textContent = currentPage;
   $instList.innerHTML =
     padArr
@@ -252,9 +239,10 @@ const playMusic = startColumn => {
 
       // 각 재생 중인 column에서의 Pad 값
       const eachStatus = padArr.map((row, i) => row[eachPlayingColumns[i]]);
-
+      console.log('eachSTa', eachStatus);
       // 플레이할 악기 배열
       const instsToPlay = [];
+
       eachStatus.forEach((v, i) => {
         if (v) instsToPlay.push(musicInfo[i].file);
       });
@@ -311,7 +299,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // 페이지 이동
 $pageUpBtn.addEventListener('click', () => {
-  if (currentPage >= Math.floor(beat / VIEW_PAGE)) return;
+  if (currentPage >= Math.ceil(beat / VIEW_PAGE)) return;
   movePage(currentPage + 1);
 });
 
@@ -483,30 +471,46 @@ document.querySelector('.file-clear-btn').addEventListener('click', () => {
 });
 
 // Beat input 변경
+const setBeatInputValue = val => {
+  beat = val;
+  if (beat < MIN_BEAT) beat = MIN_BEAT;
+  if (beat > MAX_BEAT) beat = MAX_BEAT;
+  $beatInput.value = beat;
+  $beatInput.blur();
+  changeBeat();
+};
+
 $beatInput.addEventListener('keyup', e => {
   if (e.key === 'Enter') {
-    beat = +$beatInput.value;
-    if (beat < MIN_BEAT) beat = MIN_BEAT;
-    if (beat > MAX_BEAT) beat = MAX_BEAT;
-    $beatInput.value = beat;
-    $beatInput.blur();
-    changeBeat();
+    setBeatInputValue(+$beatInput.value);
   }
 });
+
+$beatInput.addEventListener('focusout', () => {
+  setBeatInputValue(+$beatInput.value);
+});
+
+const setBpmInputValue = val => {
+  bpm = val;
+  if (bpm < 100) bpm = 100;
+  if (bpm > 800) bpm = 800;
+  $bpmInput.value = bpm;
+  $bpmInput.blur();
+  if (timerId) {
+    stopMusic();
+    playMusic(playingColumn);
+  }
+};
 
 // BPM input 변경
 $bpmInput.addEventListener('keyup', e => {
   if (e.key === 'Enter') {
-    bpm = +$bpmInput.value;
-    if (bpm < 100) bpm = 100;
-    if (bpm > 800) bpm = 800;
-    $bpmInput.value = bpm;
-    $bpmInput.blur();
-    if (timerId) {
-      stopMusic();
-      playMusic(playingColumn);
-    }
+    setBpmInputValue(+$bpmInput.value);
   }
+});
+
+$bpmInput.addEventListener('focusout', () => {
+  setBpmInputValue(+$bpmInput.value);
 });
 
 $beatInput.addEventListener('input', () => {
