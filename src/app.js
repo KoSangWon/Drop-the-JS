@@ -206,7 +206,7 @@ const initCellElements = () => {
         ];
       }
       initCellElements();
-    }
+    };
     if ($instMenu.classList.contains('active')) return;
     $instMenu.classList.add('active');
     $overlay.classList.add('active');
@@ -219,7 +219,6 @@ const initCellElements = () => {
     });
     initAddInstList();
     $instMenu.addEventListener('change', ToggleInstrument);
-    
   });
 };
 
@@ -353,7 +352,6 @@ const handleMouseOver = e => {
 
 $musicPadMask.addEventListener('mousedown', e => {
   if (!e.target.matches('label.panel-cell')) return;
-
   const checkbox = e.target.previousElementSibling;
 
   isActive = checkbox.checked;
@@ -376,8 +374,11 @@ $musicPadMask.addEventListener('mousedown', e => {
   $musicPadMask.addEventListener('mouseover', handleMouseOver);
 });
 
-$musicPadMask.addEventListener('mouseup', () => {
+$musicPadMask.addEventListener('mouseup', ({ target }) => {
   $musicPadMask.removeEventListener('mouseover', handleMouseOver);
+  if (target.htmlFor) {
+    document.getElementById(target.htmlFor).focus();
+  }
 });
 
 $musicPadMask.addEventListener('mouseleave', () => {
@@ -392,7 +393,6 @@ $musicPadMask.addEventListener('click', e => {
 
 const handleTouchMove = e => {
   const { clientX, clientY } = e.touches[0];
-  console.log(e.touches);
   if (!clientX || !clientY) return;
 
   const $touchElem = document.elementFromPoint(clientX, clientY);
@@ -577,7 +577,7 @@ $fileDownloadBtn.addEventListener('click', () => {
 
 // keyboard interaction 리팩토링 필요]
 document.addEventListener('keyup', event => {
-  if(event.key === 'Escape'){
+  if (event.key === 'Escape') {
     const $instMenu = document.querySelector('.add-inst-menu');
     $instMenu?.classList.remove('active');
     $overlay?.classList.remove('active');
@@ -593,7 +593,6 @@ document.addEventListener('keyup', event => {
 
   // instrument list
   const insts = [...document.querySelector('.inst-list').children];
-
   if (event.key === 'ArrowRight') {
     // last panel
     if (xLoc === lastXLoc && yLoc === lastYLoc) {
@@ -616,7 +615,8 @@ document.addEventListener('keyup', event => {
     // move panel to right
     else if (+yLoc < +lastYLoc) {
       document.getElementById(`cell-${xLoc}-${+yLoc + 1}`).focus();
-      if(+yLoc === VIEW_PAGE-1){
+      $musicPadMask.scrollLeft = 0;
+      if (+yLoc === VIEW_PAGE - 1) {
         movePage(2);
       }
     }
@@ -636,7 +636,7 @@ document.addEventListener('keyup', event => {
     // move panel to left
     else if (+yLoc > 0) {
       document.getElementById(`cell-${xLoc}-${+yLoc - 1}`).focus();
-      if(+yLoc === VIEW_PAGE){
+      if (+yLoc === VIEW_PAGE) {
         movePage(1);
       }
     }
@@ -672,17 +672,27 @@ document.addEventListener('keyup', event => {
     } else if (+xLoc > 0) {
       document.getElementById(`cell-${+xLoc - 1}-${yLoc}`).focus();
     }
-  } else if (event.key === ' '){
-    if(xLoc){
-      const $cell = document.getElementById(`cell-${xLoc}-${yLoc}`)
+  } else if (event.key === ' ') {
+    if (xLoc) {
+      const $cell = document.getElementById(`cell-${xLoc}-${yLoc}`);
       $cell.checked = !$cell.checked;
+      padArr[xLoc][yLoc] = $cell.checked ? 1 : 0;
     }
-  } else if (event.key === 'Tab'){
-    if(+yLoc === VIEW_PAGE-1){
-      movePage(2);
-    }
-    else if(+yLoc === +lastYLoc){
+  } 
+});
+
+document.addEventListener('keydown', e => {
+  const [, xLoc, yLoc] = document.activeElement.id.split('-');
+ 
+  if (e.shiftKey && e.key === 'Tab') {
+    if (+yLoc === VIEW_PAGE) {
       movePage(1);
     }
   }
-});
+  else if(e.key === 'Tab' && +yLoc === VIEW_PAGE-1){
+      e.preventDefault();
+      document.getElementById(`cell-${xLoc}-${+yLoc + 1}`).focus();
+      $musicPadMask.scrollLeft = 0;
+      movePage(2);
+  } 
+})
