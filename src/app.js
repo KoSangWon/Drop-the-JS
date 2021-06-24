@@ -14,32 +14,50 @@ const $instList = document.querySelector('.inst-list');
 const $bpmInput = document.querySelector('#bpm-input');
 const $beatInput = document.querySelector('#beat-input');
 
+const $fileUploadBtn = document.querySelector('input[type="file"]');
+
 const $menuToggleBtn = document.querySelector('.menu-toggle-btn');
 
 const canvas = document.getElementById('canvas');
 
 /* ==== state ==== */
 const instSet = [
-  { instName: 'drum', file: './sound/1.wav', used: true },
-  { instName: 'side-stick', file: './sound/2.wav', used: true },
-  { instName: 'cymbal', file: './sound/3.wav', used: true },
-  { instName: 'opened-hihat', file: './sound/4.wav', used: true },
-  { instName: 'clap', file: './sound/5.wav', used: true },
-  { instName: 'closed-hihat', file: './sound/6.wav', used: false },
-  { instName: 'ride', file: './sound/7.wav', used: false },
-  { instName: 'kick', file: './sound/8.wav', used: false },
-  { instName: 'hightom', file: './sound/9.wav', used: false },
-  { instName: 'lowtom', file: './sound/10.wav', used: false }
+  { instName: 'drum', file: new Audio('./sound/drum.wav'), used: true },
+  {
+    instName: 'side-stick',
+    file: new Audio('./sound/sidestick.wav'),
+    used: true
+  },
+  { instName: 'cymbal', file: new Audio('./sound/cymbal.wav'), used: true },
+  {
+    instName: 'opened-hihat',
+    file: new Audio('./sound/opened-hihat.wav'),
+    used: true
+  },
+  { instName: 'clap', file: new Audio('./sound/clap.wav'), used: true },
+  {
+    instName: 'closed-hihat',
+    file: new Audio('./sound/closed-hihat.wav'),
+    used: false
+  },
+  { instName: 'ride', file: new Audio('./sound/ride.wav'), used: false },
+  { instName: 'kick', file: new Audio('./sound/kick.wav'), used: false },
+  {
+    instName: 'high-tom',
+    file: new Audio('./sound/high-tom.wav'),
+    used: false
+  },
+  { instName: 'low-tom', file: new Audio('./sound/low-tom.wav'), used: false }
 ];
 
 const MIN_TO_MS = 60000; // 1min = 60000ms
 let beat = 16; // initial beat
 let musicInfo = [
-  { inst: 'drum', file: './sound/1.wav', beat },
-  { inst: 'side-stick', file: './sound/2.wav', beat },
-  { inst: 'cymbal', file: './sound/3.wav', beat },
-  { inst: 'opened-hihat', file: './sound/4.wav', beat },
-  { inst: 'clap', file: './sound/5.wav', beat }
+  { inst: 'drum', file: instSet[0].file, beat },
+  { inst: 'side-stick', file: instSet[1].file, beat },
+  { inst: 'cymbal', file: instSet[2].file, beat },
+  { inst: 'opened-hihat', file: instSet[3].file, beat },
+  { inst: 'clap', file: instSet[4].file, beat }
 ];
 
 // init pad array
@@ -172,7 +190,7 @@ const initCellElements = () => {
         }
         musicInfo = [
           ...musicInfo.slice(0, insertIndex),
-          { inst: targetName, file: `./sound/${insertIndex + 1}.wav`, beat },
+          { inst: targetName, file: instSet[changeIndex].file, beat },
           ...musicInfo.slice(insertIndex)
         ];
         padArr = [
@@ -231,13 +249,13 @@ const frameLooper = () => {
   analyser.getByteFrequencyData(fbcArray);
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = '#ffffff';
+  ctx.fillStyle = '#000000';
 
   for (let i = 0; i < barCount; i++) {
+    // console.log(i);
     barPos = i * 4;
     barWidth = 2;
-    barHeight = -(fbcArray[i] / 2);
-
+    barHeight = -(fbcArray[i] * (window.innerHeight / 500));
     ctx.fillRect(barPos, canvas.height, barWidth, barHeight);
   }
 };
@@ -272,52 +290,36 @@ const stopMusic = () => {
   timerId = null;
 };
 
+const context = new AudioContext();
+analyser = context.createAnalyser();
+
+ctx = canvas.getContext('2d');
+frameLooper();
+
 const playMusic = startColumn => {
-  const context = new AudioContext();
-  analyser = context.createAnalyser();
   const oneBeatTime = Math.floor(MIN_TO_MS / bpm);
   if (!timerId) {
     $playBtn.classList.add('playing');
     playingColumn = startColumn;
     timerId = setInterval(() => {
-      // 각 악기의 비트 추출
-      const beats = musicInfo.map(row => row.beat);
-
-      // 각 악기의 현재 재생 중인 column 정보
-      const eachPlayingColumns = beats.map(
-        eachBeat => playingColumn % eachBeat
-      );
-
-      // 각 재생 중인 column에서의 Pad 값
-      const eachStatus = padArr.map((row, i) => row[eachPlayingColumns[i]]);
-
-      const instsToPlay = [];
-
-      eachStatus.forEach((v, i) => {
-        if (v) instsToPlay.push(musicInfo[i].file);
-      });
-
-      // 오디오 객체 생성
-      const audios = instsToPlay.map(file => new Audio(file));
-
-      audios.forEach(audio => {
-        audio.play();
-        ctx = canvas.getContext('2d');
-        source = context.createMediaElementSource(audio);
-
-        source.connect(analyser);
-
-        analyser.connect(context.destination);
-        frameLooper();
+      const currentColumn = playingColumn % beat;
+      padArr.forEach((row, idx) => {
+        if (row[currentColumn]) {
+          const audio = musicInfo[idx].file.cloneNode();
+          audio.play();
+          source = context.createMediaElementSource(audio);
+          source.connect(analyser);
+          analyser.connect(context.destination);
+        }
       });
 
       document.querySelectorAll('.running').forEach($label => {
         $label.classList.remove('running');
       });
 
-      eachPlayingColumns.forEach((col, row) => {
+      padArr.forEach((_, row) => {
         document
-          .querySelector(`#cell-${row}-${col} + label`)
+          .querySelector(`#cell-${row}-${currentColumn} + label`)
           .classList.add('running');
       });
       const willMovePage = Math.ceil(((playingColumn % beat) + 1) / VIEW_PAGE);
@@ -398,11 +400,9 @@ $pageDownBtn.addEventListener('click', () => {
 });
 
 $playBtn.addEventListener('click', () => {
-  // 인터랙션 위해서 임의로 추가 for Safari
-  const audio = new Audio('./sound/1.wav');
-  audio.muted = true;
-  audio.play();
-  audio.pause();
+  // 인터랙션 위해서 임의로 추가(해결 방법 찾는 중)
+  // const audio = new Audio();
+  // audio.play();
 
   // 음악 재생
   playMusic(0);
@@ -502,8 +502,7 @@ $bpmInput.addEventListener('focusout', () => {
 $bpmInput.addEventListener('input', () => {
   $bpmInput.value = $bpmInput.value.replace(/[^0-9]/g, '');
 });
-
-document.querySelector('input[type="file"]').addEventListener('change', () => {
+$fileUploadBtn.addEventListener('change', () => {
   const selectedFile = $fileUploadBtn.files[0];
 
   const reader = new FileReader();
