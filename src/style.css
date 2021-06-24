@@ -1874,6 +1874,14 @@ li {
   }
 }
 
+#player {
+  width: 80vw;
+  height: 60vh;
+  background: black;
+  margin: 20px auto 20px auto;
+  display: block;
+}
+
 .overlay {
   display: none;
   position: fixed;
