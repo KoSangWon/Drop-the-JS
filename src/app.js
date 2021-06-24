@@ -22,32 +22,16 @@ const canvas = document.getElementById('canvas');
 
 /* ==== state ==== */
 const instSet = [
-  { instName: 'drum', file: new Audio('./sound/drum.wav'), used: true },
-  {
-    instName: 'side-stick',
-    file: new Audio('./sound/sidestick.wav'),
-    used: true
-  },
-  { instName: 'cymbal', file: new Audio('./sound/cymbal.wav'), used: true },
-  {
-    instName: 'opened-hihat',
-    file: new Audio('./sound/opened-hihat.wav'),
-    used: true
-  },
-  { instName: 'clap', file: new Audio('./sound/clap.wav'), used: true },
-  {
-    instName: 'closed-hihat',
-    file: new Audio('./sound/closed-hihat.wav'),
-    used: false
-  },
-  { instName: 'ride', file: new Audio('./sound/ride.wav'), used: false },
-  { instName: 'kick', file: new Audio('./sound/kick.wav'), used: false },
-  {
-    instName: 'high-tom',
-    file: new Audio('./sound/high-tom.wav'),
-    used: false
-  },
-  { instName: 'low-tom', file: new Audio('./sound/low-tom.wav'), used: false }
+  { instName: 'drum', file: './sound/drum.wav', used: true },
+  { instName: 'side-stick', file: './sound/sidestick.wav', used: true },
+  { instName: 'cymbal', file: './sound/cymbal.wav', used: true },
+  { instName: 'opened-hihat', file: './sound/opened-hihat.wav', used: true },
+  { instName: 'clap', file: './sound/clap.wav', used: true },
+  { instName: 'closed-hihat', file: './sound/closed-hihat.wav', used: false },
+  { instName: 'ride', file: './sound/ride.wav', used: false },
+  { instName: 'kick', file: './sound/kick.wav', used: false },
+  { instName: 'high-tom', file: './sound/high-tom.wav', used: false },
+  { instName: 'low-tom', file: './sound/low-tom.wav', used: false }
 ];
 
 const MIN_TO_MS = 60000; // 1min = 60000ms
@@ -305,7 +289,7 @@ const playMusic = startColumn => {
       const currentColumn = playingColumn % beat;
       padArr.forEach((row, idx) => {
         if (row[currentColumn]) {
-          const audio = musicInfo[idx].file.cloneNode();
+          const audio = new Audio(musicInfo[idx].file);
           audio.play();
           source = context.createMediaElementSource(audio);
           source.connect(analyser);

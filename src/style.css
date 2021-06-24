@@ -1322,7 +1322,6 @@ li {
   width: 100%;
   text-align: left;
   position: relative;
-  padding-left: 10px;
 }
 .add-inst-item:hover {
   background-color: rgba(248, 229, 67, 0.4);
@@ -1343,6 +1342,10 @@ li {
   width: 1px;
   height: 1px;
 }
+.add-inst-item input:focus + label {
+  background-color: rgba(248, 229, 67, 0.4);
+  color: inherit;
+}
 .add-inst-item input:checked + label::before {
   content: "";
   display: block;
@@ -1359,7 +1362,8 @@ li {
   display: block;
   width: 100%;
   height: 100%;
-  padding: 10px 0;
+  padding: 10px 10px;
+  margin: 0;
   cursor: pointer;
 }
 
@@ -1886,14 +1890,6 @@ li {
   .menu-toggle-btn {
     display: block;
   }
-}
-
-#player {
-  position: fixed;
-  bottom: 0;
-  height: 100vh;
-  background: transparent;
-  display: block;
 }
 
 .overlay {
