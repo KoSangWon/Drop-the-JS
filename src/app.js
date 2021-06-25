@@ -126,7 +126,7 @@ const initCellElements = () => {
       )
       .join('') +
     `<li class="inst-item inst-add">
-  <button class="add-btn"></button>
+  <button class="add-btn" aria-label="악기 추가"></button>
 </li>`;
   $musicPad.innerHTML = padArr
     .map((padRow, rowIdx) =>
@@ -137,7 +137,7 @@ const initCellElements = () => {
         }">
           <input type="checkbox" id="cell-${rowIdx}-${colIdx}" ${
           padCell ? 'checked' : ''
-        } />
+        } aria-label="${rowIdx + 1}행 ${colIdx + 1}열" />
           <label class="panel-cell" for="cell-${rowIdx}-${colIdx}"></label>
         </div>`
       )
@@ -512,8 +512,8 @@ document.querySelector('.file-save-btn').addEventListener('click', () => {
   const jsonString = JSON.stringify(infoToSave);
   const link = document.createElement('a');
   link.download = `dropthejs-${Date.now()}.djs`;
-  const blob = new Blob([jsonString], { type: 'text/plain' });
-  link.href = window.URL.createObjectURL(blob);
+  const file = new File([jsonString], { type: 'text/plain' });
+  link.href = window.URL.createObjectURL(file);
   link.click();
 });
 
