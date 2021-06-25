@@ -78,7 +78,7 @@ const COLORS = [
 /* ==== variables for equalizer ==== */
 let ctx;
 let source;
-
+let context;
 let analyser;
 let fbcArray;
 let barCount;
@@ -126,7 +126,7 @@ const initCellElements = () => {
       )
       .join('') +
     `<li class="inst-item inst-add">
-  <button class="add-btn"></button>
+  <button class="add-btn" aria-label="악기 추가"></button>
 </li>`;
   $musicPad.innerHTML = padArr
     .map((padRow, rowIdx) =>
@@ -137,7 +137,7 @@ const initCellElements = () => {
         }">
           <input type="checkbox" id="cell-${rowIdx}-${colIdx}" ${
           padCell ? 'checked' : ''
-        } />
+        } aria-label="${rowIdx + 1}행 ${colIdx + 1}열" />
           <label class="panel-cell" for="cell-${rowIdx}-${colIdx}"></label>
         </div>`
       )
@@ -274,15 +274,13 @@ const stopMusic = () => {
   timerId = null;
 };
 
-const context = new AudioContext();
-analyser = context.createAnalyser();
-
-ctx = canvas.getContext('2d');
-frameLooper();
-
 const playMusic = startColumn => {
   const oneBeatTime = Math.floor(MIN_TO_MS / bpm);
   if (!timerId) {
+    context ||= new AudioContext();
+    analyser ||= context.createAnalyser();
+
+    frameLooper();
     $playBtn.classList.add('playing');
     playingColumn = startColumn;
     timerId = setInterval(() => {
@@ -332,8 +330,8 @@ const changeBeat = () => {
   initCellElements();
 };
 
-const setBeatInputValue = val => {
-  beat = val;
+const setBeatInputValue = newBeat => {
+  beat = newBeat;
   if (beat < MIN_BEAT) beat = MIN_BEAT;
   if (beat > MAX_BEAT) beat = MAX_BEAT;
   $beatInput.value = beat;
@@ -341,16 +339,12 @@ const setBeatInputValue = val => {
   changeBeat();
 };
 
-const setBpmInputValue = val => {
-  bpm = val;
-  if (bpm < 100) bpm = 100;
-  if (bpm > 800) bpm = 800;
+const setBpmInputValue = newBpm => {
+  bpm = newBpm;
+  if (bpm < MIN_BPM) bpm = MIN_BPM;
+  if (bpm > MAX_BPM) bpm = MAX_BPM;
   $bpmInput.value = bpm;
   $bpmInput.blur();
-  if (timerId) {
-    stopMusic();
-    playMusic(playingColumn);
-  }
 };
 
 const handleTouchMove = ({ touches }) => {
@@ -364,7 +358,6 @@ const handleTouchMove = ({ touches }) => {
   const $checkbox = $touchElem.previousElementSibling;
   togglePannel($checkbox);
 };
-
 /* ==== event handlers ==== */
 window.addEventListener('DOMContentLoaded', () => {
   $bpmInput.value = bpm;
@@ -374,6 +367,7 @@ window.addEventListener('DOMContentLoaded', () => {
   window.AudioContext = window.AudioContext || window.webkitAudioContext;
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
+  ctx = canvas.getContext('2d');
 });
 
 // 페이지 이동
@@ -388,11 +382,6 @@ $pageDownBtn.addEventListener('click', () => {
 });
 
 $playBtn.addEventListener('click', () => {
-  // 인터랙션 위해서 임의로 추가(해결 방법 찾는 중)
-  // const audio = new Audio();
-  // audio.play();
-
-  // 음악 재생
   playMusic(0);
 });
 
@@ -443,11 +432,7 @@ document
   .addEventListener('click', ({ target }) => {
     if (!target.matches('button')) return;
     const delta = target.classList.contains('beat-up-btn') ? 1 : -1;
-    beat += delta;
-    if (beat < MIN_BEAT) beat = MIN_BEAT;
-    if (beat > MAX_BEAT) beat = MAX_BEAT;
-    $beatInput.value = beat;
-    changeBeat();
+    setBeatInputValue(beat + delta);
   });
 
 // bpm 변경
@@ -456,10 +441,7 @@ document
   .addEventListener('click', ({ target }) => {
     if (!target.matches('button')) return;
     const delta = target.classList.contains('bpm-up-btn') ? 10 : -10;
-    bpm += delta;
-    if (bpm < MIN_BPM) bpm = MIN_BPM;
-    if (bpm > MAX_BPM) bpm = MAX_BPM;
-    $bpmInput.value = bpm;
+    setBpmInputValue(bpm + delta);
 
     // Play 중 일 경우
     if (timerId) {
@@ -478,6 +460,10 @@ $beatInput.addEventListener('focusout', () => {
   setBeatInputValue(+$beatInput.value);
 });
 
+$beatInput.addEventListener('input', () => {
+  $beatInput.value = $beatInput.value.replace(/[^0-9]/g, '');
+});
+
 // BPM input 변경
 $bpmInput.addEventListener('keyup', e => {
   if (e.key === 'Enter') {
@@ -489,17 +475,10 @@ $bpmInput.addEventListener('focusout', () => {
   setBpmInputValue(+$bpmInput.value);
 });
 
-$beatInput.addEventListener('input', () => {
-  $beatInput.value = $beatInput.value
-    .replace(/[^0-9]/g, '')
-    .replace(/(\..*)\./g, '$1');
+$bpmInput.addEventListener('input', () => {
+  $bpmInput.value = $bpmInput.value.replace(/[^0-9]/g, '');
 });
 
-$bpmInput.addEventListener('input', () => {
-  $bpmInput.value = $bpmInput.value
-    .replace(/[^0-9]/g, '')
-    .replace(/(\..*)\./g, '$1');
-});
 $fileUploadBtn.addEventListener('change', () => {
   const selectedFile = $fileUploadBtn.files[0];
 
@@ -510,7 +489,7 @@ $fileUploadBtn.addEventListener('change', () => {
     reader.onload = e => {
       let fileData = e.target.result;
       fileData = JSON.parse(fileData);
-      // console.log('업로드한 데이터', fileData);
+
       musicInfo = fileData.musicInfo;
       padArr = fileData.padArr;
       bpm = fileData.bpm;
@@ -533,8 +512,8 @@ document.querySelector('.file-save-btn').addEventListener('click', () => {
   const jsonString = JSON.stringify(infoToSave);
   const link = document.createElement('a');
   link.download = `dropthejs-${Date.now()}.djs`;
-  const blob = new Blob([jsonString], { type: 'text/plain' });
-  link.href = window.URL.createObjectURL(blob);
+  const file = new File([jsonString], { type: 'text/plain' });
+  link.href = window.URL.createObjectURL(file);
   link.click();
 });
 
@@ -548,7 +527,7 @@ document.querySelector('.file-clear-btn').addEventListener('click', () => {
   initCellElements();
 });
 
-// keyboard interaction 리팩토링 필요]
+// keyboard interaction
 document.addEventListener('keyup', event => {
   if (event.key === 'Escape') {
     const $instMenu = document.querySelector('.add-inst-menu');

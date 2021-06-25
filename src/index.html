@@ -39,8 +39,11 @@
         <img src="/assets/img/logo.svg" alt="" class="logo-img" />
       </header>
       <div class="page-control">
-        <button class="page-down-btn minus-icon"></button>
-        <button class="page-up-btn plus-icon"></button>
+        <button
+          class="page-down-btn minus-icon"
+          aria-label="페이지 감소"
+        ></button>
+        <button class="page-up-btn plus-icon" aria-label="페이지 증가"></button>
         <div class="page-input-wrapper">
           <span class="current-page">1</span><span class="total-page">/1</span>
         </div>
@@ -53,7 +56,7 @@
           </li> -->
 
           <li class="inst-item inst-add">
-            <button class="add-btn"></button>
+            <button class="add-btn" aria-label="악기 추가"></button>
           </li>
         </ul>
         <div class="music-mask">
@@ -95,32 +98,60 @@
         </div>
         <section class="controls">
           <h2 class="a11y-hidden" lang="en">Control Panel</h2>
-          <button class="play-btn"></button>
+          <button class="play-btn" aria-label="재생"></button>
           <div class="control-wrapper">
             <div class="beat-control">
-              <button class="beat-down-btn minus-icon"></button>
-              <button class="beat-up-btn plus-icon"></button>
+              <button
+                class="beat-down-btn minus-icon"
+                aria-label="beat 10 감소"
+              ></button>
+              <button
+                class="beat-up-btn plus-icon"
+                aria-label="beat 10 증가"
+              ></button>
               <div class="beat-input-wrapper">
                 <label for="beat-input">Beat</label>
-                <input type="text" id="beat-input" maxlength="2" />
+                <input
+                  type="text"
+                  id="beat-input"
+                  maxlength="2"
+                  aria-label="beat 수정"
+                />
               </div>
             </div>
             <div class="bpm-control">
-              <button class="bpm-down-btn minus-icon"></button>
-              <button class="bpm-up-btn plus-icon"></button>
+              <button
+                class="bpm-down-btn minus-icon"
+                aria-label="bpm 10 감소"
+              ></button>
+              <button
+                class="bpm-up-btn plus-icon"
+                aria-label="bpm 10 증가"
+              ></button>
               <div class="bpm-input-wrapper">
                 <label for="bpm-input">BPM</label>
-                <input type="text" id="bpm-input" maxlength="3" />
+                <input
+                  type="text"
+                  id="bpm-input"
+                  maxlength="3"
+                  aria-label="bpm 수정"
+                />
               </div>
             </div>
-            <button class="menu-toggle-btn up-icon"></button>
+            <button
+              class="menu-toggle-btn up-icon"
+              aria-label="메뉴 토글"
+            ></button>
             <div class="file-control">
               <label class="file-load-btn"
-                ><input type="file" accept=".djs, .txt"
+                ><input
+                  type="file"
+                  accept=".djs, .txt"
+                  aria-label="파일로 업로드"
               /></label>
 
-              <button class="file-save-btn"></button>
-              <button class="file-clear-btn"></button>
+              <button class="file-save-btn" aria-label="파일로 저장"></button>
+              <button class="file-clear-btn" aria-label="패드 초기화"></button>
             </div>
           </div>
         </section>
